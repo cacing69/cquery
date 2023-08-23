@@ -1,5 +1,4 @@
 <?php
-
 namespace Cacing69\Cquery;
 
 use Symfony\Component\CssSelector\CssSelectorConverter;

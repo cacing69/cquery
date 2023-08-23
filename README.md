@@ -1,10 +1,18 @@
 # cquery
 
-### Currently experimenting to attempt scraping a webpage using different methods
+## Currently experimenting to attempt scraping a webpage using different methods
 
 Cquery is an acronym for crawl query, used to extract text from an HTML element using PHP. It called a query, as it adopts the structure present in an SQL query, so you can analogize that your DOM/HTML Document is a table you will query.
 
 Let's play for a moment and figure out how to make website scraping easier, much like crafting a query for a database.
+
+Please keep in mind that I haven't yet reached a beta/stable release for this library, so the available features are still very limited.
+
+## Quick Installation
+
+```bash
+composer require cacing69/cquery
+```
 
 For example, you have a simple HTML element as shown below.
 
@@ -88,6 +96,7 @@ And here are the results
 ![Alt text](https://gcdnb.pbrd.co/images/Q6XHKRydSigl.png?o=1 "a title")
 
 ### Note
+
 I've recently started building this, and if anyone is interested,I would certainly appreciate a lot of feedback from everyone who has read/seen my little project, in any way (issue, pull request or whatever).However, right now I'm considering making it better to be more flexible and user-friendly for website scraping.
 
 This is just the beginning, and I will continue to develop it as long as I can

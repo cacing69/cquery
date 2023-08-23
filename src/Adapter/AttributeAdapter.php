@@ -26,7 +26,7 @@ class AttributeAdapter {
         preg_match('/^attr\(\s*?.*\s?,\s*?(.*?)\)$/is', $this->raw[0], $node);
 
         $this->ref = $attr[1];
-        $this->selectNode = trim($node[1]);
+        $this->selectNode = $node[1];
 
         if(in_array(strtolower(trim($this->raw[1])), ["like", "=", "!=", "<>"])) {
             $this->operator = strtolower(trim($this->raw[1]));

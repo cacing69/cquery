@@ -1,6 +1,7 @@
 <?php
 namespace Cacing69\Cquery;
 
+use Cacing69\Cquery\Adapter\AttributeAdapter;
 use Cacing69\Cquery\Extractor\WhereExtractor;
 use Cacing69\Cquery\Extractor\SelectorExtractor;
 use Cacing69\Cquery\Support\HasSelectorProperty;
@@ -64,19 +65,24 @@ class Cquery {
     public function get()
     {
         // WHERE CHECKING DISINI
-        $_remove = [];
-        $cssToXpathWhere = $this->converter->toXPath($this->selector . " a");
+        $_keep = [];
 
-        $this->crawler->filterXPath($cssToXpathWhere)->each(function (Crawler $node, $i) use (&$_remove) {
-            if (!preg_match('/^vip|\svip|\svip$/im', $node->attr('class'))) { // regex khusus like %vip%
-                array_push($_remove, $i);
-            }
-        });
+        foreach ($this->where as $key => $value) {
+            $cssToXpathWhere = $this->converter->toXPath($this->selector->getValue() . $value->getSelectNode());
+
+            $this->crawler->filterXPath($cssToXpathWhere)->each(function (Crawler $node, $i) use (&$_keep, $value) {
+                if($value instanceof AttributeAdapter) {
+                    if (preg_match($value->getPattern(), $node->attr($value->getRef()))) { // regex khusus like %vip%
+                        array_push($_keep, $i);
+                    }
+                }
+            });
+        }
 
         $parentXPath = $this->converter->toXPath($this->selector);
 
-        $this->crawler->filterXPath($parentXPath)->each(function (Crawler $crawler, $i) use (&$_remove) {
-            if(in_array($i, $_remove)) {
+        $this->crawler->filterXPath($parentXPath)->each(function (Crawler $crawler, $i) use (&$_keep) {
+            if(!in_array($i, $_keep)) {
                 $node = $crawler->getNode(0);
                 $node->parentNode->removeChild($node);
             }

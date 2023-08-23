@@ -19,7 +19,7 @@ final class AttributeAdapterTest extends TestCase
         $this->assertSame("like", $attribute->getOperator());
         $this->assertSame("contains", $attribute->getOperatorType());
         $this->assertSame("/^\s?vip|\svip\s|\svip$/im", $attribute->getPattern());
-        $this->assertSame("a", $attribute->getSelectNode());
+        $this->assertSame(" a", $attribute->getSelectNode());
         $this->assertSame("vip", $attribute->getValue());
     }
 }

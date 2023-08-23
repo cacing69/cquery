@@ -65,28 +65,30 @@ class Cquery {
     public function get()
     {
         // WHERE CHECKING DISINI
-        $_keep = [];
+        if(count($this->where) > 0) {
+            $_keep = [];
 
-        foreach ($this->where as $key => $value) {
-            $cssToXpathWhere = $this->converter->toXPath($this->selector->getValue() . $value->getSelectNode());
+            foreach ($this->where as $key => $value) {
+                $cssToXpathWhere = $this->converter->toXPath($this->selector->getValue() . $value->getSelectNode());
 
-            $this->crawler->filterXPath($cssToXpathWhere)->each(function (Crawler $node, $i) use (&$_keep, $value) {
-                if($value instanceof AttributeAdapter) {
-                    if (preg_match($value->getPattern(), $node->attr($value->getRef()))) { // regex khusus like %vip%
-                        array_push($_keep, $i);
+                $this->crawler->filterXPath($cssToXpathWhere)->each(function (Crawler $node, $i) use (&$_keep, $value) {
+                    if ($value instanceof AttributeAdapter) {
+                        if (preg_match($value->getPattern(), $node->attr($value->getRef()))) { // regex khusus like %vip%
+                            array_push($_keep, $i);
+                        }
                     }
+                });
+            }
+
+            $parentXPath = $this->converter->toXPath($this->selector);
+
+            $this->crawler->filterXPath($parentXPath)->each(function (Crawler $crawler, $i) use (&$_keep) {
+                if (!in_array($i, $_keep)) {
+                    $node = $crawler->getNode(0);
+                    $node->parentNode->removeChild($node);
                 }
             });
         }
-
-        $parentXPath = $this->converter->toXPath($this->selector);
-
-        $this->crawler->filterXPath($parentXPath)->each(function (Crawler $crawler, $i) use (&$_keep) {
-            if(!in_array($i, $_keep)) {
-                $node = $crawler->getNode(0);
-                $node->parentNode->removeChild($node);
-            }
-        });
 
         // PROSES DOM DISINI
         foreach ($this->column as $column) {

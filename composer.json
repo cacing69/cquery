@@ -29,7 +29,10 @@
   ],
   "minimum-stability": "dev",
   "require": {
-    "php": ">=5.3"
+    "php": ">=7.2",
+    "symfony/css-selector": "5.4.26",
+    "tightenco/collect": "8.77.1",
+    "symfony/dom-crawler": "5.4"
   },
   "require-dev": {
     "phpunit/phpunit": "^4.8.35 || ^5.7.21 || ^6 || ^7 || ^8"

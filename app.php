@@ -2,23 +2,16 @@
 
 require_once 'vendor/autoload.php';
 
-$c = new Cacing69\Cquery\Builder()  ;
+$html = file_get_contents("src/samples/sample-simple-1.html");
+// ./vendor/bin/phpunit --verbose tests
 
-$html = '
-<html>
-  <head>
-    <title>Href Attribute Example</title>
-  </head>
-  <body>
-    <span id="lorem">
-      <h1>Href Attribute Example</h1>
-    </span>
-    <p>
-      <a href="https://www.freecodecamp.org/contribute/">The freeCodeCamp Contribution Page
-    </p>
-  </body>
-</html>';
+$data = new Cacing69\Cquery\Cquery($html);
 
-$c->setContent($html);
+$result = $data
+        ->select("h1 as title", "a > p as description", "attr(href, a) as url", "attr(class, a) as class")
+        ->from("#lorem .link")
+        ->where("attr(class, a)", "like", "%vip%")
+        ->get();
+// save output
 
-$c->pick("h1");
+dump($result);

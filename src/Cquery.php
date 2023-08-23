@@ -1,18 +1,22 @@
 <?php
 namespace Cacing69\Cquery;
 
+use Cacing69\Cquery\Extractor\WhereExtractor;
+use Cacing69\Cquery\Extractor\SelectorExtractor;
+use Cacing69\Cquery\Support\HasSelectorProperty;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 use Symfony\Component\DomCrawler\Crawler;
 
 class Cquery {
+    use HasSelectorProperty;
+
     private $crawler;
     private $converter;
-    private $selects = [];
-    private $from;
+    private $column = [];
     private $where = [];
     private $results = [];
 
-    public function __construct($content = null, $encoding = "UTF-8")
+    public function __construct($content = null)
     {
         $this->converter = new CssSelectorConverter();
 
@@ -27,7 +31,7 @@ class Cquery {
     {
         foreach ($selects as $select) {
             $decodeSelect = explode(" as ", $select);
-            $this->selects[] = [
+            $this->column[] = [
                 "selector" => trim($decodeSelect[0]),
                 "key" => trim($decodeSelect[1]),
             ];
@@ -36,9 +40,9 @@ class Cquery {
         return $this;
     }
 
-    public function from($from)
+    public function from($value)
     {
-        $this->from = $from;
+        $this->selector = new SelectorExtractor($value);
         return $this;
     }
 
@@ -49,7 +53,11 @@ class Cquery {
 
     public function where(...$where)
     {
-        $this->where[] = $where;
+        $buildWhere = new WhereExtractor($where);
+
+        $this->where[] = $buildWhere
+                        ->setSelector($this->selector)
+                        ->extract();
         return $this;
     }
 
@@ -57,7 +65,7 @@ class Cquery {
     {
         // WHERE CHECKING DISINI
         $_remove = [];
-        $cssToXpathWhere = $this->converter->toXPath($this->from . " a");
+        $cssToXpathWhere = $this->converter->toXPath($this->selector . " a");
 
         $this->crawler->filterXPath($cssToXpathWhere)->each(function (Crawler $node, $i) use (&$_remove) {
             if (!preg_match('/^vip|\svip|\svip$/im', $node->attr('class'))) { // regex khusus like %vip%
@@ -65,32 +73,32 @@ class Cquery {
             }
         });
 
-        $parentXPath = $this->converter->toXPath($this->from);
+        $parentXPath = $this->converter->toXPath($this->selector);
 
         $this->crawler->filterXPath($parentXPath)->each(function (Crawler $crawler, $i) use (&$_remove) {
             if(in_array($i, $_remove)) {
                 $node = $crawler->getNode(0);
-                $crawler->getNode(0)->parentNode->removeChild($node);
+                $node->parentNode->removeChild($node);
             }
         });
 
         // PROSES DOM DISINI
-        foreach ($this->selects as $select) {
+        foreach ($this->column as $column) {
 
-            if(preg_match("/^attr(.*, .*)$/is", $select["selector"])){
-                preg_match('/^attr\(\s*?(.*?),\s*?.*\)$/is', $select["selector"], $attr);
-                preg_match('/^attr\(\s*?.*\s?,\s*?(.*?)\)$/is', $select["selector"], $pick);
+            if(preg_match("/^attr(.*, .*)$/is", $column["selector"])){
+                preg_match('/^attr\(\s*?(.*?),\s*?.*\)$/is', $column["selector"], $attr);
+                preg_match('/^attr\(\s*?.*\s?,\s*?(.*?)\)$/is', $column["selector"], $pick);
 
-                $cssToXpath = $this->converter->toXPath($this->from . " " . $pick[1]);
+                $cssToXpath = $this->converter->toXPath($this->selector . " " . $pick[1]);
 
-                $this->crawler->filterXPath($cssToXpath)->each(function (Crawler $node, $i) use ($select, $attr) {
-                    $this->results[$i][$select["key"]] = $node->attr($attr[1]);
+                $this->crawler->filterXPath($cssToXpath)->each(function (Crawler $node, $i) use ($column, $attr) {
+                    $this->results[$i][$column["key"]] = $node->attr($attr[1]);
                 });
             } else {
-                $cssToXpath = $this->converter->toXPath($this->from." ". $select["selector"]);
+                $cssToXpath = $this->converter->toXPath($this->selector." ". $column["selector"]);
 
-                $this->crawler->filterXPath($cssToXpath)->each(function (Crawler $node, $i) use ($select){
-                    $this->results[$i][$select["key"]] = $node->innerText(false);
+                $this->crawler->filterXPath($cssToXpath)->each(function (Crawler $node, $i) use ($column){
+                    $this->results[$i][$column["key"]] = $node->innerText(false);
                 });
             }
         }

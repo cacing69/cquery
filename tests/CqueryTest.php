@@ -1,10 +1,11 @@
 <?php
 
-namespace Cacing69\Cquery;
+namespace Cacing69\Cquery\Test;
 
+use Cacing69\Cquery\Cquery;
 use PHPUnit\Framework\TestCase;
 
-define("SAMPLE_SIMPLE_1", "src/samples/sample-simple-1.html");
+define("SAMPLE_SIMPLE_1", "src/Samples/sample-simple-1.html");
 
 final class CqueryTest extends TestCase
 {
@@ -36,5 +37,32 @@ final class CqueryTest extends TestCase
             ->first();
 
         $this->assertSame(4, count($result));
+    }
+
+    public function testSetSelector()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $data->from("#lorem .link");
+
+        $selector = $data->getSelector();
+
+        $this->assertSame('#lorem .link', $selector->getValue());
+        $this->assertSame(null, $selector->getAlias());
+    }
+
+    public function testSetSelectorWithAlias()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $data->from("(#lorem .link) as _el");
+
+        $selector = $data->getSelector();
+
+        $this->assertSame('(#lorem .link) as _el', $selector->getRaw());
+        $this->assertSame('#lorem .link', $selector->getValue());
+        $this->assertSame('_el', $selector->getAlias());
     }
 }

@@ -1,10 +1,10 @@
 <?php
 namespace Cacing69\Cquery\Extractor;
 
-use Cacing69\Cquery\Adapter\WhereAttributeAdapter;
+use Cacing69\Cquery\Adapter\FilterAttributeAdapter;
 use Cacing69\Cquery\Support\HasSelectorProperty;
 
-class WhereExtractor {
+class FilterExtractor {
     use HasSelectorProperty;
 
     private $raw;
@@ -14,7 +14,7 @@ class WhereExtractor {
     {
         $this->raw = $where;
         if(preg_match('/^attr\(.*\s?,\s?.*\s?\)$/', $where[0])) {
-            $this->result = new WhereAttributeAdapter($where);
+            $this->result = new FilterAttributeAdapter($where);
         }
     }
 

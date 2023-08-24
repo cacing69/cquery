@@ -80,15 +80,15 @@ $html = file_get_contents("src/Samples/sample-simple-1.html");
 $data = new Cacing69\Cquery\Cquery($html);
 
 $result = $query
-        ->select(
+        ->from("#lorem .link") // next will be from("(#lorem .link) as el")
+        ->pick(
             "h1 as title",
             "a as description",
             "attr(href, a) as url", // get href attribute from all element at #lorem .link a
             "attr(class, a) as class"
         )
         // just imagine this is your table, and every element as your column
-        ->from("#lorem .link") // next will be from("(#lorem .link) as el")
-        ->where("attr(class, a)", "like", "%vip%") // add some filter here
+        ->filter("attr(class, a)", "like", "%vip%") // add some filter here
         ->get();
 ```
 

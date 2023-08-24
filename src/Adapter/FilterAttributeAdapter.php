@@ -3,9 +3,9 @@ namespace Cacing69\Cquery\Adapter;
 
 use Cacing69\Cquery\Support\HasSelectorProperty;
 
-class WhereAttributeAdapter extends AttributeAdapter{
+class FilterAttributeAdapter extends AttributeAdapter{
     use HasSelectorProperty;
-    private $where;
+    private $filter;
     private $operator;
     private $operatorType;
     private $pattern;
@@ -14,30 +14,30 @@ class WhereAttributeAdapter extends AttributeAdapter{
     public function __construct($raw)
     {
         parent::__construct($raw[0]);
-        $this->where = $raw;
+        $this->filter = $raw;
     }
 
     public function transform()
     {
-        preg_match('/^attr\(\s*?(.*?),\s*?.*\)$/is', $this->where[0], $attr);
-        preg_match('/^attr\(\s*?.*\s?,\s*?(.*?)\)$/is', $this->where[0], $node);
+        preg_match('/^attr\(\s*?(.*?),\s*?.*\)$/is', $this->filter[0], $attr);
+        preg_match('/^attr\(\s*?.*\s?,\s*?(.*?)\)$/is', $this->filter[0], $node);
 
         $this->ref = $attr[1];
         $this->node = $node[1];
 
-        if(in_array(strtolower(trim($this->where[1])), ["like", "=", "!=", "<>"])) {
-            $this->operator = strtolower(trim($this->where[1]));
+        if(in_array(strtolower(trim($this->filter[1])), ["like", "=", "!=", "<>"])) {
+            $this->operator = strtolower(trim($this->filter[1]));
             // search parameter is match with %val%
-            if(preg_match('/^%.+%$/im', $this->where[2])) {
+            if(preg_match('/^%.+%$/im', $this->filter[2])) {
                 $this->operatorType = 'contains';
 
-                preg_match('/^%(.*?)%$/is', $this->where[2], $value);
+                preg_match('/^%(.*?)%$/is', $this->filter[2], $value);
                 $this->value = $value[1];
                 $this->pattern = "/^\s?{$value[1]}|\s{$value[1]}\s|\s{$value[1]}$/im";
             }
         } else {
             $this->operator = "=";
-            $this->value = $this->where[1];
+            $this->value = $this->filter[1];
         }
 
         if($this->selector && $this->selector->getAlias() != null) {
@@ -46,9 +46,9 @@ class WhereAttributeAdapter extends AttributeAdapter{
         return $this;
     }
 
-    public function getWhere()
+    public function getFilter()
     {
-        return $this->where;
+        return $this->filter;
     }
 
     public function getOperator()

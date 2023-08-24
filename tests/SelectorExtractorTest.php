@@ -3,17 +3,17 @@
 namespace Cacing69\Cquery\Test;
 
 use Cacing69\Cquery\Cquery;
-use Cacing69\Cquery\Extractor\SelectorExtractor;
+use Cacing69\Cquery\Extractor\SelectExtractor;
 use PHPUnit\Framework\TestCase;
 
-final class SelectorExtractorTest extends TestCase
+final class SelectExtractorTest extends TestCase
 {
     public function testSetSelector()
     {
         $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
         $data = new Cquery($simpleHtml);
 
-        $data->from("#lorem .link");
+        $data->source("#lorem .link");
 
         $selector = $data->getActiveSelector();
 
@@ -26,7 +26,7 @@ final class SelectorExtractorTest extends TestCase
         $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
         $data = new Cquery($simpleHtml);
 
-        $data->from("(#lorem .link) as _el");
+        $data->source("(#lorem .link) as _el");
 
         $selector = $data->getActiveSelector();
 
@@ -35,9 +35,9 @@ final class SelectorExtractorTest extends TestCase
         $this->assertSame('_el', $selector->getAlias());
     }
 
-    public function testSelectorExtractorToString()
+    public function testSelectExtractorToString()
     {
-        $selector = new SelectorExtractor("(a > ul) as _el");
+        $selector = new SelectExtractor("(a > ul) as _el");
 
         $this->assertEquals('a > ul', $selector);
     }

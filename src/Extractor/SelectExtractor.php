@@ -4,7 +4,7 @@ namespace Cacing69\Cquery\Extractor;
 
 use Symfony\Component\CssSelector\CssSelectorConverter;
 
-class SelectorExtractor
+class SelectExtractor
 {
     private $raw;
     private $value;
@@ -22,7 +22,6 @@ class SelectorExtractor
 
             $this->value = $value[1];
             $this->alias = $alias[1];
-            $this->xpath = "//a";
         } else {
             $this->value = $init;
         }
@@ -31,7 +30,7 @@ class SelectorExtractor
 
     public function __toString()
     {
-        return $this->value;
+        return "{$this->value}";
     }
 
     public function getValue()
@@ -47,6 +46,11 @@ class SelectorExtractor
     public function getXpath()
     {
         return $this->xpath;
+    }
+
+    public function isHasAlias()
+    {
+        return $this->alias !== null;
     }
 
     public function getAlias()

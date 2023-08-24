@@ -7,7 +7,9 @@ use Symfony\Component\DomCrawler\Crawler;
 class DomManipulator {
     use HasSelectorProperty;
     private $crawler;
-    private $where = [];
+    private $column = [];
+    private $results = [];
+    private $filter = [];
     private $limit = null;
 
     public function __construct($content, $selector)
@@ -16,15 +18,30 @@ class DomManipulator {
         $this->selector = $selector;
     }
 
-    public function addWhere($where)
+    public function addFilter($filter)
     {
-        $this->where[] = $where
+        $this->filter[] = $filter
                         ->setSelector($this->selector)
                         ->extract();
     }
 
-    public function getWhere()
+    public function getFilter()
     {
-        return $this->where;
+        return $this->filter;
+    }
+
+    public function getCrawler()
+    {
+        return $this->crawler;
+    }
+
+    public function addColumn($column)
+    {
+        array_push($this->column, $column);
+        return $this;
+    }
+    public function getColumn()
+    {
+        return $this->column;
     }
 }

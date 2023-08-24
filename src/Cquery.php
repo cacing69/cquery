@@ -4,7 +4,7 @@ namespace Cacing69\Cquery;
 use Cacing69\Cquery\Adapter\FilterAttributeAdapter;
 use Cacing69\Cquery\Exception\CqueryException;
 use Cacing69\Cquery\Extractor\FilterExtractor;
-use Cacing69\Cquery\Extractor\SelectExtractor;
+use Cacing69\Cquery\Extractor\SelectorExtractor;
 use Cacing69\Cquery\Support\DomManipulator;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 use Symfony\Component\DomCrawler\Crawler;
@@ -65,7 +65,7 @@ class Cquery {
 
     public function source($value)
     {
-        $selector = new SelectExtractor($value);
+        $selector = new SelectorExtractor($value);
 
         $this->source = $selector->getXpath();
 

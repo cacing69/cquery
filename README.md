@@ -65,7 +65,7 @@ For example, you have a simple HTML element as shown below.
       <a href="https://www.freecodecamp.org/contribute/">The freeCodeCamp Contribution Page
     </p>
     <footer>
-      <p>Copyright 2023 Your name</p>
+      <p>Copyright 2023</p>
     </footer>
   </body>
 </html>
@@ -93,6 +93,7 @@ $result = $query
 ```
 
 And here are the results
+
 ![Alt text](https://gcdnb.pbrd.co/images/Q6XHKRydSigl.png?o=1 "a title")
 
 ### Note

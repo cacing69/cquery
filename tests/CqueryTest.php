@@ -39,30 +39,35 @@ final class CqueryTest extends TestCase
         $this->assertSame(4, count($result));
     }
 
-    public function testSetSelector()
+    public function testGetFooter()
     {
         $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
         $data = new Cquery($simpleHtml);
 
-        $data->from("#lorem .link");
+        $result = $data
+            ->select("p")
+            ->from("footer")
+            ->first();
 
-        $selector = $data->getSelector();
-
-        $this->assertSame('#lorem .link', $selector->getValue());
-        $this->assertSame(null, $selector->getAlias());
+        $this->assertSame('Copyright 2023', $result["p"]);
     }
 
-    public function testSetSelectorWithAlias()
+    public function testReusableElement()
     {
         $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
         $data = new Cquery($simpleHtml);
 
-        $data->from("(#lorem .link) as _el");
+        $result = $data
+            ->select("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->from("#lorem .link")
+            ->first();
 
-        $selector = $data->getSelector();
+        $result_clone = $data
+            ->select("p")
+            ->from("footer")
+            ->first();
 
-        $this->assertSame('(#lorem .link) as _el', $selector->getRaw());
-        $this->assertSame('#lorem .link', $selector->getValue());
-        $this->assertSame('_el', $selector->getAlias());
+        $this->assertSame('Title 1', $result["title"]);
+        $this->assertSame('Copyright 2023', $result_clone["p"]);
     }
 }

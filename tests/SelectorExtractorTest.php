@@ -15,7 +15,7 @@ final class SelectorExtractorTest extends TestCase
 
         $data->from("#lorem .link");
 
-        $selector = $data->getSelector();
+        $selector = $data->getActiveSelector();
 
         $this->assertSame('#lorem .link', $selector->getValue());
         $this->assertSame(null, $selector->getAlias());
@@ -28,7 +28,7 @@ final class SelectorExtractorTest extends TestCase
 
         $data->from("(#lorem .link) as _el");
 
-        $selector = $data->getSelector();
+        $selector = $data->getActiveSelector();
 
         $this->assertSame('(#lorem .link) as _el', $selector->getRaw());
         $this->assertSame('#lorem .link', $selector->getValue());

@@ -176,9 +176,9 @@ class Cquery {
 
                 $dom->getCrawler()->filterXPath($cssToXpath)->each(function (Crawler $node, $i) use ($column, $limit){
                     if ($limit === null) {
-                        $this->results[$this->element][$i][$column["key"]] = $node->innerText();
+                        $this->results[$this->element][$i][$column["key"]] = $node->text();
                     } else if ($limit - 1 <= $i) {
-                        $this->results[$this->element][$i][$column["key"]] = $node->innerText();
+                        $this->results[$this->element][$i][$column["key"]] = $node->text();
                         return false;
                     }
                 });

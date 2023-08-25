@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Cacing69\Cquery;
 
 use Cacing69\Cquery\Adapter\FilterAttributeAdapter;
@@ -8,6 +10,7 @@ use Cacing69\Cquery\Extractor\SelectorExtractor;
 use Cacing69\Cquery\Support\DomManipulator;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 use Symfony\Component\DomCrawler\Crawler;
+use Tightenco\Collect\Support\Collection;
 
 class Cquery {
     private $content;
@@ -18,7 +21,7 @@ class Cquery {
     private $element;
     private $dom = [];
 
-    public function __construct($content = null, $encoding = "UTF-8")
+    public function __construct(string $content = null, string $encoding = "UTF-8")
     {
         $this->converter = new CssSelectorConverter();
 
@@ -32,11 +35,11 @@ class Cquery {
         }
     }
 
-    private function addColumnToActiveDom($column) {
+    private function addColumnToActiveDom($column): void {
         $this->dom[$this->element]->addColumn($column);
     }
 
-    public function pick(...$selects)
+    public function pick(string ...$selects): Cquery
     {
         $this->validateElement();
         $column = null;
@@ -63,7 +66,7 @@ class Cquery {
         return $this;
     }
 
-    public function from($value)
+    public function from(string $value): Cquery
     {
         $selector = new SelectorExtractor($value);
 
@@ -73,7 +76,7 @@ class Cquery {
         return $this;
     }
 
-    public function limit($limit)
+    public function limit(int $limit): Cquery
     {
         $this->limit = $limit;
         return $this;
@@ -87,27 +90,27 @@ class Cquery {
                 ->first();
     }
 
-    public function filter(...$where)
+    public function filter(...$filter): Cquery
     {
         $this->validateElement();
 
-        $where = new FilterExtractor($where);
-        $this->dom[$this->element]->addFilter($where);
+        $filter = new FilterExtractor($filter);
+        $this->dom[$this->element]->addFilter($filter);
 
         return $this;
     }
 
-    public function OrFilter(...$where)
+    public function OrFilter(...$filter) : Cquery
     {
         $this->validateElement();
 
-        $where = new FilterExtractor($where, "or");
-        $this->dom[$this->element]->addFilter($where);
+        $filter = new FilterExtractor($filter, "or");
+        $this->dom[$this->element]->addFilter($filter);
 
         return $this;
     }
 
-    public function get()
+    public function get() : Collection
     {
         $this->validateElement();
 
@@ -174,7 +177,7 @@ class Cquery {
         return collect($this->results[@$this->element]);
     }
 
-    public static function getResultFilter($filtered) {
+    public static function getResultFilter(array $filtered) : array {
         $result = [
             "and" => [],
             "or" => [],
@@ -195,7 +198,7 @@ class Cquery {
         return $filterResult;
     }
 
-    public function getActiveDom()
+    public function getActiveDom() : DomManipulator
     {
         return $this->dom[$this->element];
     }

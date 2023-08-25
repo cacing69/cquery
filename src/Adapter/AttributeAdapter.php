@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types = 1);
 namespace Cacing69\Cquery\Adapter;
 
 abstract class AttributeAdapter {
@@ -8,7 +8,7 @@ abstract class AttributeAdapter {
     protected $refType = "attribute";
     protected $node;
 
-    public function __construct($raw)
+    public function __construct(string $raw)
     {
         $this->raw = $raw;
 
@@ -19,22 +19,22 @@ abstract class AttributeAdapter {
         $this->node = $node[1];
     }
 
-    public function getRaw()
+    public function getRaw(): string
     {
         return $this->raw;
     }
 
-    public function getRef()
+    public function getRef(): string
     {
         return $this->ref;
     }
 
-    public function getRefType()
+    public function getRefType(): string
     {
         return $this->refType;
     }
 
-    public function getNode()
+    public function getNode(): string
     {
         return $this->node;
     }

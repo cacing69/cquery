@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 namespace Cacing69\Cquery\Adapter;
 
 use Cacing69\Cquery\Support\HasOperatorProperty;
@@ -13,14 +15,14 @@ class FilterAttributeAdapter extends AttributeAdapter{
     private $pattern;
     private $value;
 
-    public function __construct($raw)
+    public function __construct(array $raw)
     {
         parent::__construct($raw[0]);
         $this->filter = $raw;
         $this->clause = "and";
     }
 
-    public function transform()
+    public function transform(): FilterAttributeAdapter
     {
         preg_match('/^attr\(\s*?(.*?),\s*?.*\)$/is', $this->filter[0], $attr);
         preg_match('/^attr\(\s*?.*\s?,\s*?(.*?)\)$/is', $this->filter[0], $node);
@@ -55,27 +57,27 @@ class FilterAttributeAdapter extends AttributeAdapter{
         return $this->filter;
     }
 
-    public function getClause()
+    public function getClause(): string
     {
         return $this->clause;
     }
 
-    public function getClauseType()
+    public function getClauseType(): string
     {
         return $this->clauseType;
     }
 
-    public function getPattern()
+    public function getPattern(): string
     {
         return $this->pattern;
     }
 
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }
 
-    public function adapt($extractor)
+    public function adapt($extractor): FilterAttributeAdapter
     {
         $this->selector = $extractor->getSelector();
         $this->operator = $extractor->getOperator();

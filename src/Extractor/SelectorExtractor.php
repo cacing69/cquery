@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 namespace Cacing69\Cquery\Extractor;
 
 use Symfony\Component\CssSelector\CssSelectorConverter;
@@ -24,6 +25,7 @@ class SelectorExtractor
             $this->alias = $alias[1];
         } else {
             $this->value = $init;
+            $this->alias = "";
         }
         $this->xpath = $css->toXPath($this->value);
     }
@@ -50,7 +52,7 @@ class SelectorExtractor
 
     public function isHasAlias()
     {
-        return $this->alias !== null;
+        return $this->alias !== "";
     }
 
     public function getAlias()

@@ -18,7 +18,7 @@ final class SelectorExtractorTest extends TestCase
         $selector = $data->getActiveDom()->getSelector();
 
         $this->assertSame('#lorem .link', $selector->getValue());
-        $this->assertSame(null, $selector->getAlias());
+        $this->assertSame("", $selector->getAlias());
     }
 
     public function testSetSelectorWithAlias()

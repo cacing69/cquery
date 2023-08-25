@@ -17,7 +17,7 @@ final class CqueryTest extends TestCase
         $data = new Cquery($simpleHtml);
 
         $result = $data
-            ->source("#lorem .link")
+            ->from("#lorem .link")
             ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
             ->first();
 
@@ -33,7 +33,7 @@ final class CqueryTest extends TestCase
         $data = new Cquery($simpleHtml);
 
         $result = $data
-            ->source("#lorem .link")
+            ->from("#lorem .link")
             ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
             ->filter("attr(class, a)", "like", "%vip%")
             ->first();
@@ -47,7 +47,7 @@ final class CqueryTest extends TestCase
         $data = new Cquery($simpleHtml);
 
         $result = $data
-            ->source("footer")
+            ->from("footer")
             ->pick("p")
             ->first();
 
@@ -60,12 +60,12 @@ final class CqueryTest extends TestCase
         $data = new Cquery($simpleHtml);
 
         $result = $data
-            ->source("#lorem .link")
+            ->from("#lorem .link")
             ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
             ->first();
 
         $result_clone = $data
-            ->source("footer")
+            ->from("footer")
             ->pick("p")
             ->first();
 
@@ -79,7 +79,7 @@ final class CqueryTest extends TestCase
         $data = new Cquery($simpleHtml);
 
         $query = $data
-            ->source("(#lorem .link) as _el")
+            ->from("(#lorem .link) as _el")
             ->pick("_el > a > p as title");
 
         $first = $query->first();
@@ -97,8 +97,40 @@ final class CqueryTest extends TestCase
                 ->pick("_el > a > p as title");
         } catch (Exception $e) { //Not catching a generic Exception or the fail function is also catched
             $this->assertSame(CqueryException::class, get_class($e));
-            $this->assertSame("No source defined", $e->getMessage());
+            $this->assertSame("no element defined", $e->getMessage());
         }
+    }
 
+    public function testMultipleWhereWithUsedOrCondition()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem .link")
+            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->filter("attr(class, a)", "like", "%vip%")
+            ->OrFilter("attr(class, a)", "like", "%super%")
+            ->OrFilter("attr(class, a)", "like", "%blocked%")
+            ->get();
+
+        $this->assertSame(5, count($result));
+    }
+
+    public function testMultipleWhereWithUsedAndCondition()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem .link")
+            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->filter("attr(class, a)", "like", "%vip%")
+            ->filter("attr(class, a)", "like", "%blocked%")
+            ->filter("attr(class, a)", "like", "%super%")
+            // ->OrFilter("attr(class, a)", "like", "%blocked%")
+            ->get();
+
+        $this->assertSame(1, count($result));
     }
 }

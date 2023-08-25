@@ -2,7 +2,7 @@
 
 namespace Cacing69\Cquery\Adapter;
 
-class AttributeAdapter {
+abstract class AttributeAdapter {
     protected $raw;
     protected $ref;
     protected $refType = "attribute";

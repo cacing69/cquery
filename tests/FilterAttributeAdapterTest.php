@@ -16,8 +16,8 @@ final class FilterAttributeAdapterTest extends TestCase
         $this->assertSame(["attr(class, a)", "like", "%vip%"], $attribute->getFilter());
         $this->assertSame("class", $attribute->getRef());
         $this->assertSame("attribute", $attribute->getRefType());
-        $this->assertSame("like", $attribute->getOperator());
-        $this->assertSame("contains", $attribute->getOperatorType());
+        $this->assertSame("like", $attribute->getClause());
+        $this->assertSame("contains", $attribute->getClauseType());
         $this->assertSame("/^\s?vip|\svip\s|\svip$/im", $attribute->getPattern());
         $this->assertSame(" a", $attribute->getNode());
         $this->assertSame("vip", $attribute->getValue());

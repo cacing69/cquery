@@ -15,7 +15,7 @@ class Cquery {
     // private $column = [];
     private $limit = null;
     private $results = [];
-    private $source;
+    private $element;
     private $dom = [];
 
     public function __construct($content = null, $encoding = "UTF-8")
@@ -26,19 +26,19 @@ class Cquery {
             $this->content = $content;
         }
     }
-    private function validateSource() {
+    private function validateElement() {
         if (count($this->dom) === 0) {
-            throw new CqueryException("No source defined");
+            throw new CqueryException("no element defined");
         }
     }
 
     private function addColumnToActiveDom($column) {
-        $this->dom[$this->source]->addColumn($column);
+        $this->dom[$this->element]->addColumn($column);
     }
 
     public function pick(...$selects)
     {
-        $this->validateSource();
+        $this->validateElement();
         $column = null;
         foreach ($selects as $select) {
             if (preg_match('/.+\s+?as\s+?.+/im', $select)) {
@@ -63,13 +63,13 @@ class Cquery {
         return $this;
     }
 
-    public function source($value)
+    public function from($value)
     {
         $selector = new SelectorExtractor($value);
 
-        $this->source = $selector->getXpath();
+        $this->element = $selector->getXpath();
 
-        $this->dom[$this->source] = new DomManipulator($this->content, $selector);
+        $this->dom[$this->element] = new DomManipulator($this->content, $selector);
         return $this;
     }
 
@@ -89,36 +89,51 @@ class Cquery {
 
     public function filter(...$where)
     {
-        $this->validateSource();
+        $this->validateElement();
 
         $where = new FilterExtractor($where);
-        $this->dom[$this->source]->addFilter($where);
+        $this->dom[$this->element]->addFilter($where);
+
+        return $this;
+    }
+
+    public function OrFilter(...$where)
+    {
+        $this->validateElement();
+
+        $where = new FilterExtractor($where, "or");
+        $this->dom[$this->element]->addFilter($where);
 
         return $this;
     }
 
     public function get()
     {
-        $this->validateSource();
+        $this->validateElement();
 
         // WHERE CHECKING
         $dom = $this->getActiveDom();
 
         if(count($dom->getFilter()) > 0) {
-            $_keep = [];
-            foreach ($dom->getFilter() as $value) {
+            $_affect = [
+                "and" => [],
+                "or" => [],
+            ];
+            foreach ($dom->getFilter() as $key => $value) {
                 $cssToXpathWhere = $this->converter->toXPath($dom->getSelector()->getValue() . $value->getNode());
-                $dom->getCrawler()->filterXPath($cssToXpathWhere)->each(function (Crawler $node, $i) use (&$_keep, $value) {
+                $dom->getCrawler()->filterXPath($cssToXpathWhere)->each(function (Crawler $node, $i) use (&$_affect, $key, $value) {
                     if ($value instanceof FilterAttributeAdapter) {
                         if (preg_match($value->getPattern(), $node->attr($value->getRef()))) { // regex khusus like %vip%
-                            array_push($_keep, $i);
+                            $_affect[$value->getOperator()][$key][] = $i;
                         }
                     }
                 });
             }
 
-            $dom->getCrawler()->filterXPath($dom->getSelector()->getXpath())->each(function (Crawler $crawler, $i) use (&$_keep) {
-                if (!in_array($i, $_keep)) {
+            $_filtered = $this->getResultFilter($_affect);
+
+            $dom->getCrawler()->filterXPath($dom->getSelector()->getXpath())->each(function (Crawler $crawler, $i) use ($_filtered) {
+                if (!in_array($i, $_filtered)) {
                     $node = $crawler->getNode(0);
                     $node->parentNode->removeChild($node);
                 }
@@ -129,16 +144,16 @@ class Cquery {
         $limit = $this->limit;
 
         foreach ($this->getActiveDom()->getColumn() as $column) {
-            if(preg_match("/^attr(.*, .*)$/is", $column["selector"])){
+            if(preg_match("/^attr(.*,\s?.*)$/is", $column["selector"])){
                 preg_match('/^attr\(\s*?(.*?),\s*?.*\)$/is', $column["selector"], $attr);
                 preg_match('/^attr\(\s*?.*\s?,\s*?(.*?)\)$/is', $column["selector"], $pick);
 
                 $cssToXpath = $this->converter->toXPath($dom->getSelector() . " " . $pick[1]);
                 $dom->getCrawler()->filterXPath($cssToXpath)->each(function (Crawler $node, $i) use ($column, $attr, $limit) {
                     if($limit === null) {
-                        $this->results[$this->source][$i][$column["key"]] = $node->attr($attr[1]);
+                        $this->results[$this->element][$i][$column["key"]] = $node->attr($attr[1]);
                     } else if ($limit - 1 <= $i) {
-                        $this->results[$this->source][$i][$column["key"]] = $node->attr($attr[1]);
+                        $this->results[$this->element][$i][$column["key"]] = $node->attr($attr[1]);
                         return false;
                     }
                 });
@@ -148,25 +163,40 @@ class Cquery {
 
                 $dom->getCrawler()->filterXPath($cssToXpath)->each(function (Crawler $node, $i) use ($column, $limit){
                     if ($limit === null) {
-                        $this->results[$this->source][$i][$column["key"]] = $node->innerText();
+                        $this->results[$this->element][$i][$column["key"]] = $node->innerText();
                     } else if ($limit - 1 <= $i) {
-                        $this->results[$this->source][$i][$column["key"]] = $node->innerText();
+                        $this->results[$this->element][$i][$column["key"]] = $node->innerText();
                         return false;
                     }
                 });
             }
         }
-        return collect($this->results[@$this->source]);
+        return collect($this->results[@$this->element]);
     }
 
-    public function getActiveSelector()
-    {
-        return $this
-                ->getActiveDom()
-                ->getSelector();
+    public static function getResultFilter($filtered) {
+        $result = [
+            "and" => [],
+            "or" => [],
+        ];
+
+        if(array_key_exists("and", $filtered) && count($filtered["and"]) > 0){
+            $result["and"] = array_intersect(...$filtered["and"]);
+        }
+
+        if (array_key_exists("or", $filtered) && count($filtered["or"]) > 0) {
+            $result["or"] = array_unique(array_merge(...$filtered["or"]));
+        }
+
+        $filterResult = array_unique(array_merge($result["and"], $result["or"]));
+
+        sort($filterResult, SORT_NUMERIC);
+
+        return $filterResult;
     }
+
     public function getActiveDom()
     {
-        return $this->dom[$this->source];
+        return $this->dom[$this->element];
     }
 }

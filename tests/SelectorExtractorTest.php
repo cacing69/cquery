@@ -13,9 +13,9 @@ final class SelectorExtractorTest extends TestCase
         $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
         $data = new Cquery($simpleHtml);
 
-        $data->source("#lorem .link");
+        $data->from("#lorem .link");
 
-        $selector = $data->getActiveSelector();
+        $selector = $data->getActiveDom()->getSelector();
 
         $this->assertSame('#lorem .link', $selector->getValue());
         $this->assertSame(null, $selector->getAlias());
@@ -26,9 +26,9 @@ final class SelectorExtractorTest extends TestCase
         $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
         $data = new Cquery($simpleHtml);
 
-        $data->source("(#lorem .link) as _el");
+        $data->from("(#lorem .link) as _el");
 
-        $selector = $data->getActiveSelector();
+        $selector = $data->getActiveDom()->getSelector();
 
         $this->assertSame('(#lorem .link) as _el', $selector->getRaw());
         $this->assertSame('#lorem .link', $selector->getValue());

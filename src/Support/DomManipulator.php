@@ -21,8 +21,8 @@ class DomManipulator {
     public function addFilter($filter)
     {
         $this->filter[] = $filter
-                        ->setSelector($this->selector)
-                        ->extract();
+                            ->setSelector($this->selector)
+                            ->extract();
     }
 
     public function getFilter()

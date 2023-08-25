@@ -112,9 +112,9 @@ $result = $query
             "attr(class, a) as class"
         )
         // just imagine this is your table, and every element as your column
-        ->filter("attr(class, a)", "like", "%vip%") // add some filter here
-        // ->OrFilter("attr(class, a)", "like", "%super%") // add another condition its like OR condition SQL
-        // ->filter("attr(class, a)", "like", "%blocked%") // add another condition its like AND condition SQL
+        ->filter("attr(class, a)", "has", "vip") // add some filter here
+        // ->OrFilter("attr(class, a)", "has", "super") // add another condition its has OR condition SQL
+        // ->filter("attr(class, a)", "has", "blocked") // add another condition its has AND condition SQL
         ->get();
 ```
 

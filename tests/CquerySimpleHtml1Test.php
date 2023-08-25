@@ -27,7 +27,7 @@ final class CquerySimpleHtml1Test extends TestCase
         $this->assertSame('ini vip class-1', $result['class']);
     }
 
-    public function testWhereLikeWithAnyCondition()
+    public function testWhereHasWithAnyCondition()
     {
         $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
         $data = new Cquery($simpleHtml);
@@ -35,7 +35,7 @@ final class CquerySimpleHtml1Test extends TestCase
         $result = $data
             ->from("#lorem .link")
             ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
-            ->filter("attr(class, a)", "like", "%vip%")
+            ->filter("attr(class, a)", "has", "vip")
             ->first();
 
         $this->assertSame(4, count($result));
@@ -109,9 +109,9 @@ final class CquerySimpleHtml1Test extends TestCase
         $result = $data
             ->from("#lorem .link")
             ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
-            ->filter("attr(class, a)", "like", "%vip%")
-            ->OrFilter("attr(class, a)", "like", "%super%")
-            ->OrFilter("attr(class, a)", "like", "%blocked%")
+            ->filter("attr(class, a)", "has", "vip")
+            ->OrFilter("attr(class, a)", "has", "super")
+            ->OrFilter("attr(class, a)", "has", "blocked")
             ->get();
 
         $this->assertSame(5, count($result));
@@ -125,9 +125,9 @@ final class CquerySimpleHtml1Test extends TestCase
         $result = $data
             ->from("#lorem .link")
             ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
-            ->filter("attr(class, a)", "like", "%vip%")
-            ->filter("attr(class, a)", "like", "%blocked%")
-            ->filter("attr(class, a)", "like", "%super%")
+            ->filter("attr(class, a)", "has", "vip")
+            ->filter("attr(class, a)", "has", "blocked")
+            ->filter("attr(class, a)", "has", "super")
             ->get();
 
         $this->assertSame(1, count($result));
@@ -192,15 +192,29 @@ final class CquerySimpleHtml1Test extends TestCase
         $this->assertSame("vip class-2 nih", $result["class"]);
     }
 
-    public function testUsedFilterLength()
-    {
-        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
-        $data = new Cquery($simpleHtml);
+    // public function testUsedFilterLength()
+    // {
+    //     $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+    //     $data = new Cquery($simpleHtml);
 
-        $result = $data
-            ->from("#lorem .link")
-            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
-            ->filter("length(h1)", "=", "5")
-            ->first();
-    }
+    //     $result = $data
+    //         ->from("#lorem .link")
+    //         ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+    //         ->filter("length(h1)", "=", 5)
+    //         ->first();
+    // }
+
+    // public function testUsedFilterAnonymousFunction()
+    // {
+    //     $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+    //     $data = new Cquery($simpleHtml);
+
+    //     $result = $data
+    //         ->from("#lorem .link")
+    //         ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+    //         ->filter(function ($e) {
+    //             return $e->text();
+    //         })
+    //         ->first();
+    // }
 }

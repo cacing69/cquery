@@ -10,17 +10,19 @@ trait ClauseExtractor
     protected $pattern;
     protected $value;
     final protected function extract($clause, $clauseValue){
-        if (strtolower(trim($clause)) === "like") {
+        if (strtolower(trim($clause)) === "has") {
             $this->clause = strtolower(trim($clause));
 
             // search parameter is match with %val%
-            if (preg_match('/^%.+%$/im', $clauseValue)) {
-                $this->clauseType = 'contains';
+            // if (preg_match('/^%.+%$/im', $clauseValue)) {
+            // if (preg_match('/^.+$/im', $clauseValue)) {
+                $this->clauseType = 'has';
 
-                preg_match('/^%(.*?)%$/is', $clauseValue, $value);
-                $this->value = $value[1];
-                $this->pattern = "/^\s?{$value[1]}|\s{$value[1]}\s|\s{$value[1]}$/im";
-            }
+                // preg_match('/^%(.*?)%$/is', $clauseValue, $value);
+                $this->value = $clauseValue;
+                // $this->pattern = "/^\s?{$value[1]}|\s{$value[1]}\s|\s{$value[1]}$/im";
+                $this->pattern = "/^\s?{$clauseValue}|\s{$clauseValue}\s|\s{$clauseValue}$/im";
+            // }
         } else if(trim($clause) === "="){
             $this->clause = "=";
             $this->clauseType = 'equals';

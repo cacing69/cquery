@@ -174,4 +174,21 @@ final class CqueryTest extends TestCase
 
         $this->assertSame(1, count($result));
     }
+
+    public function testValueWithRefIdAttribute()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem .link")
+            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->filter("attr(ref-id, h1)", "=", "23")
+            ->first();
+
+        $this->assertSame("Title 2", $result["title"]);
+        $this->assertSame("Href Attribute Example 2 Lorem pilsum", $result["description"]);
+        $this->assertSame("http://ini-url-2.com", $result["url"]);
+        $this->assertSame("vip class-2 nih", $result["class"]);
+    }
 }

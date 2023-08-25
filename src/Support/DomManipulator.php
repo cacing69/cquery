@@ -1,14 +1,17 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Cacing69\Cquery\Support;
 
+use Cacing69\Cquery\Extractor\ColumnExtractor;
+use Cacing69\Cquery\Support\HasSelectorProperty;
 use Symfony\Component\DomCrawler\Crawler;
 
 class DomManipulator {
     use HasSelectorProperty;
     private $crawler;
-    private $column = [];
+    private $definer = [];
     private $results = [];
     private $filter = [];
     private $limit = null;
@@ -36,13 +39,13 @@ class DomManipulator {
         return $this->crawler;
     }
 
-    public function addColumn($column)
+    public function addDefiner($definer)
     {
-        array_push($this->column, $column);
+        array_push($this->definer, new ColumnExtractor($definer));
         return $this;
     }
-    public function getColumn()
+    public function getDefiner()
     {
-        return $this->column;
+        return $this->definer;
     }
 }

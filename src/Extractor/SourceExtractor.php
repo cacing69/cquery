@@ -5,7 +5,7 @@ namespace Cacing69\Cquery\Extractor;
 
 use Symfony\Component\CssSelector\CssSelectorConverter;
 
-class SelectorExtractor
+class SourceExtractor
 {
     private $raw;
     private $value;

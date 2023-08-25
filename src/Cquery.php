@@ -7,7 +7,7 @@ use Cacing69\Cquery\Adapter\AttributeAdapter;
 use Cacing69\Cquery\Adapter\FilterAttributeAdapter;
 use Cacing69\Cquery\Exception\CqueryException;
 use Cacing69\Cquery\Extractor\FilterExtractor;
-use Cacing69\Cquery\Extractor\SelectorExtractor;
+use Cacing69\Cquery\Extractor\SourceExtractor;
 use Cacing69\Cquery\Support\DomManipulator;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 use Symfony\Component\DomCrawler\Crawler;
@@ -16,10 +16,9 @@ use Tightenco\Collect\Support\Collection;
 class Cquery {
     private $content;
     private $converter;
-    // private $column = [];
     private $limit = null;
     private $results = [];
-    private $element;
+    private $source;
     private $dom = [];
 
     public function __construct(string $content = null, string $encoding = "UTF-8")
@@ -30,38 +29,35 @@ class Cquery {
             $this->content = $content;
         }
     }
-    private function validateElement() {
+    private function validatesource() {
         if (count($this->dom) === 0) {
-            throw new CqueryException("no element defined");
+            throw new CqueryException("no source defined");
         }
     }
 
-    private function addColumnToActiveDom($column): void {
-        $this->dom[$this->element]->addColumn($column);
-    }
-
-    public function pick(string ...$selects): Cquery
+    public function pick(string ...$picks): Cquery
     {
-        $this->validateElement();
-        $column = null;
-        foreach ($selects as $select) {
-            if (preg_match('/.+\s+?as\s+?.+/im', $select)) {
-                $decodeSelect = explode(" as ", $select);
-                $column = [
-                    "selector" => trim($decodeSelect[0]),
-                    "key" => trim($decodeSelect[1]),
-                ];
-            } else {
-                $column = [
-                    "selector" => $select,
-                    "key" => $select,
-                ];
-            }
+        $this->validatesource();
+        // $column = null;
+        foreach ($picks as $pick) {
+        //     if (preg_match('/.+\s+?as\s+?.+/im', $select)) {
+        //         $decodeSelect = explode(" as ", $select);
+        //         $column = [
+        //             "selector" => trim($decodeSelect[0]),
+        //             "key" => trim($decodeSelect[1]),
+        //         ];
+        //     } else {
+        //         $column = [
+        //             "selector" => $select,
+        //             "key" => $select, "_",
+        //         ];
+        //     }
 
-            if($column === null) {
-                throw new CqueryException("wrong column defined");
-            }
-            $this->addColumnToActiveDom($column);
+            // if($pick === null) {
+            //     throw new CqueryException("wrong column defined");
+            // }
+
+            $this->dom[$this->source]->addDefiner($pick);
         }
 
         return $this;
@@ -69,11 +65,11 @@ class Cquery {
 
     public function from(string $value): Cquery
     {
-        $selector = new SelectorExtractor($value);
+        $selector = new SourceExtractor($value);
 
-        $this->element = $selector->getXpath();
+        $this->source = $selector->getXpath();
 
-        $this->dom[$this->element] = new DomManipulator($this->content, $selector);
+        $this->dom[$this->source] = new DomManipulator($this->content, $selector);
         return $this;
     }
 
@@ -93,27 +89,27 @@ class Cquery {
 
     public function filter(...$filter): Cquery
     {
-        $this->validateElement();
+        $this->validatesource();
 
         $filter = new FilterExtractor($filter);
-        $this->dom[$this->element]->addFilter($filter);
+        $this->dom[$this->source]->addFilter($filter);
 
         return $this;
     }
 
     public function OrFilter(...$filter) : Cquery
     {
-        $this->validateElement();
+        $this->validatesource();
 
         $filter = new FilterExtractor($filter, "or");
-        $this->dom[$this->element]->addFilter($filter);
+        $this->dom[$this->source]->addFilter($filter);
 
         return $this;
     }
 
     public function get() : Collection
     {
-        $this->validateElement();
+        $this->validatesource();
 
         // WHERE CHECKING
         $dom = $this->getActiveDom();
@@ -165,37 +161,33 @@ class Cquery {
         // PROCESS DOM HERE
         $limit = $this->limit;
 
-        foreach ($this->getActiveDom()->getColumn() as $column) {
-            if(preg_match("/^attr(.*,\s?.*)$/is", $column["selector"])){
-                dd(gettype($column));
-            // if($column instanceof AttributeAdapter){
-                preg_match('/^attr\(\s*?(.*?),\s*?.*\)$/is', $column["selector"], $attr);
-                preg_match('/^attr\(\s*?.*\s?,\s*?(.*?)\)$/is', $column["selector"], $pick);
-
-                $cssToXpath = $this->converter->toXPath($dom->getSelector() . " " . $pick[1]);
-                $dom->getCrawler()->filterXPath($cssToXpath)->each(function (Crawler $node, $i) use ($column, $attr, $limit) {
+        foreach ($this->getActiveDom()->getDefiner() as $column) {
+            if($column->getColumn() instanceof AttributeAdapter){
+                $cssToXpath = $this->converter->toXPath($dom->getSelector() . " " . $column->getColumn()->getNode());
+                $dom->getCrawler()->filterXPath($cssToXpath)->each(function (Crawler $node, $i) use ($column, $limit) {
                     if($limit === null) {
-                        $this->results[$this->element][$i][$column["key"]] = $node->attr($attr[1]);
+                        $this->results[$this->source][$i][$column->getAlias()] = $node->attr($column->getColumn()->getRef());
                     } else if ($limit - 1 <= $i) {
-                        $this->results[$this->element][$i][$column["key"]] = $node->attr($attr[1]);
+                        $this->results[$this->source][$i][$column->getAlias()] = $node->attr($column->getColumn()->getRef());
                         return false;
                     }
                 });
             } else {
+                dd($column->getColumn());
                 $columnSelector = str_replace($dom->getSelector()->getAlias(), "", $column["selector"]);
                 $cssToXpath = $this->converter->toXPath($dom->getSelector()." ". trim($columnSelector));
 
                 $dom->getCrawler()->filterXPath($cssToXpath)->each(function (Crawler $node, $i) use ($column, $limit){
                     if ($limit === null) {
-                        $this->results[$this->element][$i][$column["key"]] = $node->text();
+                        $this->results[$this->source][$i][$column["key"]] = $node->text();
                     } else if ($limit - 1 <= $i) {
-                        $this->results[$this->element][$i][$column["key"]] = $node->text();
+                        $this->results[$this->source][$i][$column["key"]] = $node->text();
                         return false;
                     }
                 });
             }
         }
-        return collect($this->results[@$this->element]);
+        return collect($this->results[@$this->source]);
     }
 
     public static function getResultFilter(array $filtered) : array {
@@ -221,6 +213,6 @@ class Cquery {
 
     public function getActiveDom() : DomManipulator
     {
-        return $this->dom[$this->element];
+        return $this->dom[$this->source];
     }
 }

@@ -18,7 +18,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->pick("h1 > p", "a as description", "attr(href, a) as url", "attr(class, a) as class")
             ->first();
 
         $this->assertSame('Title 1', $result['title']);
@@ -97,7 +97,7 @@ final class CquerySimpleHtml1Test extends TestCase
                 ->pick("_el > a > p as title");
         } catch (Exception $e) {
             $this->assertSame(CqueryException::class, get_class($e));
-            $this->assertSame("no element defined", $e->getMessage());
+            $this->assertSame("no source defined", $e->getMessage());
         }
     }
 
@@ -312,6 +312,20 @@ final class CquerySimpleHtml1Test extends TestCase
         $result = $data
             ->from("#lorem .link")
             ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->filter("attr(regex-test, a)", "regex", "/[a-z]+\-[0-9]+\-[a-z]+/im")
+            ->get();
+
+        $this->assertSame(3, $result->count());
+    }
+
+    public function testForNewColumnDefiner()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem .link")
+            ->pick("attr(href, a) as url", "attr(class, a) as class")
             ->filter("attr(regex-test, a)", "regex", "/[a-z]+\-[0-9]+\-[a-z]+/im")
             ->get();
 

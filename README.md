@@ -82,22 +82,22 @@ For example, you have a simple HTML element as shown below.
 Below are the functions you are can use, they may change over time. Right now, nested function doesnt support yet.
 | function | example | description |
 | --------- | ------------- | ------------------ |
-| attr(attrName, selector) | attr(class, .link) | based on the provided example, it will retrieve all class value present on the element/container according to the selector. (.link) |
+| `attr(attrName, selector)` | `attr(class, .link)` | based on the provided example, it will retrieve all class value present on the element/container according to the selector. (.link) |
 
 
 #### How to use filter
 
 | operator | example | description |
 | --------- | ------------- | ------------------ |
-| = | filter("attr(id, a)", "=", "99") | retrieve data according to elements that only have the same id attribute = 99 |
-| < | filter("attr(id, a)", "<", 99) | retrieve data according to elements that only have values smaller than 99 |
-| <= | filter("attr(id, a)", "<=", 99) | get data from elements with values that are lesser than or equal to 99 |
-| > | filter("attr(id, a)", ">", 99) |  get data from elements with values that are greater than 99 |
-| >= | filter("attr(id, a)", ">=", 99) |  Get data from elements with values that are greater than or equal 99 |
-| (<> or !=) | filter("attr(id, a)", "!=", 99) |  get data from elements that are not equal to 99 |
-| has | filter("attr(class, a)", "has", "foo") | get data from elements that only have class "foo" |
-| regex | filter("attr(class, a)", "regex", "/[a-z]+\-[0-9]+\-[a-z]+/im") | get data from elements that match the given regex pattern only, with the provided pattern being (a-192-ab, b-12-ac, zx-1223-ac) |
-| like | filter("attr(class, a)", "like", "%foo%") <br><br> filter("attr(class, a)", "like", "%foo") <br><br> ->filter("attr(class, a)", "like", "foo%") | retrieve data according to elements and value criteria. <br><br> %foo% = anything containing the phrase "foo" <br><br> foo% = all sentences starting with "foo" <br><br> %foo = all sentences ending with "foo"|
+| = | `filter("attr(id, a)", "=", "99")` | retrieve data according to elements that only have the same id attribute = 99 |
+| < | `filter("attr(id, a)", "<", 99)` | retrieve data according to elements that only have values smaller than 99 |
+| <= | `filter("attr(id, a)", "<=", 99)` | get data from elements with values that are lesser than or equal to 99 |
+| > | `filter("attr(id, a)", ">", 99)` |  get data from elements with values that are greater than 99 |
+| >= | `filter("attr(id, a)", ">=", 99)` |  Get data from elements with values that are greater than or equal 99 |
+| (<> or !=) | `filter("attr(id, a)", "!=", 99)` |  get data from elements that are not equal to 99 |
+| has | `filter("attr(class, a)", "has", "foo")` | get data from elements that only have class "foo" |
+| regex | `filter("attr(class, a)", "regex", "/[a-z]+\-[0-9]+\-[a-z]+/im")` | get data from elements that match the given regex pattern only, with the provided pattern being (a-192-ab, b-12-ac, zx-1223-ac) |
+| like | `filter("attr(class, a)", "like", "%foo%")` <br><br> `filter("attr(class, a)", "like", "%foo")` <br><br> `filter("attr(class, a)", "like", "foo%")` | retrieve data according to elements and value criteria. <br><br> %foo% = anything containing the phrase "foo" <br><br> foo% = all sentences starting with "foo" <br><br> %foo = all sentences ending with "foo"|
 ---
 
 

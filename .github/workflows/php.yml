@@ -18,7 +18,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.4
+          php-version: 7.2
       - uses: php-actions/composer@v6
       - run: echo "Composer dependencies have been installed"
-      - run: vendor/bin/phpunit
+      - run: ./vendor/bin/phpunit --verbose tests

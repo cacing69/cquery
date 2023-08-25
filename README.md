@@ -89,7 +89,7 @@ Below are the functions you are can use, they may change over time. Right now, n
 
 | operator | example | description |
 | --------- | ------------- | ------------------ |
-| = | `filter("attr(id, a)", "=", "99")` | retrieve data according to elements that only have the same id attribute = 99 |
+| = | `filter("h1", "=", "99")` | retrieve data according to elements that only have the same value = 99 |
 | < | `filter("attr(id, a)", "<", 99)` | retrieve data according to elements that only have values smaller than 99 |
 | <= | `filter("attr(id, a)", "<=", 99)` | get data from elements with values that are lesser than or equal to 99 |
 | > | `filter("attr(id, a)", ">", 99)` |  get data from elements with values that are greater than 99 |

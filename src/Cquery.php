@@ -122,12 +122,16 @@ class Cquery {
                 "and" => [],
                 "or" => [],
             ];
+
             foreach ($dom->getFilter() as $key => $value) {
                 $cssToXpathWhere = $this->converter->toXPath($dom->getSelector()->getValue() . $value->getNode());
-                $dom->getCrawler()->filterXPath($cssToXpathWhere)->each(function (Crawler $node, $i) use (&$_affect, $key, $value) {
+                $dom->getCrawler()->filterXPath($cssToXpathWhere)->each(function (Crawler $node, $i) use (&$_affect, &$_remove, $key, $value) {
                     if ($value instanceof FilterAttributeAdapter) {
-                        if (preg_match($value->getPattern(), $node->attr($value->getRef()))) { // regex khusus like %vip%
-                            $_affect[$value->getOperator()][$key][] = $i;
+                        // dd($value->getPattern(), $value->getRef());
+                        if($node->attr($value->getRef()) !== null) {
+                            if (preg_match($value->getPattern(), $node->attr($value->getRef()))) {
+                                $_affect[$value->getOperator()][$key][] = $i;
+                            }
                         }
                     }
                 });
@@ -135,12 +139,18 @@ class Cquery {
 
             $_filtered = $this->getResultFilter($_affect);
 
-            $dom->getCrawler()->filterXPath($dom->getSelector()->getXpath())->each(function (Crawler $crawler, $i) use ($_filtered) {
-                if (!in_array($i, $_filtered)) {
-                    $node = $crawler->getNode(0);
-                    $node->parentNode->removeChild($node);
-                }
-            });
+            if(count($_filtered) === 0) {
+                return collect([]);
+            }
+
+            if(count($_filtered) > 0){
+                $dom->getCrawler()->filterXPath($dom->getSelector()->getXpath())->each(function (Crawler $crawler, $i) use ($_filtered) {
+                    if (!in_array($i, $_filtered)) {
+                        $node = $crawler->getNode(0);
+                        $node->parentNode->removeChild($node);
+                    }
+                });
+            }
         }
 
         // PROCESS DOM HERE

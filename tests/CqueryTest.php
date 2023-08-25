@@ -95,7 +95,7 @@ final class CqueryTest extends TestCase
         try {
             $query = $data
                 ->pick("_el > a > p as title");
-        } catch (Exception $e) { //Not catching a generic Exception or the fail function is also catched
+        } catch (Exception $e) {
             $this->assertSame(CqueryException::class, get_class($e));
             $this->assertSame("no element defined", $e->getMessage());
         }
@@ -128,7 +128,48 @@ final class CqueryTest extends TestCase
             ->filter("attr(class, a)", "like", "%vip%")
             ->filter("attr(class, a)", "like", "%blocked%")
             ->filter("attr(class, a)", "like", "%super%")
-            // ->OrFilter("attr(class, a)", "like", "%blocked%")
+            ->get();
+
+        $this->assertSame(1, count($result));
+    }
+
+    public function testFilterWithEqualSign()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem .link")
+            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->filter("attr(class, a)", "=", "test-1-item")
+            ->get();
+
+        $this->assertSame(1, count($result));
+    }
+
+    public function testWithWrongFilterAttribute()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem .link")
+            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->filter("attr(ref-id, a)", "=", "23")
+            ->get();
+
+        $this->assertSame(0, count($result));
+    }
+
+    public function testWithRefIdAttribute()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem .link")
+            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->filter("attr(ref-id, h1)", "=", "23")
             ->get();
 
         $this->assertSame(1, count($result));

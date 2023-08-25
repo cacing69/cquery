@@ -12,7 +12,6 @@ final class FilterAttributeAdapterTest extends TestCase
         $attribute = new FilterAttributeAdapter(["attr(class, a)", "like", "%vip%"]);
         $attribute->transform();
 
-        // $this->assertSame("attr(class, a) like '%vip%'", $attribute->getRaw());
         $this->assertSame(["attr(class, a)", "like", "%vip%"], $attribute->getFilter());
         $this->assertSame("class", $attribute->getRef());
         $this->assertSame("attribute", $attribute->getRefType());

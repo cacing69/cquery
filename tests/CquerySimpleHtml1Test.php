@@ -18,7 +18,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick("h1 > p", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
             ->first();
 
         $this->assertSame('Title 1', $result['title']);

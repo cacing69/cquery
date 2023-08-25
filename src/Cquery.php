@@ -173,14 +173,14 @@ class Cquery {
                     }
                 });
             } else {
-                $columnSelector = str_replace($dom->getSelector()->getAlias(), "", $column["selector"]);
+                $columnSelector = str_replace($dom->getSelector()->getAlias(), " ", $column->getColumn());
                 $cssToXpath = $this->converter->toXPath($dom->getSelector()." ". trim($columnSelector));
 
                 $dom->getCrawler()->filterXPath($cssToXpath)->each(function (Crawler $node, $i) use ($column, $limit){
                     if ($limit === null) {
-                        $this->results[$this->source][$i][$column["key"]] = $node->text();
+                        $this->results[$this->source][$i][$column->getAlias()] = $node->text();
                     } else if ($limit - 1 <= $i) {
-                        $this->results[$this->source][$i][$column["key"]] = $node->text();
+                        $this->results[$this->source][$i][$column->getAlias()] = $node->text();
                         return false;
                     }
                 });

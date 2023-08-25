@@ -27,44 +27,44 @@ For example, you have a simple HTML element as shown below.
   <body>
     <span id="lorem">
       <div class="link valid">
-        <h1 ref-id="23" data-link-from-source="/url-1" id="title-id-1" class="class-title-1">Title 1</h1>
+        <h1 data-link-from-source="/url-1" id="title-id-1" class="class-title-1">Title 1</h1>
         <a class="ini vip class-1" data-custom-attr-id="12" href="http://ini-url-1.com">Href Attribute Example 1
         </a>
       </div>
       <div class="link">
-        <h1 id="title-id-2" class="class-title-1">Title 2</h1>
-        <a class="vip class-2 nih" data-custom-attr-id="212" href="http://ini-url-2.com">
+        <h1 ref-id="23" id="title-id-2" class="class-title-1">Title 2</h1>
+        <a class="vip class-2 nih tenied" data-custom-attr-id="212" href="http://ini-url-2.com">
           Href Attribute Example 2
           <p>Lorem pilsum</p>
         </a>
       </div>
       <div class="link">
         <h1 id="title-id-3" class="class-title-1">Title 3</h1>
-        <a class="premium class-3" data-custom-attr-id="122" href="http://ini-url-3.com">Href Attribute Example 4</a>
+        <a class="premium class-3" data-custom-attr-id="122" regex-test="a-abc-ab" href="http://ini-url-3.com">Href Attribute Example 4</a>
       </div>
       <div class="link">
         <h1>Title 11</h1>
-        <a class="vip class-1 super blocked" data-custom-attr-id="132" href="http://ini-url-11.com">Href Attribute Example 78</a>
+        <a class="vip class-1 super blocked" data-custom-attr-id="132" regex-test="a-192-ab" href="http://ini-url-11.com">Href Attribute Example 78</a>
         </div>
       <div class="link">
         <h1>Title 22</h1>
-        <a class="itu class-2 vip blocked" data-custom-attr-id="712" href="http://ini-url-22.com">Href Attribute Example 90</a>
+        <a class="preview itu class-2 vip blocked" data-custom-attr-id="712" regex-test="b-12-ac" href="http://ini-url-22.com">Href Attribute Example 90</a>
       </div>
       <div class="link">
         <h1>Title 323</h1>
-        <a class="premium class-3 blocked" data-custom-attr-id="132" href="http://ini-url-33-1.com">Href Attribute Example 5</a>
+        <a class="nied premium class-3 blocked" data-custom-attr-id="132" href="http://ini-url-33-1.com">Href Attribute Example 5</a>
       </div>
       <div class="link pending">
         <h1>Title 331</h1>
-        <a class="premium class-31" data-custom-attr-id="121" href="http://ini-url-33-2.com">Href Attribute Example 51</a>
+        <a class="premium class-31 ended" data-custom-attr-id="121" regex-test="zx-1223-ac" customer-id="18" href="http://ini-url-33-2.com">Href Attribute Example 51</a>
       </div>
       <div class="link pending">
         <h1>Title 331</h1>
-        <a class="test-1-item" data-custom-attr-id="121" href="http://ini-url-33-2.com">Href Attribute Example 51</a>
+        <a class="test-1-item" data-custom-attr-id="121" customer-id="16" href="http://ini-url-33-2.com">Href Attribute Example 51</a>
       </div>
       <div class="link pending">
-        <h1>Title 339</h1>
-        <a class="premium class-32" data-custom-attr-id="1652" href="http://ini-url-33-0.com">Href Attribute Example 52</a>
+        <h1>12345</h1>
+        <a class="premium class-32 denied" data-custom-attr-id="1652" customer-id="17" href="http://ini-url-33-0.com">Href Attribute Example 52</a>
       </div>
     </span>
     <p>
@@ -82,22 +82,22 @@ For example, you have a simple HTML element as shown below.
 Below are the functions you are can use, they may change over time. Right now, nested function doesnt support yet.
 | function | example | description |
 | --------- | ------------- | ------------------ |
-| attr(attrName, selector) | attr(class, .link) | berdasarkan contoh yang diberikan, akan mengambil semua attribut class yang ada pada elemen/container sesuai dengan selector (.link) |
+| attr(attrName, selector) | attr(class, .link) | based on the provided example, it will retrieve all class value present on the element/container according to the selector. (.link) |
 
 
 #### How to use filter
 
 | operator | example | description |
 | --------- | ------------- | ------------------ |
-| = | ...->filter("attr(id, a)", "=", "99") | ambil data sesuai dengan elemen yang hanya attribut id = 99 |
-| < | ...->filter("attr(id, a)", "<", 99) | ambil data sesuai dengan elemen yang hanya memiliki nilai lebih kecil dari 99 |
-| <= | ...->filter("attr(id, a)", "<=", 99) | ambil data sesuai dengan elemen yang hanya memiliki nilai lebih kecil sama dengan 99 |
-| > | ...->filter("attr(id, a)", ">", 99) |  ambil data sesuai dengan elemen yang hanya memiliki nilai lebih besar dari 99 |
-| >= | ...->filter("attr(id, a)", ">=", 99) |  ambil data sesuai dengan elemen yang hanya memiliki nilai lebih besar sama dengan 99 |
-| (<> or !=) | ...->filter("attr(id, a)", "!=", 99) |  ambil data sesuai dengan elemen yang tidak sama dengan 99 |
-| has | ...->filter("attr(class, a)", "has", "foo") | ambil data sesuai dengan elemen yang hanya memiliki kelas foo |
-| regex | ...->filter("attr(class, a)", "regex", "/[a-z]+\-[0-9]+\-[a-z]+/im") | ambil data sesuai dengan elemen yang hanya memiliki pattern regex, dalam kasus ini pattern yang ingin dicari adalah (a-192-ab, b-12-ac, zx-1223-ac) |
-| like | ...->filter("attr(class, a)", "like", "%foo%") <br><br> ...->filter("attr(class, a)", "like", "%foo") <br><br> ->filter("attr(class, a)", "like", "foo%") | ambil data sesuai dengan elemen dan kriteria value <br><br> %foo% = semua yang mengandung kalimat foo <br><br> foo% = semua kalimat berawalan dengan foo <br><br> %foo = semua kalimat yang berakhiran foo|
+| = | filter("attr(id, a)", "=", "99") | retrieve data according to elements that only have the same id attribute = 99 |
+| < | filter("attr(id, a)", "<", 99) | retrieve data according to elements that only have values smaller than 99 |
+| <= | filter("attr(id, a)", "<=", 99) | get data from elements with values that are lesser than or equal to 99 |
+| > | filter("attr(id, a)", ">", 99) |  get data from elements with values that are greater than 99 |
+| >= | filter("attr(id, a)", ">=", 99) |  Get data from elements with values that are greater than or equal 99 |
+| (<> or !=) | filter("attr(id, a)", "!=", 99) |  get data from elements that are not equal to 99 |
+| has | filter("attr(class, a)", "has", "foo") | get data from elements that only have class "foo" |
+| regex | filter("attr(class, a)", "regex", "/[a-z]+\-[0-9]+\-[a-z]+/im") | get data from elements that match the given regex pattern only, with the provided pattern being (a-192-ab, b-12-ac, zx-1223-ac) |
+| like | filter("attr(class, a)", "like", "%foo%") <br><br> filter("attr(class, a)", "like", "%foo") <br><br> ->filter("attr(class, a)", "like", "foo%") | retrieve data according to elements and value criteria. <br><br> %foo% = anything containing the phrase "foo" <br><br> foo% = all sentences starting with "foo" <br><br> %foo = all sentences ending with "foo"|
 ---
 
 

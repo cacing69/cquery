@@ -1,4 +1,4 @@
-name: php-latest
+name: php-81
 on:
   push:
     branches: [ "main" ]
@@ -20,5 +20,5 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.1
+          php-version: 7.2
       - run: ./vendor/bin/phpunit tests

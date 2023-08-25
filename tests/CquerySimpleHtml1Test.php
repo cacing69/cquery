@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 define("SAMPLE_SIMPLE_1", "src/Samples/sample-simple-1.html");
 
-final class CqueryTest extends TestCase
+final class CquerySimpleHtml1Test extends TestCase
 {
     public function testCollectFirst()
     {
@@ -190,5 +190,17 @@ final class CqueryTest extends TestCase
         $this->assertSame("Href Attribute Example 2 Lorem pilsum", $result["description"]);
         $this->assertSame("http://ini-url-2.com", $result["url"]);
         $this->assertSame("vip class-2 nih", $result["class"]);
+    }
+
+    public function testUsedFilterLength()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem .link")
+            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->filter("length(h1)", "=", "5")
+            ->first();
     }
 }

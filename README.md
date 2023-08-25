@@ -77,6 +77,24 @@ For example, you have a simple HTML element as shown below.
 </html>
 ```
 
+### List function available
+
+Below are the functions you are can use, they may change over time. Right now, nested function doesnt support yet.
+| Location | Vendor | Specification |
+| --------- | ------------- | ------------------ |
+| Germany | [Hetzner](https://www.hetzner.com) | 2 vCPU / 4 GB RAM |
+| Ukraine (Kyiv) | [dc.volia](https://dc.volia.com) | 2 vCPU / 4 GB RAM |
+
+#### How to use filter
+
+| Location | Vendor | Specification |
+| --------- | ------------- | ------------------ |
+| Germany | [Hetzner](https://www.hetzner.com) | 2 vCPU / 4 GB RAM |
+| Ukraine (Kyiv) | [dc.volia](https://dc.volia.com) | 2 vCPU / 4 GB RAM |
+
+---
+
+
 So, let's start scraping this website.
 
 ```php

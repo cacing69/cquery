@@ -173,7 +173,6 @@ class Cquery {
                     }
                 });
             } else {
-                dd($column->getColumn());
                 $columnSelector = str_replace($dom->getSelector()->getAlias(), "", $column["selector"]);
                 $cssToXpath = $this->converter->toXPath($dom->getSelector()." ". trim($columnSelector));
 

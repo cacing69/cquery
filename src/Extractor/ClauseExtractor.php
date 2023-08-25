@@ -2,32 +2,93 @@
 
 declare(strict_types=1);
 namespace Cacing69\Cquery\Extractor;
+use Cacing69\Cquery\Exception\CqueryException;
 
 trait ClauseExtractor
 {
     protected $clause = "and";
     protected $clauseType;
     protected $pattern;
+    protected $callback;
     protected $value;
     final protected function extract($clause, $clauseValue){
+        $this->clause = strtolower(trim($clause));
         if (strtolower(trim($clause)) === "has") {
-            $this->clause = strtolower(trim($clause));
+            $this->clauseType = 'has';
 
-            // search parameter is match with %val%
-            // if (preg_match('/^%.+%$/im', $clauseValue)) {
-            // if (preg_match('/^.+$/im', $clauseValue)) {
-                $this->clauseType = 'has';
-
-                // preg_match('/^%(.*?)%$/is', $clauseValue, $value);
-                $this->value = $clauseValue;
-                // $this->pattern = "/^\s?{$value[1]}|\s{$value[1]}\s|\s{$value[1]}$/im";
-                $this->pattern = "/^\s?{$clauseValue}|\s{$clauseValue}\s|\s{$clauseValue}$/im";
-            // }
-        } else if(trim($clause) === "="){
-            $this->clause = "=";
-            $this->clauseType = 'equals';
             $this->value = $clauseValue;
-            $this->pattern = "/^\s?{$clauseValue}\s?$/im";
+            $this->pattern = "/^\s?{$clauseValue}|\s{$clauseValue}\s|\s{$clauseValue}$/im";
+        } else if(trim($clause) === "="){
+            $this->clauseType = 'equals';
+
+            $this->value = $clauseValue;
+            $this->pattern = "/^{$clauseValue}$/im";
+        } else if(trim($clause) === "like") {
+            if (preg_match('/^%.+%$/im', $clauseValue)) {
+                $this->clauseType = 'contains';
+
+                preg_match('/^%(.*?)%$/is', $clauseValue, $value);
+                $this->value = $value[1];
+                $this->pattern = "/{$value[1]}/im";
+            } else if (preg_match('/^%.+$/im', $clauseValue)) {
+                $this->clauseType = 'end with';
+
+                preg_match('/^%(.*?)$/is', $clauseValue, $value);
+                $this->value = $value[1];
+                $this->pattern = "/.*{$value[1]}$/im";
+            } else if (preg_match('/^.+%$/im', $clauseValue)) {
+                $this->clauseType = 'start with';
+
+                preg_match('/^(.*?)%$/is', $clauseValue, $value);
+                $this->value = $value[1];
+                $this->pattern = "/^{$value[1]}.*/im";
+            }
+        } else if (in_array(trim($clause), ["<", ">", "<=", ">=", "<>", "!="])) {
+            if(!is_numeric($clauseValue)){
+                throw new CqueryException("comparison operator need a numeric value");
+            }
+
+            if (trim($clause) === "<") {
+                $this->clauseType = 'less than';
+                $this->value = $clauseValue;
+
+                $this->callback = function ($e) use ($clauseValue) {
+                    return (int) $e < $clauseValue;
+                };
+            } else if (trim($clause) === ">") {
+                $this->clauseType = 'less than';
+                $this->value = $clauseValue;
+
+                $this->callback = function ($e) use ($clauseValue) {
+                    return (int) $e > $clauseValue;
+                };
+            } else if (trim($clause) === "<=") {
+                $this->clauseType = 'less than equal';
+                $this->value = $clauseValue;
+
+                $this->callback = function ($e) use ($clauseValue) {
+                    return (int) $e <= $clauseValue;
+                };
+            } else if (trim($clause) === ">=") {
+                $this->clauseType = 'greater than equal';
+                $this->value = $clauseValue;
+
+                $this->callback = function ($e) use ($clauseValue) {
+                    return (int) $e >= $clauseValue;
+                };
+            } else if (in_array(trim($clause), ["<>", "!="])) {
+                $this->clauseType = 'not equal';
+                $this->value = $clauseValue;
+
+                $this->callback = function ($e) use ($clauseValue) {
+                    return (int) $e !== $clauseValue;
+                };
+            }
+        } if(trim($clause) === "regex"){
+            $this->clauseType = 'regex';
+
+            $this->value = $clauseValue;
+            $this->pattern = $clauseValue;
         }
 
         return $this;
@@ -46,6 +107,11 @@ trait ClauseExtractor
     public function getPattern()
     {
         return $this->pattern;
+    }
+
+    public function getCallback()
+    {
+        return $this->callback;
     }
 
     public function getValue(): string

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Cacing69\Cquery;
 
+use Cacing69\Cquery\Adapter\AttributeAdapter;
 use Cacing69\Cquery\Adapter\FilterAttributeAdapter;
 use Cacing69\Cquery\Exception\CqueryException;
 use Cacing69\Cquery\Extractor\FilterExtractor;
@@ -127,10 +128,18 @@ class Cquery {
                 $cssToXpathWhere = $this->converter->toXPath($dom->getSelector()->getValue() . $value->getNode());
                 $dom->getCrawler()->filterXPath($cssToXpathWhere)->each(function (Crawler $node, $i) use (&$_affect, &$_remove, $key, $value) {
                     if ($value instanceof FilterAttributeAdapter) {
-                        // dd($value->getPattern(), $value->getRef());
                         if($node->attr($value->getRef()) !== null) {
-                            if (preg_match($value->getPattern(), $node->attr($value->getRef()))) {
-                                $_affect[$value->getOperator()][$key][] = $i;
+                            if($value->getPattern()) {
+                                if (preg_match($value->getPattern(), $node->attr($value->getRef()))) {
+                                    $_affect[$value->getOperator()][$key][] = $i;
+                                }
+                            }
+
+                            if ($value->getCallback() !== null) {
+                                $callback = $value->getCallback();
+                                if($callback($node->attr($value->getRef()))) {
+                                    $_affect[$value->getOperator()][$key][] = $i;
+                                }
                             }
                         }
                     }
@@ -158,6 +167,8 @@ class Cquery {
 
         foreach ($this->getActiveDom()->getColumn() as $column) {
             if(preg_match("/^attr(.*,\s?.*)$/is", $column["selector"])){
+                dd(gettype($column));
+            // if($column instanceof AttributeAdapter){
                 preg_match('/^attr\(\s*?(.*?),\s*?.*\)$/is', $column["selector"], $attr);
                 preg_match('/^attr\(\s*?.*\s?,\s*?(.*?)\)$/is', $column["selector"], $pick);
 

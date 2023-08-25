@@ -80,18 +80,24 @@ For example, you have a simple HTML element as shown below.
 ### List function available
 
 Below are the functions you are can use, they may change over time. Right now, nested function doesnt support yet.
-| Location | Vendor | Specification |
+| function | example | description |
 | --------- | ------------- | ------------------ |
-| Germany | [Hetzner](https://www.hetzner.com) | 2 vCPU / 4 GB RAM |
-| Ukraine (Kyiv) | [dc.volia](https://dc.volia.com) | 2 vCPU / 4 GB RAM |
+| attr(attrName, selector) | attr(class, .link) | berdasarkan contoh yang diberikan, akan mengambil semua attribut class yang ada pada elemen/container sesuai dengan selector (.link) |
+
 
 #### How to use filter
 
-| Location | Vendor | Specification |
+| operator | example | description |
 | --------- | ------------- | ------------------ |
-| Germany | [Hetzner](https://www.hetzner.com) | 2 vCPU / 4 GB RAM |
-| Ukraine (Kyiv) | [dc.volia](https://dc.volia.com) | 2 vCPU / 4 GB RAM |
-
+| = | ...->filter("attr(id, a)", "=", "99") | ambil data sesuai dengan elemen yang hanya attribut id = 99 |
+| < | ...->filter("attr(id, a)", "<", 99) | ambil data sesuai dengan elemen yang hanya memiliki nilai lebih kecil dari 99 |
+| <= | ...->filter("attr(id, a)", "<=", 99) | ambil data sesuai dengan elemen yang hanya memiliki nilai lebih kecil sama dengan 99 |
+| > | ...->filter("attr(id, a)", ">", 99) |  ambil data sesuai dengan elemen yang hanya memiliki nilai lebih besar dari 99 |
+| >= | ...->filter("attr(id, a)", ">=", 99) |  ambil data sesuai dengan elemen yang hanya memiliki nilai lebih besar sama dengan 99 |
+| (<> or !=) | ...->filter("attr(id, a)", "!=", 99) |  ambil data sesuai dengan elemen yang tidak sama dengan 99 |
+| has | ...->filter("attr(class, a)", "has", "foo") | ambil data sesuai dengan elemen yang hanya memiliki kelas foo |
+| regex | ...->filter("attr(class, a)", "regex", "/[a-z]+\-[0-9]+\-[a-z]+/im") | ambil data sesuai dengan elemen yang hanya memiliki pattern regex, dalam kasus ini pattern yang ingin dicari adalah (a-192-ab, b-12-ac, zx-1223-ac) |
+| like | ...->filter("attr(class, a)", "like", "%foo%") <br><br> ...->filter("attr(class, a)", "like", "%foo") <br><br> ->filter("attr(class, a)", "like", "foo%") | ambil data sesuai dengan elemen dan kriteria value <br><br> %foo% = semua yang mengandung kalimat foo <br><br> foo% = semua kalimat berawalan dengan foo <br><br> %foo = semua kalimat yang berakhiran foo|
 ---
 
 

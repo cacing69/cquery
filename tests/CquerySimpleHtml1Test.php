@@ -189,7 +189,133 @@ final class CquerySimpleHtml1Test extends TestCase
         $this->assertSame("Title 2", $result["title"]);
         $this->assertSame("Href Attribute Example 2 Lorem pilsum", $result["description"]);
         $this->assertSame("http://ini-url-2.com", $result["url"]);
-        $this->assertSame("vip class-2 nih", $result["class"]);
+        $this->assertSame("vip class-2 nih tenied", $result["class"]);
+    }
+
+    public function testWithLikeContains()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem .link")
+            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->filter("attr(class, a)", "like", "%ni%")
+            ->get();
+
+        $this->assertSame(4, $result->count());
+    }
+
+    public function testWithLikeStartWith()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem .link")
+            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->filter("attr(class, a)", "like", "pre%")
+            ->get();
+
+        $this->assertSame(4, $result->count());
+    }
+
+    public function testWithLikeEndWith()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem .link")
+            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->filter("attr(class, a)", "like", "%ed")
+            ->get();
+
+        $this->assertSame(6, $result->count());
+    }
+
+    public function testWithLikeEndWithNied()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem .link")
+            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->filter("attr(class, a)", "like", "%nied")
+            ->get();
+
+        $this->assertSame(2, $result->count());
+    }
+
+    public function testWithLessThan()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem .link")
+            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->filter("attr(customer-id, a)", "<", 18)
+            ->get();
+
+        $this->assertSame(2, $result->count());
+    }
+
+    public function testWithLessThanEqual()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem .link")
+            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->filter("attr(customer-id, a)", "<", 18)
+            ->get();
+
+        $this->assertSame(2, $result->count());
+    }
+
+    public function testWithGreaterThan()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem .link")
+            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->filter("attr(customer-id, a)", ">", 16)
+            ->get();
+
+        $this->assertSame(2, $result->count());
+    }
+
+    public function testWithGreaterThanEquals()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem .link")
+            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->filter("attr(customer-id, a)", ">=", 16)
+            ->get();
+
+        $this->assertSame(3, $result->count());
+    }
+
+    public function testWithRegex()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem .link")
+            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->filter("attr(regex-test, a)", "regex", "/[a-z]+\-[0-9]+\-[a-z]+/im")
+            ->get();
+
+        $this->assertSame(3, $result->count());
     }
 
     // public function testUsedFilterLength()

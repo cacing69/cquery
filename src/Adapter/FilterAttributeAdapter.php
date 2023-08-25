@@ -11,11 +11,8 @@ class FilterAttributeAdapter extends AttributeAdapter{
     use HasSelectorProperty;
     use HasOperatorProperty;
     use ClauseExtractor;
+    private $sign = "attr(attrName, selector)";
     private $filter;
-    // private $clause;
-    // private $clauseType;
-    // private $pattern;
-    // private $value;
 
     public function __construct(array $raw)
     {

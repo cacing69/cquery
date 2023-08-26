@@ -11,7 +11,7 @@ use Tightenco\Collect\Support\Collection;
 class Cquery extends Loader{
     private $loader;
 
-    public function __construct(string $content = null, string $encoding = "UTF-8")
+    public function __construct(string $content = null, $contentType = "html", string $encoding = "UTF-8")
     {
         if($content !== null) {
             $this->loader = new HTMLLoader($content);
@@ -73,7 +73,7 @@ class Cquery extends Loader{
 
     public function setContent(string $args)
     {
-        $this->content = $args;
+        $this->loader->setContent($args);
         return $this;
     }
 }

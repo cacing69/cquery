@@ -8,6 +8,7 @@ Let's play for a moment and figure out how to make website scraping easier, much
 
 Please keep in mind that I haven't yet reached a beta/stable release for this library, so the available features are still very limited.
 
+I would greatly accept any support/contribution from everyone. See [CONTRIBUTING.md](CONTRIBUTING.md) for help getting started.
 ## Quick Installation
 
 ```bash

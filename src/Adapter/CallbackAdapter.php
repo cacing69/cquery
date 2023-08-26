@@ -7,7 +7,6 @@ use Cacing69\Cquery\Trait\HasOperatorProperty;
 use Cacing69\Cquery\Trait\HasCriteriaProperty;
 use Cacing69\Cquery\Trait\HasExtractMethod;
 use Cacing69\Cquery\Trait\HasClauseProperty;
-use Cacing69\Cquery\Extractor\ClauseExtractorV2;
 use Cacing69\Cquery\Trait\HasSelectorProperty;
 use Cacing69\Cquery\Trait\HasFilterProperty;
 

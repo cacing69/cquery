@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Cacing69\Cquery\Trait;
 
 use Cacing69\Cquery\Exception\CqueryException;
+use Cacing69\Cquery\Support\CqueryRegex;
 
 trait HasExtractMethod
 {
@@ -19,9 +20,7 @@ trait HasExtractMethod
                 return $this->criteria === $value;
             }
         } else if($this->clause === "regex"){
-            $this->clauseType = "regex pattern";
-
-            // dd($this, $value);
+            $this->clauseType = "regular expressions";
 
             if($value === null) {
                 return false;
@@ -50,19 +49,12 @@ trait HasExtractMethod
         } else if ($this->clause === "<") {
             $this->clauseType = "less than";
             $criteria = $this->criteria;
-            // dd($this);
-            // dump(gettype($this->criteria), gettype($value));
-            // return (int) $this->criteria < (int) $value;
-            // $fn = fu/nction ($criteria, $value) {
-                // echo "{$value} < {$criteria} = " . ($value < $criteria) .strlen($value)."\n";
-                if($value === null) {
-                    return false;
-                } else {
-                    return (int) $value < (int) $criteria;
-                }
-            // };
 
-            // return $fn($this->criteria, $value);
+            if($value === null) {
+                return false;
+            } else {
+                return (int) $value < (int) $criteria;
+            }
         } else if ($this->clause === "<=") {
             $this->clauseType = "less than equals";
 
@@ -73,29 +65,25 @@ trait HasExtractMethod
             }
 
         } else if ($this->clause === "like") {
-            if (preg_match('/^%.+%$/im', $this->criteria)) {
+            if (preg_match(CqueryRegex::IS_FILTER_LIKE_CONTAINS_VALUE, $this->criteria)) {
                 $this->clauseType = "contains value '{$this->criteria}'";
 
-                preg_match('/^%(.*?)%$/is', $this->criteria, $extract);
+                preg_match(CqueryRegex::EXTRACT_FIRST_PARAM_FILTER_LIKE_CONTAINS_VALUE, $this->criteria, $extract);
 
-                // dd($value, $extract, $this->criteria);
-                // $this->value = $value[1];
                 return preg_match("/{$extract[1]}/im", $value);
-
-            } else if (preg_match('/^%.+$/im', $this->criteria)) {
+            } else if (preg_match(CqueryRegex::IS_FILTER_LIKE_END_WITH, $this->criteria)) {
                 $this->clauseType = "end with '{$this->criteria}'";
 
-                preg_match('/^%(.*?)$/is', $this->criteria, $extract);
-                // $this->value = $value[1];
+                preg_match(CqueryRegex::EXTRACT_FIRST_PARAM_FILTER_LIKE_END_WITH, $this->criteria, $extract);
+
                 return preg_match("/.*{$extract[1]}$/im", $value);
-            } else if (preg_match('/^.+%$/im', $this->criteria)) {
+            } else if (preg_match(CqueryRegex::IS_FILTER_LIKE_START_WITH, $this->criteria)) {
                 $this->clauseType = "start with '{$this->criteria}'";
 
-                preg_match('/^(.*?)%$/is', $this->criteria, $extract);
-                // $this->value = $value[1];
+                preg_match(CqueryRegex::EXTRACT_FIRST_PARAM_FILTER_LIKE_START_WITH, $this->criteria, $extract);
+
                 return preg_match("/^{$extract[1]}.*/im", $value);
             }
-            // $this->clauseType < "less than equals";
 
             return  $value > $this->criteria;
         } else if (in_array($this->clause, ["<>", "!=", "!=="])) {

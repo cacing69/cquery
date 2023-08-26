@@ -3,6 +3,7 @@
 declare(strict_types=1);
 namespace Cacing69\Cquery\Extractor;
 
+use Cacing69\Cquery\Support\CqueryRegex;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 
 class SourceExtractor
@@ -17,9 +18,9 @@ class SourceExtractor
 
         $this->raw = $init;
         $css = new CssSelectorConverter();
-        if (preg_match('/\s*?\(\s*?.*\s*?\)\s+as\s+.*$/is', $init)) {
-            preg_match('/^\s*?\(\s*(.*)\)\s+as\s+.*$/is', $init, $value);
-            preg_match('/^\s*?\(\s*.*\s+as\s+(.*)$/is', $init, $alias);
+        if (preg_match(CqueryRegex::IS_SOURCE_HAVE_ALIAS, $init)) {
+            preg_match(CqueryRegex::EXTRACT_FIRST_PARAM_SOURCE_HAVE_ALIAS, $init, $value);
+            preg_match(CqueryRegex::EXTRACT_SECOND_PARAM_SOURCE_HAVE_ALIAS, $init, $alias);
 
             $this->value = $value[1];
             $this->alias = $alias[1];

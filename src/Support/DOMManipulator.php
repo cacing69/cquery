@@ -15,7 +15,6 @@ class DOMManipulator {
     use HasSelectorProperty;
     private $crawler;
     private $definer = [];
-    // private $definerV2 = [];
     private $results = [];
     private $filter = [];
     private $limit = null;
@@ -30,9 +29,9 @@ class DOMManipulator {
     {
         $adapter = null;
 
-        if(preg_match('/^attr\(.*\s?,\s.*\s?\)$/', $filter[0])) {
+        if(preg_match(CqueryRegex::IS_ATTRIBUTE, $filter[0])) {
             $adapter = new AttributeCallbackAdapter($filter[0], $this->selector);
-        } else if (preg_match("/^length(\s?.*\s?)$/is", $filter[0])) {
+        } else if (preg_match(CqueryRegex::IS_LENGTH, $filter[0])) {
             $adapter = new LengthCallbackAdapter($filter[0], $this->selector);
         } else {
             $adapter = new DefaultCallbackAdapter($filter[0], $this->selector);
@@ -53,22 +52,11 @@ class DOMManipulator {
     {
         return $this->crawler;
     }
-
-    // public function addDefiner($definer)
-    // {
-    //     array_push($this->definer, new ColumnExtractor($definer));
-    //     return $this;
-    // }
     public function addDefiner($definer)
     {
-        // dd($definer);
         array_push($this->definer, new DefinerExtractor($definer, $this->selector));
         return $this;
     }
-    // public function getDefiner()
-    // {
-    //     return $this->definer;
-    // }
 
     public function getDefiner()
     {

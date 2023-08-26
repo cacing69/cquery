@@ -6,7 +6,7 @@ namespace Cacing69\Cquery\Loader;
 
 use Tightenco\Collect\Support\Collection;
 
-abstract class AbstractLoader
+abstract class Loader
 {
     protected $limit = null;
 

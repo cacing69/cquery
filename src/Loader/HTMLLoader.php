@@ -5,7 +5,7 @@ namespace Cacing69\Cquery\Loader;
 use Cacing69\Cquery\Support\DOMManipulator;
 use Tightenco\Collect\Support\Collection;
 
-class HTMLLoader extends AbstractLoader
+class HTMLLoader extends Loader
 {
     private $dom = [];
 

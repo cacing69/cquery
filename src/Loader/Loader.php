@@ -25,6 +25,7 @@ abstract class Loader
     abstract protected function validateSource();
     abstract public function pick(string ...$pick);
     abstract public function from(string $value);
+    abstract public function setContent(string $value);
 
     public function first()
     {

@@ -2,7 +2,10 @@
 declare(strict_types = 1);
 namespace Cacing69\Cquery\Loader;
 
+use Cacing69\Cquery\Exception\CqueryException;
+use Cacing69\Cquery\Extractor\SourceExtractor;
 use Cacing69\Cquery\Support\DOMManipulator;
+use Symfony\Component\DomCrawler\Crawler;
 use Tightenco\Collect\Support\Collection;
 
 class HTMLLoader extends Loader
@@ -14,6 +17,13 @@ class HTMLLoader extends Loader
         if ($content !== null) {
             $this->content = $content;
         }
+    }
+
+    public function setContent(string $content)
+    {
+        $this->content = $content;
+
+        return $this;
     }
 
     protected function validateSource()

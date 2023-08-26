@@ -79,10 +79,11 @@ For example, you have a simple HTML element as shown below.
 
 ### List function available
 
-Below are the functions you are can use, they may change over time. Right now, nested function doesnt support yet.
+Below are the functions you are can use, they may change over time. <br>**Note:** nested function doesn't support yet.
 | function | example | description |
 | --------- | ------------- | ------------------ |
-| `attr(attrName, selector)` | `attr(class, .link)` | based on the provided example, it will retrieve all class value present on the element/container according to the selector. (.link) |
+| `attr(attrName, selector)` | `attr(class, .link)` |  will retrieve all class value present on the element/container according to the selector. (.link) |
+| `legnth(selector)` | `length(h1)` | will retrieve all length string on the element/container according to the selector. (h1) |
 
 
 #### How to use filter

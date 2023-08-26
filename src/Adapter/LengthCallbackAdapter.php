@@ -8,7 +8,6 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class LengthCallbackAdapter extends CallbackAdapter
 {
-    // use HasFilterProperty;
     public function __construct(string $raw, SourceExtractor $source = null)
     {
         $this->raw = $raw;

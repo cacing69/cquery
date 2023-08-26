@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Cacing69\Cquery;
 
 use Cacing69\Cquery\Exception\CqueryException;
-use Cacing69\Cquery\Extractor\FilterExtractor;
 use Cacing69\Cquery\Extractor\SourceExtractor;
 use Cacing69\Cquery\Support\DOMManipulator;
 use Symfony\Component\DomCrawler\Crawler;
@@ -42,9 +41,6 @@ class Cquery {
     public function from(string $value): Cquery
     {
         $selector = new SourceExtractor($value);
-
-        // dd($selector);
-
         $this->source = $selector->getXpath();
 
         $this->dom[$this->source] = new DOMManipulator($this->content, $selector);
@@ -68,10 +64,6 @@ class Cquery {
     public function filter(...$filter): Cquery
     {
         $this->validateSource();
-
-        // $filter = new FilterExtractor($filter);
-        // $filter = new FilterExtractorV2($filter);
-        // dd($filter);
         $this->dom[$this->source]->addFilter($filter, "and");
 
         return $this;
@@ -79,18 +71,7 @@ class Cquery {
 
     public function OrFilter(...$filter) : Cquery
     {
-        // $this->validateSource();
-
-        // $filter = new FilterExtractor($filter, "or");
-        // $this->dom[$this->source]->addFilter($filter);
-
-        // return $this;
-
         $this->validateSource();
-
-        // $filter = new FilterExtractor($filter);
-        // $filter = new FilterExtractorV2($filter);
-        // dd($filter);
         $this->dom[$this->source]->addFilter($filter, "or");
 
         return $this;
@@ -109,55 +90,14 @@ class Cquery {
             ];
 
             foreach ($dom->getFilter() as $key => $value) {
-                // $cssToXpathWhere = $this->converter->toXPath($dom->getSelector()->getXpath());
-                // if(get_class($value) === DefaultCallbackAdapter::class) {
-                    $dom->getCrawler()->filterXPath($dom->getSelector()->getXpath())->each(function (Crawler $node, $index) use (&$_affect, $key, $value) {
-
-                        // dd($callback($node);
-                        $node->filter($value->getNode())->each(function (Crawler $childNode) use (&$_affect, $key, $value, $index) {
-                            $callback = $value->getCallback();
-                            if ($value->extract($callback($childNode))) {
-                                $_affect[$value->getOperator()][$key][] = $index;
-                            }
-                        });
-
-                        // if($callback($node) === $value->getFilter()[2])  {
-                        //     $_affect[$value->getOperator()][$key][] = $index;
-                        // }
+                $dom->getCrawler()->filterXPath($dom->getSelector()->getXpath())->each(function (Crawler $node, $index) use (&$_affect, $key, $value) {
+                    $node->filter($value->getNode())->each(function (Crawler $childNode) use (&$_affect, $key, $value, $index) {
+                        $callback = $value->getCallback();
+                        if ($value->extract($callback($childNode))) {
+                            $_affect[$value->getOperator()][$key][] = $index;
+                        }
                     });
-                // } else {
-
-                // }
-                // $cssToXpathWhere = $this->converter->toXPath($dom->getSelector()->getValue() ." ". $value->getNode());
-                // // dd($dom->getSelector()->getValue(), $value->getNode());
-                // $selectElement = $dom->getCrawler()->filterXPath($cssToXpathWhere);
-                // // dd($selectElement);
-                // $selectElement->each(function (Crawler $node, $i) use (&$_affect, $key, $value) {
-                //     if ($value instanceof FilterAttributeAdapter) {
-                //         if($node->attr($value->getRef()) !== null) {
-                //             if($value->getPattern()) {
-                //                 if (preg_match($value->getPattern(), $node->attr($value->getRef()))) {
-                //                     $_affect[$value->getOperator()][$key][] = $i;
-                //                 }
-                //             }
-
-                //             if ($value->getCallback() !== null) {
-                //                 $callback = $value->getCallback();
-                //                 if($callback($node->attr($value->getRef()))) {
-                //                     $_affect[$value->getOperator()][$key][] = $i;
-                //                 }
-                //             }
-                //         }
-                //     } else if ($value instanceof FilterLengthAdapter) {
-
-                //         if ($value->getCallback() !== null) {
-                //             $callback = $value->getCallback();
-                //             if ($callback($node->attr($value->getRef()), $value->getOperator())) {
-                //                 $_affect[$value->getOperator()][$key][] = $i;
-                //             }
-                //         }
-                //     }
-                // });
+                });
             }
 
             $_filtered = $this->getResultFilter($_affect);
@@ -196,31 +136,6 @@ class Cquery {
                     return false;
                 }
             });
-
-            // OLD VESION HERE, ITS OK, BUT CANT HANDLE DYNAMIC FUNCTION
-            // if($column->getColumn() instanceof AttributeAdapter){
-            //     $cssToXpath = $this->converter->toXPath($dom->getSelector() . " " . $column->getColumn()->getNode());
-            //     $dom->getCrawler()->filterXPath($cssToXpath)->each(function (Crawler $node, $i) use ($column, $limit) {
-            //         if($limit === null) {
-            //             $this->results[$this->source][$i][$column->getAlias()] = $node->attr($column->getColumn()->getRef());
-            //         } else if ($limit - 1 <= $i) {
-            //             $this->results[$this->source][$i][$column->getAlias()] = $node->attr($column->getColumn()->getRef());
-            //             return false;
-            //         }
-            //     });
-            // } else {
-            //     $columnSelector = str_replace($dom->getSelector()->getAlias(), " ", $column->getColumn());
-            //     $cssToXpath = $this->converter->toXPath($dom->getSelector()." ". trim($columnSelector));
-
-            //     $dom->getCrawler()->filterXPath($cssToXpath)->each(function (Crawler $node, $i) use ($column, $limit){
-            //         if ($limit === null) {
-            //             $this->results[$this->source][$i][$column->getAlias()] = $node->text();
-            //         } else if ($limit - 1 <= $i) {
-            //             $this->results[$this->source][$i][$column->getAlias()] = $node->text();
-            //             return false;
-            //         }
-            //     });
-            // }
         }
 
         return collect($this->results[@$this->source]);

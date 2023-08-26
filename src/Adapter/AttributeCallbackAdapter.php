@@ -3,7 +3,6 @@ declare(strict_types = 1);
 namespace Cacing69\Cquery\Adapter;
 
 use Cacing69\Cquery\Extractor\SourceExtractor;
-use Cacing69\Cquery\Trait\HasFilterProperty;
 use Symfony\Component\DomCrawler\Crawler;
 
 class AttributeCallbackAdapter extends CallbackAdapter

@@ -26,13 +26,6 @@ class DOMManipulator {
         $this->selector = $selector;
     }
 
-    // public function addFilter($filter)
-    // {
-    //     $this->filter[] = $filter
-    //                         ->setSelector($this->selector)
-    //                         ->extract();
-    // }
-
     public function addFilter($filter, $operator = "and")
     {
         $adapter = null;

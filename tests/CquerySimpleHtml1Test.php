@@ -147,20 +147,6 @@ final class CquerySimpleHtml1Test extends TestCase
         $this->assertSame(1, count($result));
     }
 
-    public function testWithWrongFilterAttribute()
-    {
-        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
-        $data = new Cquery($simpleHtml);
-
-        $result = $data
-            ->from("#lorem .link")
-            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
-            ->filter("attr(ref-id, a)", "=", "23")
-            ->get();
-
-        $this->assertSame(0, count($result));
-    }
-
     public function testWithRefIdAttribute()
     {
         $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);

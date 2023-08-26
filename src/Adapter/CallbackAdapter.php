@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Cacing69\Cquery\Adapter;
 use Cacing69\Cquery\Trait\HasOperatorProperty;
+use Cacing69\Cquery\Trait\HasCriteriaProperty;
 use Cacing69\Cquery\Trait\HasExtractMethod;
 use Cacing69\Cquery\Trait\HasClauseProperty;
 use Cacing69\Cquery\Extractor\ClauseExtractorV2;
@@ -17,6 +18,7 @@ abstract class CallbackAdapter
     use HasSelectorProperty;
     use HasClauseProperty;
     use HasExtractMethod;
+    use HasCriteriaProperty;
 
     protected $raw;
     protected $node;

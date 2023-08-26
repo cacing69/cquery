@@ -4,10 +4,11 @@ declare(strict_types=1);
 namespace Cacing69\Cquery;
 
 use Cacing69\Cquery\Loader\HTMLLoader;
+use Cacing69\Cquery\Loader\Loader;
 use Cacing69\Cquery\Support\DOMManipulator;
 use Tightenco\Collect\Support\Collection;
 
-class Cquery {
+class Cquery extends Loader{
     private $loader;
 
     public function __construct(string $content = null, string $encoding = "UTF-8")
@@ -20,7 +21,6 @@ class Cquery {
     public function pick(string ...$picks): Cquery
     {
         $this->loader->pick(...$picks);
-
         return $this;
     }
 
@@ -44,7 +44,6 @@ class Cquery {
     public function filter(...$filter): Cquery
     {
         $this->loader->filter(...$filter);
-
         return $this;
     }
 
@@ -58,6 +57,11 @@ class Cquery {
         return $this->loader->get();
     }
 
+    protected function validateSource()
+    {
+        $this->loader->validateSource();
+    }
+
     public function getActiveSource(): DOMManipulator
     {
         if(get_class($this->loader) === HTMLLoader::class) {
@@ -65,5 +69,11 @@ class Cquery {
         }
 
         return null;
+    }
+
+    public function setContent(string $args)
+    {
+        $this->content = $args;
+        return $this;
     }
 }

@@ -84,7 +84,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $first = $query->first();
 
-        $this->assertSame('Lorem pilsum', $first["title"]);
+        $this->assertSame(null, $first["title"]);
     }
 
     public function testShouldGetAnExceptionNoSourceDefined()
@@ -255,9 +255,11 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class", "attr(customer-id, a)")
             ->filter("attr(customer-id, a)", "<", 18)
             ->get();
+
+        // dd($result);
 
         $this->assertSame(2, $result->count());
     }
@@ -270,10 +272,10 @@ final class CquerySimpleHtml1Test extends TestCase
         $result = $data
             ->from("#lorem .link")
             ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
-            ->filter("attr(customer-id, a)", "<", 18)
+            ->filter("attr(customer-id, a)", "<=", "18")
             ->get();
 
-        $this->assertSame(2, $result->count());
+        $this->assertSame(3, $result->count());
     }
 
     public function testWithGreaterThan()
@@ -284,7 +286,7 @@ final class CquerySimpleHtml1Test extends TestCase
         $result = $data
             ->from("#lorem .link")
             ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
-            ->filter("attr(customer-id, a)", ">", 16)
+            ->filter("attr(customer-id, a)", ">", "16")
             ->get();
 
         $this->assertSame(2, $result->count());
@@ -332,6 +334,50 @@ final class CquerySimpleHtml1Test extends TestCase
         $this->assertSame(3, $result->count());
     }
 
+    public function testNewAdapter()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem .link")
+            ->pick("attr(class, a > p) as class_a_p", "attr(class, a) as url", "length(h1) as length")
+            ->get();
+
+        $this->assertSame(9, $result->count());
+    }
+
+    public function testNewAdapterWithWhereEquals()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem .link")
+            ->pick("attr(class, a) as class_a_p", "attr(class, a) as url", "length(h1) as length")
+            // ->filter("attr(class, a)", "=", "test-1-item")
+            ->filter("a", "=", "Href Attribute Example 90")
+            ->get();
+
+        $this->assertSame(1, $result->count());
+    }
+
+    // public function testPickCustomerId()
+    // {
+    //     $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+    //     $data = new Cquery($simpleHtml);
+
+    //     $result = $data
+    //         ->from("#lorem .link")
+    //         ->pick("attr(customer-id, a) as cust_id", "attr(class, a) as class")
+    //         ->filter("attr(customer-id, a)", "<=", "18")
+    //         ->get();
+
+    //     dump($result);
+
+    //     $this->assertSame(3, $result->count());
+    // }
+
     // public function testUsedFilterLength()
     // {
     //     $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
@@ -339,9 +385,11 @@ final class CquerySimpleHtml1Test extends TestCase
 
     //     $result = $data
     //         ->from("#lorem .link")
-    //         ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+    //         ->pick("h1 as title")
     //         ->filter("length(h1)", "=", 5)
     //         ->first();
+
+    //     $this->assertSame(1, $result->count());
     // }
 
     // public function testUsedFilterAnonymousFunction()

@@ -1,11 +1,12 @@
 <?php
 
 declare(strict_types=1);
-namespace Cacing69\Cquery\Adapter;
+namespace Cacing69\Cquery\Filter;
 
+use Cacing69\Cquery\Adapter\AttributeAdapter;
 use Cacing69\Cquery\Extractor\ClauseExtractor;
-use Cacing69\Cquery\Support\HasOperatorProperty;
-use Cacing69\Cquery\Support\HasSelectorProperty;
+use Cacing69\Cquery\Trait\HasOperatorProperty;
+use Cacing69\Cquery\Trait\HasSelectorProperty;
 
 class FilterAttributeAdapter extends AttributeAdapter{
     use HasSelectorProperty;
@@ -38,7 +39,7 @@ class FilterAttributeAdapter extends AttributeAdapter{
         return $this->filter;
     }
 
-    public function adapt($extractor): FilterAttributeAdapter
+    public function adapt($extractor)
     {
         $this->selector = $extractor->getSelector();
         $this->operator = $extractor->getOperator();

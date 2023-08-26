@@ -22,7 +22,20 @@ trait ClauseExtractor
             $this->clauseType = 'equals';
 
             $this->value = $clauseValue;
-            $this->pattern = "/^{$clauseValue}$/im";
+            // dd($this->getCallbackAdapter()("lorem"));
+            if ($this->getCallbackAdapter !== null) {
+
+            } else {
+                if ($this->pattern !== null) {
+                    $this->pattern = "/^{$clauseValue}$/im";
+                }
+                // else {
+                //     $this->callback = function ($e) use ($clauseValue) {
+                //         return $this->getCallbackAdapter()($clauseValue);
+                //     };
+                // }
+            }
+
         } else if(trim($clause) === "like") {
             if (preg_match('/^%.+%$/im', $clauseValue)) {
                 $this->clauseType = 'contains';
@@ -47,7 +60,6 @@ trait ClauseExtractor
             if(!is_numeric($clauseValue)){
                 throw new CqueryException("comparison operator need a numeric value");
             }
-
             if (trim($clause) === "<") {
                 $this->clauseType = 'less than';
                 $this->value = $clauseValue;

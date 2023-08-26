@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-namespace Cacing69\Cquery\Support;
+namespace Cacing69\Cquery\Trait;
 
 trait HasOperatorProperty {
     private $operator;

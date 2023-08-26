@@ -3,7 +3,7 @@
 namespace Cacing69\Cquery\Extractor;
 
 use Cacing69\Cquery\Adapter\AttributeAdapter;
-use Cacing69\Cquery\Support\Slugify;
+use Cacing69\Cquery\Support\StringHelper;
 
 class ColumnExtractor {
     private $raw;
@@ -16,21 +16,14 @@ class ColumnExtractor {
         if (preg_match('/.+\s+?as\s+?.+/im', $column)) {
             $decodeSelect = explode(" as ", $column);
             $_column = trim($decodeSelect[0]);
-            $this->alias = Slugify::make($decodeSelect[1]);
+            $this->alias = StringHelper::slug($decodeSelect[1]);
         } else {
             $_column = $column;
-            $this->alias = Slugify::make($column, "_");
+            $this->alias = StringHelper::slug($column, "_");
         }
 
         if (preg_match("/^attr(.*,\s?.*)$/is", $column)) {
-            // if (preg_match('/.+\s+?as\s+?.+/im', $column)) {
-                // $decodeSelect = explode(" as ", $column);
             $this->column = new AttributeAdapter($_column);
-                // $this->alias = trim($decodeSelect[1]);
-            // } else {
-                // $this->column = new AttributeAdapter($column);
-                // $this->alias = Slugify::make($column, "_");
-            // }
         } else {
             $this->column = $_column;
         }

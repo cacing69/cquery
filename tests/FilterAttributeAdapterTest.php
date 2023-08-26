@@ -2,7 +2,7 @@
 
 namespace Cacing69\Cquery\Test;
 
-use Cacing69\Cquery\Adapter\FilterAttributeAdapter;
+use Cacing69\Cquery\Filter\FilterAttributeAdapter;
 use PHPUnit\Framework\TestCase;
 
 final class FilterAttributeAdapterTest extends TestCase

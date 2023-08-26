@@ -97,7 +97,7 @@ Below are the functions you are can use, they may change over time. Right now, n
 | (<> or !=) | `filter("attr(id, a)", "!=", 99)` |  get data from elements that are not equal to 99 |
 | has | `filter("attr(class, a)", "has", "foo")` | get data from elements that only have class "foo" |
 | regex | `filter("attr(class, a)", "regex", "/[a-z]+\-[0-9]+\-[a-z]+/im")` | get data from elements that match the given regex pattern only, with the provided pattern being (a-192-ab, b-12-ac, zx-1223-ac) |
-| like | `filter("attr(class, a)", "like", "%foo%")` <br><br> `filter("attr(class, a)", "like", "%foo")` <br><br> `filter("attr(class, a)", "like", "foo%")` | retrieve data according to elements and value criteria. <br><br> %foo% = anything containing the phrase "foo" <br><br> foo% = all sentences starting with "foo" <br><br> %foo = all sentences ending with "foo"|
+| like | `filter("attr(class, a)", "like", "%foo%")` <br><br> `filter("attr(class, a)", "like", "%foo")` <br><br> `filter("attr(class, a)", "like", "foo%")` | retrieve data according to elements and value criteria. <br><br> %foo% = anything containing the phrase "foo" <br><br> %foo = all sentences ending with "foo" <br><br> foo% = all sentences starting with "foo"|
 ---
 
 

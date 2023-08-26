@@ -38,4 +38,11 @@ class AttributeAdapter {
     {
         return $this->node;
     }
+
+    protected $callbackAdapter;
+
+    public function getCallbackAdapter()
+    {
+        return $this->callbackAdapter;
+    }
 }

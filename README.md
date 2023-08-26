@@ -2,7 +2,7 @@
 
 ## Currently experimenting to attempt scraping a webpage using different methods
 
-Cquery is an acronym for crawl query, used to extract text from an HTML element using PHP, simply its tool for crawlin/scraping web page. It called a query, as it adopts the structure present in an SQL query, so you can analogize that your DOM/HTML Document is a table you will query.
+Cquery is an acronym for crawl query, used to extract text from an HTML element using PHP, simply its tool for crawling/scraping web page. It called a query, as it adopts the structure present in an SQL query, so you can analogize that your DOM/HTML Document is a table you will query.
 
 Let's play for a moment and figure out how to make website scraping easier, much like crafting a query for a database.
 
@@ -16,7 +16,11 @@ composer require cacing69/cquery
 
 For example, you have a simple HTML element as shown below.
 
-```html
+
+<details>
+  <summary>Click to show HTML : <code>src/Samples/sample-simple-1.html</code></summary>
+
+  ```html
 <!DOCTYPE HTML>
 <html lang="en-US">
   <head>
@@ -77,6 +81,8 @@ For example, you have a simple HTML element as shown below.
 </html>
 ```
 
+</details>
+
 ### List function available
 
 Below are the functions you are can use, they may change over time. <br>**Note:** nested function doesn't support yet.
@@ -84,7 +90,6 @@ Below are the functions you are can use, they may change over time. <br>**Note:*
 | --------- | ------------- | ------------------ |
 | `attr(attrName, selector)` | `attr(class, .link)` |  will retrieve all class value present on the element/container according to the selector. (.link) |
 | `legnth(selector)` | `length(h1)` | will retrieve all length string on the element/container according to the selector. (h1) |
-
 
 #### How to use filter
 
@@ -100,7 +105,6 @@ Below are the functions you are can use, they may change over time. <br>**Note:*
 | regex | `filter("attr(class, a)", "regex", "/[a-z]+\-[0-9]+\-[a-z]+/im")` | get data from elements that match the given regex pattern only, with the provided pattern being (a-192-ab, b-12-ac, zx-1223-ac) |
 | like | `filter("attr(class, a)", "like", "%foo%")` <br><br> `filter("attr(class, a)", "like", "%foo")` <br><br> `filter("attr(class, a)", "like", "foo%")` | retrieve data according to elements and value criteria. <br><br> %foo% = anything containing the phrase "foo" <br><br> %foo = all sentences ending with "foo" <br><br> foo% = all sentences starting with "foo"|
 ---
-
 
 So, let's start scraping this website.
 

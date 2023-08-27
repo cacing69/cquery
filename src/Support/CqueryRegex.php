@@ -17,4 +17,5 @@ class CqueryRegex {
     const EXTRACT_FIRST_PARAM_FILTER_LIKE_END_WITH = '/^%(.*?)$/is';
     const IS_FILTER_LIKE_START_WITH = '/^.+%$/im';
     const EXTRACT_FIRST_PARAM_FILTER_LIKE_START_WITH = '/^(.*?)%$/is';
+    const CHECK_AND_EXTRACT_PICKER_WITH_WRAP = '/^\s?\(\s?(.*?)\s?\)\s?$/';
 }

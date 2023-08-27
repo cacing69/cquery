@@ -4,7 +4,6 @@ namespace Cacing69\Cquery\Adapter;
 
 use Cacing69\Cquery\Extractor\SourceExtractor;
 use Cacing69\Cquery\Support\CqueryRegex;
-use Cacing69\Cquery\Trait\HasFilterProperty;
 use Symfony\Component\DomCrawler\Crawler;
 
 class LengthCallbackAdapter extends CallbackAdapter

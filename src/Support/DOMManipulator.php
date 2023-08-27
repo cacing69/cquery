@@ -6,8 +6,11 @@ namespace Cacing69\Cquery\Support;
 
 use Cacing69\Cquery\Adapter\AttributeCallbackAdapter;
 use Cacing69\Cquery\Trait\HasSelectorProperty;
+use Cacing69\Cquery\Adapter\ClosureCallbackAdapter;
+use Closure;
 use Cacing69\Cquery\Adapter\DefaultCallbackAdapter;
 use Cacing69\Cquery\Adapter\LengthCallbackAdapter;
+use Cacing69\Cquery\Exception\CqueryException;
 use Cacing69\Cquery\Extractor\DefinerExtractor;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -29,12 +32,23 @@ class DOMManipulator {
     {
         $adapter = null;
 
-        if(preg_match(CqueryRegex::IS_ATTRIBUTE, $filter[0])) {
-            $adapter = new AttributeCallbackAdapter($filter[0], $this->selector);
-        } else if (preg_match(CqueryRegex::IS_LENGTH, $filter[0])) {
-            $adapter = new LengthCallbackAdapter($filter[0], $this->selector);
+        if($filter[0] instanceof Closure) {
+            $adapter = new ClosureCallbackAdapter($filter[0], $this->selector);
+
+            if(!array_key_exists(1, $filter)) {
+                throw new CqueryException("error processing filter, when used callback filter, please set selector on second parameter");
+
+            }
+
+            $adapter->setNode($filter[1]);
         } else {
-            $adapter = new DefaultCallbackAdapter($filter[0], $this->selector);
+            if(preg_match(CqueryRegex::IS_ATTRIBUTE, $filter[0])) {
+                $adapter = new AttributeCallbackAdapter($filter[0], $this->selector);
+            } else if (preg_match(CqueryRegex::IS_LENGTH, $filter[0])) {
+                $adapter = new LengthCallbackAdapter($filter[0], $this->selector);
+            } else {
+                $adapter = new DefaultCallbackAdapter($filter[0], $this->selector);
+            }
         }
 
         $adapter->setOperator($operator);

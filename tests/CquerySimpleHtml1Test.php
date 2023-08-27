@@ -3,9 +3,12 @@
 namespace Cacing69\Cquery\Test;
 
 use Cacing69\Cquery\Cquery;
+use Cacing69\Cquery\Definer;
 use Cacing69\Cquery\Exception\CqueryException;
+use Cacing69\Cquery\Picker;
 use Exception;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DomCrawler\Crawler;
 
 define("SAMPLE_SIMPLE_1", "src/Samples/sample-simple-1.html");
 
@@ -348,47 +351,102 @@ final class CquerySimpleHtml1Test extends TestCase
         $this->assertSame(1, $result->count());
     }
 
-    // public function testPickCustomerId()
-    // {
-    //     $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
-    //     $data = new Cquery($simpleHtml);
+    public function testWithClosurePicker()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
 
-    //     $result = $data
-    //         ->from("#lorem .link")
-    //         ->pick("attr(customer-id, a) as cust_id", "attr(class, a) as class")
-    //         ->filter("attr(customer-id, a)", "<=", "18")
-    //         ->get();
+        $result = $data
+            ->from("#lorem .link")
+            ->pick(new Picker(function ($node) {
+                    return strtoupper($node->text());
+                }, "a", "title"))
+            ->first();
 
-    //     dump($result);
+        $this->assertSame("HREF ATTRIBUTE EXAMPLE 1", $result["title"]);
+    }
 
-    //     $this->assertSame(3, $result->count());
-    // }
+    public function testPickWithPickerUsedClosure()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
 
-    // public function testUsedFilterLength()
-    // {
-    //     $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
-    //     $data = new Cquery($simpleHtml);
+        $closure = function ($node) {
+            return $node->text() . "-XXX";
+        };
 
-    //     $result = $data
-    //         ->from("#lorem .link")
-    //         ->pick("h1 as title")
-    //         ->filter("length(h1)", "=", 5)
-    //         ->first();
+        $result = $data
+            ->from("#lorem .link")
+            ->pick(
+                new Picker("a", "key_2")
+            )
+            ->first();
 
-    //     $this->assertSame(1, $result->count());
-    // }
+        $this->assertSame("Href Attribute Example 1", $result["key_2"]);
 
-    // public function testUsedFilterAnonymousFunction()
-    // {
-    //     $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
-    //     $data = new Cquery($simpleHtml);
+    }
 
-    //     $result = $data
-    //         ->from("#lorem .link")
-    //         ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
-    //         ->filter(function ($e) {
-    //             return $e->text();
-    //         })
-    //         ->first();
-    // }
+    public function testPickCustomerId()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem .link")
+            ->pick("attr(customer-id, a) as cust_id", "attr(class, a) as class")
+            ->filter("attr(customer-id, a)", "<=", "18")
+            ->get();
+
+        $this->assertSame(3, $result->count());
+    }
+
+    public function testUsedFilterLength()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem .link")
+            ->pick("h1 as title")
+            ->filter("length(h1)", "=", 5)
+            ->get();
+
+        $this->assertCount(1, $result);
+    }
+
+    public function testUsedFilterAnonymousFunction()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem .link")
+            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->filter(function ($e) {
+                return $e->text() === "Title 3";
+            }, "h1")
+            ->get();
+
+        $this->assertCount(1, $result);
+    }
+
+    public function testUsedFilterErrorAnonymousFunctionWithoutSelector()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        try {
+            $result = $data
+            ->from("#lorem .link")
+            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->filter(function ($e) {
+                return $e->text() === "Title 3";
+            })
+            ->get();
+        } catch (Exception $e) {
+            $this->assertSame(CqueryException::class, get_class($e));
+            $this->assertSame("error processing filter, when used callback filter, please set selector on second parameter", $e->getMessage());
+        }
+
+    }
 }

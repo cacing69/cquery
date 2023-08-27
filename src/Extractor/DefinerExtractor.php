@@ -5,40 +5,58 @@ namespace Cacing69\Cquery\Extractor;
 use Cacing69\Cquery\Adapter\AttributeCallbackAdapter;
 use Cacing69\Cquery\Adapter\DefaultCallbackAdapter;
 use Cacing69\Cquery\Adapter\LengthCallbackAdapter;
+use Cacing69\Cquery\Picker;
 use Cacing69\Cquery\Support\CqueryRegex;
 use Cacing69\Cquery\Support\StringHelper;
 use Cacing69\Cquery\Trait\HasSelectorProperty;
+use Cacing69\Cquery\Adapter\ClosureCallbackAdapter;
+use Cacing69\Cquery\Trait\HasAliasProperty;
+use Closure;
 
 class DefinerExtractor {
     use HasSelectorProperty;
+    use HasAliasProperty;
     private $raw;
-    private $alias;
     private $definer;
     private $adapter;
-    public function __construct($definer, SourceExtractor $selectorParent = null)
+    public function __construct($picker, SourceExtractor $selectorParent = null)
     {
         $this->selector = $selectorParent;
-        $this->raw = $definer;
-        if (preg_match(CqueryRegex::IS_DEFINER_HAVE_ALIAS, $definer)) {
-            $decodeSelect = explode(" as ", $definer);
-            $this->definer = trim($decodeSelect[0]);
-            $this->alias = StringHelper::slug($decodeSelect[1]);
-        } else {
-            $this->definer = $definer;
-            $this->alias = StringHelper::slug($definer, "_");
-        }
+        $this->raw = $picker;
 
-        if (preg_match(CqueryRegex::IS_ATTRIBUTE, $definer)) {
-            $this->adapter = new AttributeCallbackAdapter($this->definer, $selectorParent);
-        } else if (preg_match(CqueryRegex::IS_LENGTH, $definer)) {
-            $this->adapter = new LengthCallbackAdapter($this->definer, $selectorParent);
+        if($picker instanceof Picker) {
+            $this->alias = $picker->getAlias();
+
+            if($picker->getRaw() instanceof Closure) {
+                $this->definer = $picker;
+                $adapter = new ClosureCallbackAdapter($picker->getRaw(), $this->selector);
+                $adapter->setNode($picker->getNode());
+                $this->adapter = $adapter;
+            } else {
+                $this->handlerDefiner($picker->getRawWithAlias());
+            }
         } else {
-            $this->adapter = new DefaultCallbackAdapter($this->definer, $selectorParent);
+            $this->handlerDefiner($picker);
         }
     }
 
-    public function getAlias() {
-        return $this->alias;
+    private function handlerDefiner($pickerRaw) {
+        if (preg_match(CqueryRegex::IS_DEFINER_HAVE_ALIAS, $pickerRaw)) {
+            $decodeSelect = explode(" as ", $pickerRaw);
+            $this->definer = trim($decodeSelect[0]);
+            $this->alias = StringHelper::slug($decodeSelect[1]);
+        } else {
+            $this->definer = $pickerRaw;
+            $this->alias = StringHelper::slug($pickerRaw, "_");
+        }
+
+        if (preg_match(CqueryRegex::IS_ATTRIBUTE, $pickerRaw)) {
+            $this->adapter = new AttributeCallbackAdapter($this->definer, $this->selector);
+        } else if (preg_match(CqueryRegex::IS_LENGTH, $pickerRaw)) {
+            $this->adapter = new LengthCallbackAdapter($this->definer, $this->selector);
+        } else {
+            $this->adapter = new DefaultCallbackAdapter($this->definer, $this->selector);
+        }
     }
 
     public function getDefiner() {

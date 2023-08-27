@@ -18,7 +18,7 @@ class Cquery extends Loader{
         }
     }
 
-    public function pick(string ...$picks): Cquery
+    public function pick(...$picks): Cquery
     {
         $this->loader->pick(...$picks);
         return $this;

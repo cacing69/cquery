@@ -2,6 +2,7 @@
 declare(strict_types = 1);
 namespace Cacing69\Cquery\Loader;
 
+use Cacing69\Cquery\Adapter\ClosureCallbackAdapter;
 use Cacing69\Cquery\Exception\CqueryException;
 use Cacing69\Cquery\Extractor\SourceExtractor;
 use Cacing69\Cquery\Support\DOMManipulator;
@@ -33,7 +34,7 @@ class HTMLLoader extends Loader
         }
     }
 
-    public function pick(string ...$picks)
+    public function pick(...$picks)
     {
         $this->validateSource();
         foreach ($picks as $pick) {
@@ -83,12 +84,23 @@ class HTMLLoader extends Loader
 
             foreach ($dom->getFilter() as $key => $value) {
                 $dom->getCrawler()->filterXPath($dom->getSelector()->getXpath())->each(function (Crawler $node, $index) use (&$_affect, $key, $value) {
-                    $node->filter($value->getNode())->each(function (Crawler $childNode) use (&$_affect, $key, $value, $index) {
-                        $callback = $value->getCallback();
-                        if ($value->extract($callback($childNode))) {
-                            $_affect[$value->getOperator()][$key][] = $index;
+                    if($value->getNode() !== null){
+                        if ($value instanceof ClosureCallbackAdapter) {
+                            $node->filter($value->getNode())->each(function (Crawler $childNode) use (&$_affect, $key, $value, $index) {
+                                $callback = $value->getRaw();
+                                if ($callback($childNode)) {
+                                    $_affect[$value->getOperator()][$key][] = $index;
+                                }
+                            });
+                        } else {
+                            $node->filter($value->getNode())->each(function (Crawler $childNode) use (&$_affect, $key, $value, $index) {
+                                $callback = $value->getCallback();
+                                if ($value->extract($callback($childNode))) {
+                                    $_affect[$value->getOperator()][$key][] = $index;
+                                }
+                            });
                         }
-                    });
+                    }
                 });
             }
 
@@ -115,14 +127,18 @@ class HTMLLoader extends Loader
             $dom->getCrawler()->filterXPath($dom->getSelector()->getXpath())->each(function (Crawler $node, $index) use ($definer, $limit) {
                 $adapter = $definer->getAdapter();
 
-                if (count($node->filter($adapter->getNode())) === 0) {
+                if($adapter->getNode() !== null){
+                    if (count($node->filter($adapter->getNode())) === 0) {
+                        $this->results[$this->source][$index][$definer->getAlias()] = null;
+                    }
+
+                    $node->filter($adapter->getNode())->each(function (Crawler $childNode) use ($definer, $index, $limit) {
+                        $callback = $definer->getAdapter()->getCallback();
+                        $this->results[$this->source][$index][$definer->getAlias()] = $callback($childNode);
+                    });
+                } else {
                     $this->results[$this->source][$index][$definer->getAlias()] = null;
                 }
-
-                $node->filter($adapter->getNode())->each(function (Crawler $childNode) use ($definer, $index, $limit) {
-                    $callback = $definer->getAdapter()->getCallback();
-                    $this->results[$this->source][$index][$definer->getAlias()] = $callback($childNode);
-                });
 
                 if ($limit !== null && $limit - 1 <= $index) {
                     return false;

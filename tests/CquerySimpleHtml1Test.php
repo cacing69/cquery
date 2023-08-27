@@ -449,4 +449,67 @@ final class CquerySimpleHtml1Test extends TestCase
         }
 
     }
+
+    public function testCqueryWithNestedDefinerFunctionLengthAndAttr()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem .link")
+            ->pick("length(attr(class, a)) as length_attr_class_a")
+            ->get();
+
+        $this->assertSame(15, $result[0]["length_attr_class_a"]);
+        $this->assertSame(22, $result[1]["length_attr_class_a"]);
+        $this->assertSame(15, $result[2]["length_attr_class_a"]);
+        $this->assertSame(25, $result[3]["length_attr_class_a"]);
+        $this->assertSame(31, $result[4]["length_attr_class_a"]);
+        $this->assertSame(28, $result[5]["length_attr_class_a"]);
+        $this->assertSame(22, $result[6]["length_attr_class_a"]);
+        $this->assertSame(11, $result[7]["length_attr_class_a"]);
+        $this->assertSame(23, $result[8]["length_attr_class_a"]);
+    }
+
+    public function testCqueryWithUpperFunction()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem .link")
+            ->pick("upper(h1)")
+            ->get();
+
+        $this->assertSame("TITLE 1", $result[0]['upper_h1']);
+        $this->assertSame("TITLE 2", $result[1]['upper_h1']);
+        $this->assertSame("TITLE 3", $result[2]['upper_h1']);
+        $this->assertSame("TITLE 11", $result[3]['upper_h1']);
+        $this->assertSame("TITLE 22", $result[4]['upper_h1']);
+        $this->assertSame("TITLE 323", $result[5]['upper_h1']);
+        $this->assertSame("TITLE 331", $result[6]['upper_h1']);
+        $this->assertSame("TITLE 331", $result[7]['upper_h1']);
+        $this->assertSame("12345", $result[8]['upper_h1']);
+    }
+
+    public function testCqueryWithNestedThreeDefiner()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem .link")
+            ->pick("reverse(length(attr(class, a))) as reverse_length_attr_class_a")
+            ->get();
+
+        $this->assertEquals(51, $result[0]["reverse_length_attr_class_a"]);
+        $this->assertEquals(22, $result[1]["reverse_length_attr_class_a"]);
+        $this->assertEquals(51, $result[2]["reverse_length_attr_class_a"]);
+        $this->assertEquals(52, $result[3]["reverse_length_attr_class_a"]);
+        $this->assertEquals(13, $result[4]["reverse_length_attr_class_a"]);
+        $this->assertEquals(82, $result[5]["reverse_length_attr_class_a"]);
+        $this->assertEquals(22, $result[6]["reverse_length_attr_class_a"]);
+        $this->assertEquals(11, $result[7]["reverse_length_attr_class_a"]);
+        $this->assertEquals(32, $result[8]["reverse_length_attr_class_a"]);
+    }
 }

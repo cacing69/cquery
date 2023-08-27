@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Cacing69\Cquery\Adapter;
+namespace Cacing69\Cquery\Adapter\HTML;
 
 use Cacing69\Cquery\Exception\CqueryException;
 use Cacing69\Cquery\Support\CqueryRegex;

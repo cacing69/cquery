@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace Cacing69\Cquery\Support;
 
-use Cacing69\Cquery\Adapter\AttributeCallbackAdapter;
+use Cacing69\Cquery\Adapter\HTML\AttributeCallbackAdapter;
 use Cacing69\Cquery\Trait\HasSelectorProperty;
-use Cacing69\Cquery\Adapter\ClosureCallbackAdapter;
-use Closure;
-use Cacing69\Cquery\Adapter\DefaultCallbackAdapter;
-use Cacing69\Cquery\Adapter\LengthCallbackAdapter;
+use Cacing69\Cquery\Adapter\HTML\ClosureCallbackAdapter;
+use Cacing69\Cquery\Adapter\HTML\DefaultCallbackAdapter;
+use Cacing69\Cquery\Adapter\HTML\LengthCallbackAdapter;
+use Cacing69\Cquery\Adapter\HTML\ReverseCallbackAdapter;
+use Cacing69\Cquery\Adapter\HTML\UpperCallbackAdapter;
 use Cacing69\Cquery\Exception\CqueryException;
 use Cacing69\Cquery\Extractor\DefinerExtractor;
+use Closure;
 use Symfony\Component\DomCrawler\Crawler;
 
 class DOMManipulator {
@@ -46,6 +48,10 @@ class DOMManipulator {
                 $adapter = new AttributeCallbackAdapter($filter[0], $this->selector);
             } else if (preg_match(CqueryRegex::IS_LENGTH, $filter[0])) {
                 $adapter = new LengthCallbackAdapter($filter[0], $this->selector);
+            } else if (preg_match(CqueryRegex::IS_UPPER, $filter[0])) {
+                $adapter = new UpperCallbackAdapter($filter[0], $this->selector);
+            } else if (preg_match(CqueryRegex::IS_REVERSE, $filter[0])) {
+                $adapter = new ReverseCallbackAdapter($filter[0], $this->selector);
             } else {
                 $adapter = new DefaultCallbackAdapter($filter[0], $this->selector);
             }

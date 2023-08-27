@@ -2,14 +2,16 @@
 
 namespace Cacing69\Cquery\Extractor;
 
-use Cacing69\Cquery\Adapter\AttributeCallbackAdapter;
-use Cacing69\Cquery\Adapter\DefaultCallbackAdapter;
-use Cacing69\Cquery\Adapter\LengthCallbackAdapter;
+use Cacing69\Cquery\Adapter\HTML\AttributeCallbackAdapter;
+use Cacing69\Cquery\Adapter\HTML\DefaultCallbackAdapter;
+use Cacing69\Cquery\Adapter\HTML\LengthCallbackAdapter;
 use Cacing69\Cquery\Picker;
 use Cacing69\Cquery\Support\CqueryRegex;
 use Cacing69\Cquery\Support\StringHelper;
 use Cacing69\Cquery\Trait\HasSelectorProperty;
-use Cacing69\Cquery\Adapter\ClosureCallbackAdapter;
+use Cacing69\Cquery\Adapter\HTML\ClosureCallbackAdapter;
+use Cacing69\Cquery\Adapter\HTML\ReverseCallbackAdapter;
+use Cacing69\Cquery\Adapter\HTML\UpperCallbackAdapter;
 use Cacing69\Cquery\Trait\HasAliasProperty;
 use Closure;
 
@@ -54,6 +56,10 @@ class DefinerExtractor {
             $this->adapter = new AttributeCallbackAdapter($this->definer, $this->selector);
         } else if (preg_match(CqueryRegex::IS_LENGTH, $pickerRaw)) {
             $this->adapter = new LengthCallbackAdapter($this->definer, $this->selector);
+        } else if (preg_match(CqueryRegex::IS_UPPER, $pickerRaw)) {
+            $this->adapter = new UpperCallbackAdapter($this->definer, $this->selector);
+        } else if (preg_match(CqueryRegex::IS_REVERSE, $pickerRaw)) {
+            $this->adapter = new ReverseCallbackAdapter($this->definer, $this->selector);
         } else {
             $this->adapter = new DefaultCallbackAdapter($this->definer, $this->selector);
         }

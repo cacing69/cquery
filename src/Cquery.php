@@ -14,9 +14,6 @@ class Cquery extends Loader{
 
     public function __construct(string $content = null, $contentType = "html", string $encoding = "UTF-8")
     {
-        // dd(filter_var($content, FILTER_VALIDATE_URL));
-
-
         if($content !== null) {
             if (filter_var($content, FILTER_VALIDATE_URL)) {
                 $ch = curl_init();

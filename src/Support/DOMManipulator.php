@@ -44,7 +44,13 @@ class DOMManipulator {
 
             }
 
-            $adapter->setNode($filter[1]);
+            $extractor = new DefinerExtractor($filter[1]);
+
+            $adapter = $adapter
+                ->setNode($extractor->getAdapter()->getNode())
+                ->setCall($extractor->getAdapter()->getCall())
+                // ->setCallback()
+                ->setCallParameter($extractor->getAdapter()->getCallParameter());
         } else {
             if(preg_match(CqueryRegex::IS_ATTRIBUTE, $filter[0])) {
                 $adapter = new AttributeCallbackAdapter($filter[0], $this->source);

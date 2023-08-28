@@ -66,7 +66,7 @@ final class FreeProxyListScrapeTest extends TestCase
                 "td:nth-child(1) as ip_address",
                 // "td:nth-child(2) as port",
                 // "td:nth-child(3) as code",
-                // "td:nth-child(4) as country",
+                "td:nth-child(4) as country",
                 // "td:nth-child(5) as anonymity",
                 // "td:nth-child(6) as google",
                 "td:nth-child(7) as https",

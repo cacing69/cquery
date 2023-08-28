@@ -5,6 +5,7 @@ namespace Cacing69\Cquery\Test;
 use Cacing69\Cquery\Cquery;
 use Cacing69\Cquery\Exception\CqueryException;
 use Cacing69\Cquery\Picker;
+use DateTime;
 use Exception;
 use PHPUnit\Framework\TestCase;
 
@@ -430,6 +431,22 @@ final class CquerySimpleHtml1Test extends TestCase
         $this->assertCount(1, $result);
     }
 
+    public function testUsedFilterAnonymousFunctionButWithCustomAdapterFunc()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem .link")
+            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->filter(function ($e) {
+                return $e->text() === "Title 3";
+            }, "h1")
+            ->get();
+
+        $this->assertCount(1, $result);
+    }
+
     public function testUsedFilterErrorAnonymousFunctionWithoutSelector()
     {
         $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
@@ -537,30 +554,28 @@ final class CquerySimpleHtml1Test extends TestCase
             ->filter("span > .pluck", "=", "text-pluck-1")
             ->get();
 
-        dump($result);
-
         $this->assertCount(1, $result);
     }
 
-    // public function testCqueryFreeProxyListWithUrl()
-    // {
-    //     $url = "https://free-proxy-list.net/";
+    public function testCqueryMoreForDoc()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
 
-    //     $data = new Cquery($url);
+        $date = date("Y-m-d H:i:s");
 
-    //     $result = $data
-    //         ->from("#list")
-    //         ->pick(
-    //             "td:nth-child(1) as ip_address",
-    //             "td:nth-child(2) as port",
-    //             "td:nth-child(3) as code",
-    //             "td:nth-child(4) as country",
-    //             "td:nth-child(5) as anonymity",
-    //             "td:nth-child(6) as google",
-    //             "td:nth-child(7) as https",
-    //             "td:nth-child(8) as last_checked",
-    //         )
-    //         ->filter('td:nth-child(7)', "=", "yes")
-    //         ->get();
-    // }
+        $result = $data
+            ->from("#lorem .link")
+            ->pick(
+                "upper(h1) as title_upper",
+                new Picker(function($value) use ($date) {
+                    return "{$value} fetched on: {$date}";
+                }, "a", "col_2")
+            )
+            ->filter("attr(class, a)", "has", "vip")
+            ->limit(2)
+            ->get();
+
+        $this->assertCount(2, $result);
+    }
 }

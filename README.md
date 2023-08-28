@@ -86,22 +86,26 @@ For example, you have a simple HTML element as shown below.
 
 ### List function available
 
-Below are the functions you are can use, they may change over time. <br>**Note:** nested function doesn't support yet.
+Below are the functions you are can use, they may change over time. <br>**Note:** nested function has been supported.
 | function | example | description |
 | --------- | ------------- | ------------------ |
 | `attr(attrName, selector)` | `attr(class, .link)` |  will retrieve all class value present on the element/container according to the selector. (.link) |
-| `legnth(selector)` | `length(h1)` | will retrieve all length string on the element/container according to the selector. (h1) |
+| `length(selector)` | `length(h1)` | will retrieve all length string on the element/container according to the selector. (h1) |
+| `upper(selector)` | `upper(h1)` | will change text to uppercase element/container according to the selector. (h1) |
+| `reverse(selector)` | `reverse(h1)` | will reverse text according to the selector. (h1) |
 
 #### How to use filter
-
+x
 | operator | example | description |
 | --------- | ------------- | ------------------ |
-| = | `filter("h1", "=", "99")` | retrieve data according to elements that only have the same value = 99 |
+| (= or ==) | `filter("h1", "=", "99")` | retrieve data according to elements that only have the same value = 99 |
+| === | `filter("h1", "===", "99")` | retrieve data according to elements that only have the same and identic with value = 99 |
 | < | `filter("attr(id, a)", "<", 99)` | retrieve data according to elements that only have values smaller than 99 |
 | <= | `filter("attr(id, a)", "<=", 99)` | get data from elements with values that are lesser than or equal to 99 |
 | > | `filter("attr(id, a)", ">", 99)` |  get data from elements with values that are greater than 99 |
 | >= | `filter("attr(id, a)", ">=", 99)` |  Get data from elements with values that are greater than or equal 99 |
 | (<> or !=) | `filter("attr(id, a)", "!=", 99)` |  get data from elements that are not equal to 99 |
+| !== | `filter("attr(id, a)", "!==", 99)` |  get data from elements that are not equal or they are not the same type to 99 |
 | has | `filter("attr(class, a)", "has", "foo")` | get data from elements that only have class "foo" |
 | regex | `filter("attr(class, a)", "regex", "/[a-z]+\-[0-9]+\-[a-z]+/im")` | get data from elements that match the given regex pattern only, with the provided pattern being (a-192-ab, b-12-ac, zx-1223-ac) |
 | like | `filter("attr(class, a)", "like", "%foo%")` <br><br> `filter("attr(class, a)", "like", "%foo")` <br><br> `filter("attr(class, a)", "like", "foo%")` | retrieve data according to elements and value criteria. <br><br> %foo% = anything containing the phrase "foo" <br><br> %foo = all sentences ending with "foo" <br><br> foo% = all sentences starting with "foo"|
@@ -133,6 +137,71 @@ $result = $query
 And here are the results
 
 ![Alt text](https://gcdnb.pbrd.co/images/Q6XHKRydSigl.png?o=1 "a title")
+
+### Another example with anonymous function
+
+```php
+require_once 'vendor/autoload.php';
+
+$html = file_get_contents("src/Samples/sample-simple-1.html");
+$data = new Cacing69\Cquery\Cquery($html);
+
+$result_1 = $data
+          ->from("#lorem .link")
+          ->pick(
+              "upper(h1) as title_upper",
+              new Picker(function($value) use ($date) {
+                  return "{$value} fetched on: {$date}";
+              }, "a", "col_2")
+          )
+          ->filter("attr(class, a)", "has", "vip")
+          ->limit(2)
+          ->get();
+
+```
+
+Here are the result for `$result_1`
+
+![Alt text](https://gcdnb.pbrd.co/images/qtItVezcEUq7.png?o=1 "a title")
+
+```php
+// another example, filter with closure
+$result_2 = $data
+            ->from("#lorem .link")
+            ->pick("reverse(h1) as title", "attr(href, a) as url")
+            ->filter(function ($e) {
+                return $e->text() === "Title 3";
+            }, "h1")
+            ->get();
+
+```
+
+Here are the result for `$result_2`
+
+![Alt text](https://gcdnb.pbrd.co/images/qtItVezcEUq7.png?o=1 "a title")
+
+```php
+// another example, to load data from url
+// for now it used curl without any config, but i have plan to change it withh browserKit, i hope have much time to realize that
+
+$url = "https://free-proxy-list.net/";
+$data = new Cquery($url);
+
+$result_3 = $data
+    ->from(".fpl-list")
+    ->pick(
+        "td:nth-child(1) as ip_address",
+        "td:nth-child(4) as country",
+        "td:nth-child(7) as https",
+    )->filter('td:nth-child(7)', "=", "no")
+    ->limit(1)
+    ->get();
+
+```
+
+Here are the result for `$result_3`
+
+![Alt text](https://gcdnb.pbrd.co/images/We0ea7frlZw1.png?o=1 "a title")
 
 ### Note
 

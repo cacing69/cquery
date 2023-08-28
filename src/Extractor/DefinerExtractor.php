@@ -36,8 +36,6 @@ class DefinerExtractor {
                 $adapter = new ClosureCallbackAdapter($picker->getRaw(), $this->source);
                 $extractor = new DefinerExtractor("{$picker->getNode()} as {$picker->getAlias()}");
 
-                // dd($extractor);
-
                 $adapter = $adapter->setNode($extractor->getAdapter()->getNode())
                             ->setCall($extractor->getAdapter()->getCall())
                             ->setCallParameter($extractor->getAdapter()->getCallParameter());

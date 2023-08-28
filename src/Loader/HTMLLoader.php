@@ -120,8 +120,6 @@ class HTMLLoader extends Loader
 
             $_filtered = $this->getResultFilter($_affect);
 
-            // dump(count($_filtered));
-
             if (count($_filtered) === 0) {
                 return collect([]);
             }
@@ -132,13 +130,10 @@ class HTMLLoader extends Loader
             //         if($dom->getCrawler()->filter($dom->getSource()->getValue())->count() === 1){
             //             foreach ($dom->getFilter() as $key => $adapter) {
             //                 if ($adapter->getNode() !== null) {
-            //                     // dd($ge);
             //                     $node->filter($adapter->getNode())->each(
             //                         function (Crawler $childNode, $indexChild) use (&$_affect, $key, $adapter, $index, $dom, $_filtered) {
-            //                             // dd($childNode->nodeName());
             //                             if(!in_array($indexChild, $_filtered)) {
             //                                 foreach ($childNode as $__node) {
-            //                                     dump($__node);
             //                                     $__node->parentNode->removeChild($__node);
             //                                 }
             //                                 // $currentNode = $childNode->getNode(0);
@@ -178,12 +173,9 @@ class HTMLLoader extends Loader
 
                 // if ($limit !== null) {
                 //     $_data = $_data->reduce(function (Crawler $node) use ($limit, $_hold_data, $key) {
-                //         // dump($limit." ". count($_hold_data));
                 //         return $limit == count($_hold_data);
                 //     });
                 // }
-
-                // dd($definer);
 
                 if($definer->getAdapter()->getCall() === "extract"){
                     $_data = $_data->{$definer->getAdapter()->getCall()}($definer->getAdapter()->getCallParameter());
@@ -193,7 +185,6 @@ class HTMLLoader extends Loader
 
                 if($definer->getAdapter()->getAfterCall() !== null) {
                     $_afterCall = $definer->getAdapter()->getAfterCall();
-                    // dd($_afterCall);
                     $_data = array_map(function ($_mapValue) use ($_afterCall) {
                         return $_afterCall($_mapValue);
                     }, $_data);
@@ -217,8 +208,6 @@ class HTMLLoader extends Loader
 
 
                 }
-
-                // dump();
 
                 // if($key === count($this->getActiveDom()->getDefiner())) {
                 //     if($limit !== null) {
@@ -267,7 +256,6 @@ class HTMLLoader extends Loader
             //                     $this->results[$this->source][$_index][$definer->getAlias()] = $callback($childNode);
             //                 }
             //             } else {
-            //                 dump(count($this->results[$this->source]));
             //                 $this->results[$this->source][$_index][$definer->getAlias()] = $callback($childNode);
             //             }
             //         });
@@ -280,7 +268,6 @@ class HTMLLoader extends Loader
         // foreach ($variable as $key => $value) {
         //     # code...
         // }
-        // dd($_hold_data);
 
         return collect($_hold_data);
 

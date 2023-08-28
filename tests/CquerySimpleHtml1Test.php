@@ -86,13 +86,11 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $query = $data
             ->from("(#lorem .link) as _el")
-            ->pick("_el > a > p as title");
+            ->pick("a > p as title");
 
         $first = $query->first();
 
-        dump($first);
-
-        $this->assertSame(null, $first);
+        $this->assertSame("Lorem pilsum", $first['title']);
     }
 
     public function testShouldGetAnExceptionNoSourceDefined()

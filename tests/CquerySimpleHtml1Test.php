@@ -90,7 +90,9 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $first = $query->first();
 
-        $this->assertSame(null, $first["title"]);
+        dump($first);
+
+        $this->assertSame(null, $first);
     }
 
     public function testShouldGetAnExceptionNoSourceDefined()

@@ -8,6 +8,7 @@ use Cacing69\Cquery\Loader\Loader;
 use Cacing69\Cquery\Support\DOMManipulator;
 use Tightenco\Collect\Support\Collection;
 
+
 class Cquery extends Loader{
     private $loader;
 

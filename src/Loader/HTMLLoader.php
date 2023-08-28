@@ -83,7 +83,7 @@ class HTMLLoader extends Loader
             ];
 
             foreach ($dom->getFilter() as $key => $value) {
-                $dom->getCrawler()->filterXPath($dom->getSelector()->getXpath())->each(function (Crawler $node, $index) use (&$_affect, $key, $value) {
+                $dom->getCrawler()->filterXPath($dom->getSource()->getXpath())->each(function (Crawler $node, $index) use (&$_affect, $key, $value) {
                     if($value->getNode() !== null){
                         if ($value instanceof ClosureCallbackAdapter) {
                             $node->filter($value->getNode())->each(function (Crawler $childNode) use (&$_affect, $key, $value, $index) {
@@ -111,7 +111,7 @@ class HTMLLoader extends Loader
             }
 
             if (count($_filtered) > 0) {
-                $dom->getCrawler()->filterXPath($dom->getSelector()->getXpath())->each(function (Crawler $crawler, $i) use ($_filtered) {
+                $dom->getCrawler()->filterXPath($dom->getSource()->getXpath())->each(function (Crawler $crawler, $i) use ($_filtered) {
                     if (!in_array($i, $_filtered)) {
                         $node = $crawler->getNode(0);
                         $node->parentNode->removeChild($node);
@@ -124,26 +124,33 @@ class HTMLLoader extends Loader
         $limit = $this->limit;
 
         foreach ($this->getActiveDom()->getDefiner() as $definer) {
-            $dom->getCrawler()->filterXPath($dom->getSelector()->getXpath())->each(function (Crawler $node, $index) use ($definer, $limit) {
-                $adapter = $definer->getAdapter();
+            $domSource = $dom->getCrawler()->filter($dom->getSource()->getValue());
+                $domSource->each(function (Crawler $node, $index) use ($domSource, $definer, $limit) {
+                    $adapter = $definer->getAdapter();
 
-                if($adapter->getNode() !== null){
-                    if (count($node->filter($adapter->getNode())) === 0) {
+                    if ($adapter->getNode() !== null) {
+                        if (count($node->filter($adapter->getNode())) === 0) {
+                            $this->results[$this->source][$index][$definer->getAlias()] = null;
+                        }
+
+                        $node->filter($adapter->getNode())->each(function (Crawler $childNode, $indexChild) use ($domSource, $definer, $index, $limit) {
+                            $callback = $definer->getAdapter()->getCallback();
+
+                            $_index = $index;
+                            if($domSource->count() === 1) {
+                                $_index = $indexChild;
+                            }
+
+                            $this->results[$this->source][$_index][$definer->getAlias()] = $callback($childNode);
+                        });
+                    } else {
                         $this->results[$this->source][$index][$definer->getAlias()] = null;
                     }
 
-                    $node->filter($adapter->getNode())->each(function (Crawler $childNode) use ($definer, $index, $limit) {
-                        $callback = $definer->getAdapter()->getCallback();
-                        $this->results[$this->source][$index][$definer->getAlias()] = $callback($childNode);
-                    });
-                } else {
-                    $this->results[$this->source][$index][$definer->getAlias()] = null;
-                }
-
-                if ($limit !== null && $limit - 1 <= $index) {
-                    return false;
-                }
-            });
+                    if ($limit !== null && $limit - 1 <= $index) {
+                        return false;
+                    }
+                });
         }
 
         return collect($this->results[@$this->source]);

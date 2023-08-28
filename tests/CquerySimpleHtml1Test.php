@@ -3,12 +3,10 @@
 namespace Cacing69\Cquery\Test;
 
 use Cacing69\Cquery\Cquery;
-use Cacing69\Cquery\Definer;
 use Cacing69\Cquery\Exception\CqueryException;
 use Cacing69\Cquery\Picker;
 use Exception;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\DomCrawler\Crawler;
 
 define("SAMPLE_SIMPLE_1", "src/Samples/sample-simple-1.html");
 
@@ -498,7 +496,7 @@ final class CquerySimpleHtml1Test extends TestCase
         $data = new Cquery($simpleHtml);
 
         $result = $data
-            ->from("#lorem .link")
+            ->from("#lorem > .link")
             ->pick("reverse(length(attr(class, a))) as reverse_length_attr_class_a")
             ->get();
 
@@ -512,4 +510,53 @@ final class CquerySimpleHtml1Test extends TestCase
         $this->assertEquals(11, $result[7]["reverse_length_attr_class_a"]);
         $this->assertEquals(32, $result[8]["reverse_length_attr_class_a"]);
     }
+
+    public function testCqueryResultSelectorSingleId()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#list-test-child > div")
+            ->pick("span > .pluck as title")
+            ->get();
+
+        $this->assertCount(3, $result);
+    }
+
+    public function testCqueryResultSelectorSingleIdWithFilter()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#list-test-child > div")
+            ->pick("span > .pluck as title")
+            ->filter("span > .pluck", "=", "text-pluck-1")
+            ->get();
+
+        $this->assertCount(1, $result);
+    }
+
+    // public function testCqueryFreeProxyListWithUrl()
+    // {
+    //     $url = "https://free-proxy-list.net/";
+
+    //     $data = new Cquery($url);
+
+    //     $result = $data
+    //         ->from("#list")
+    //         ->pick(
+    //             "td:nth-child(1) as ip_address",
+    //             "td:nth-child(2) as port",
+    //             "td:nth-child(3) as code",
+    //             "td:nth-child(4) as country",
+    //             "td:nth-child(5) as anonymity",
+    //             "td:nth-child(6) as google",
+    //             "td:nth-child(7) as https",
+    //             "td:nth-child(8) as last_checked",
+    //         )
+    //         ->filter('td:nth-child(7)', "=", "yes")
+    //         ->get();
+    // }
 }

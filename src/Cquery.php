@@ -13,8 +13,21 @@ class Cquery extends Loader{
 
     public function __construct(string $content = null, $contentType = "html", string $encoding = "UTF-8")
     {
+        // dd(filter_var($content, FILTER_VALIDATE_URL));
+
+
         if($content !== null) {
-            $this->loader = new HTMLLoader($content);
+            if (filter_var($content, FILTER_VALIDATE_URL)) {
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $content);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                $output = curl_exec($ch);
+                $this->loader = new HTMLLoader($output);
+                curl_close($ch);
+            } else {
+
+                $this->loader = new HTMLLoader($content);
+            }
         }
     }
 

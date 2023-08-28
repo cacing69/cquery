@@ -31,6 +31,12 @@ abstract class CallbackAdapter
         return $this->callback;
     }
 
+    final public function getNodeWithoutAlias()
+    {
+        return $this;
+    }
+
+
     final public function extract($value)
     {
         if (in_array($this->clause, ["=", "==", "==="])) {

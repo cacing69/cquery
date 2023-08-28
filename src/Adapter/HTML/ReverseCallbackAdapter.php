@@ -23,12 +23,29 @@ class ReverseCallbackAdapter extends CallbackAdapter
             $this->node = $extractor->getAdapter()->getNode();
             $callbackFromExtractor = $extractor->getAdapter()->getCallback();
 
+            $this->call = $extractor->getAdapter()->getCall();
+            $this->callParameter = $extractor->getAdapter()->getCallParameter();
+
+            $afterCallFromExtractor = $extractor->getAdapter()->getAfterCall();
+
+            $this->afterCall = function (string $value) use ($afterCallFromExtractor) {
+                return $afterCallFromExtractor ? strrev((string) $afterCallFromExtractor($value)) : strrev((string) $value);
+            };
+
             $this->callback = function (Crawler $node) use ($callbackFromExtractor) {
                 return strrev((string) $callbackFromExtractor($node));
             };
         } else {
             preg_match(CqueryRegex::EXTRACT_FIRST_PARAM_REVERSE, $raw, $node);
             $this->node = $node[1];
+
+            $this->call = "extract";
+            $this->callParameter = ["_text"];
+
+            $this->afterCall = function (string $value) {
+                return strrev($value);
+            };
+
             $this->callback = function (Crawler $node) {
                 return strrev((string) $node->text());
             };

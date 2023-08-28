@@ -18,6 +18,9 @@ class AttributeCallbackAdapter extends CallbackAdapter
         $this->ref = $attr[1];
         $this->node = $node[1];
 
+        $this->call = "extract";
+        $this->callParameter = [$this->ref];
+
         $ref = $this->ref;
         $this->callback = function (Crawler $crawlNode) use ($ref) {
             return $crawlNode->attr($ref);

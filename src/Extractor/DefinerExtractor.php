@@ -34,7 +34,14 @@ class DefinerExtractor {
             if($picker->getRaw() instanceof Closure) {
                 $this->definer = $picker;
                 $adapter = new ClosureCallbackAdapter($picker->getRaw(), $this->source);
-                $adapter->setNode($picker->getNode());
+                $extractor = new DefinerExtractor("{$picker->getNode()} as {$picker->getAlias()}");
+
+                // dd($extractor);
+
+                $adapter = $adapter->setNode($extractor->getAdapter()->getNode())
+                            ->setCall($extractor->getAdapter()->getCall())
+                            ->setCallParameter($extractor->getAdapter()->getCallParameter());
+
                 $this->adapter = $adapter;
             } else {
                 $this->handlerDefiner($picker->getRawWithAlias());

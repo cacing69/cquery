@@ -6,6 +6,7 @@ use Cacing69\Cquery\Cquery;
 use Cacing69\Cquery\Extractor\SourceExtractor;
 use PHPUnit\Framework\TestCase;
 
+define("SAMPLE_SIMPLE_1", "src/Samples/sample-simple-1.html");
 final class SourceExtractorTest extends TestCase
 {
     public function testSetSelector()

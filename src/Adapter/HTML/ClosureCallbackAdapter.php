@@ -12,8 +12,17 @@ class ClosureCallbackAdapter extends CallbackAdapter
     {
         $this->raw = $raw;
 
+        $this->call = "extract";
+        $this->callParameter = ["_text"];
+
+        $this->afterCall = function (string $value) use ($raw) {
+            return $raw($value);
+        };
+
         $this->callback = function (Crawler $crawlNode) use ($raw) {
-            return $raw($crawlNode);
+            if($crawlNode instanceof Crawler) {
+                return $raw($crawlNode);
+            }
         };
     }
 }

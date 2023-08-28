@@ -13,6 +13,7 @@ use Cacing69\Cquery\Trait\HasClauseProperty;
 use Cacing69\Cquery\Trait\HasSelectorProperty;
 use Cacing69\Cquery\Trait\HasFilterProperty;
 use Cacing69\Cquery\Trait\HasRawProperty;
+use Symfony\Component\CssSelector\CssSelectorConverter;
 
 abstract class CallbackAdapter
 {
@@ -24,6 +25,10 @@ abstract class CallbackAdapter
     use HasRawProperty;
     use HasNodeProperty;
     protected $ref;
+    protected $call;
+    protected $callParameter;
+    protected $afterCall;
+
     protected $callback;
 
     public function getCallback()
@@ -31,9 +36,48 @@ abstract class CallbackAdapter
         return $this->callback;
     }
 
+    public function setCall($call)
+    {
+        $this->call = $call;
+        return $this;
+    }
+
+    public function getCall()
+    {
+        return $this->call;
+    }
+
+    public function getAfterCall()
+    {
+        return $this->afterCall;
+    }
+
+    public function setAfterCall($afterCall)
+    {
+        $this->afterCall = $afterCall;
+        return $this;
+    }
+
+    public function getCallParameter()
+    {
+        return $this->callParameter;
+    }
+
+    public function setCallParameter($callParameter)
+    {
+        $this->callParameter = $callParameter;
+        return $this;
+    }
+
     final public function getNodeWithoutAlias()
     {
         return $this;
+    }
+
+    public function getNodeXpath()
+    {
+        $css = new CssSelectorConverter();
+        return $css->toXPath($this->node);
     }
 
 

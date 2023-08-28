@@ -14,6 +14,8 @@ class DefaultCallbackAdapter extends CallbackAdapter
         $this->raw = $raw;
 
         $this->node = $raw;
+        $this->call = "extract";
+        $this->callParameter = ["_text"];
 
         $this->callback = function (Crawler $node) {
             return $node->text();

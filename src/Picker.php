@@ -6,6 +6,7 @@ namespace Cacing69\Cquery;
 use Cacing69\Cquery\Support\CqueryRegex;
 use Cacing69\Cquery\Support\StringHelper;
 use Cacing69\Cquery\Trait\HasRawProperty;
+use Cacing69\Cquery\Extractor\DefinerExtractor;
 use Closure;
 use Cacing69\Cquery\Trait\HasAliasProperty;
 use Cacing69\Cquery\Trait\HasNodeProperty;

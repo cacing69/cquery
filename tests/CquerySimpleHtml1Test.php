@@ -19,7 +19,12 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->pick(
+                "h1 as title",
+                "a as description",
+                "attr(href, a) as url",
+                "attr(class, a) as class"
+            )
             ->first();
 
         $this->assertSame('Title 1', $result['title']);
@@ -115,7 +120,7 @@ final class CquerySimpleHtml1Test extends TestCase
             ->OrFilter("attr(class, a)", "has", "blocked")
             ->get();
 
-        $this->assertSame(5, count($result));
+        $this->assertCount(5, $result);
     }
 
     public function testMultipleWhereWithUsedAndCondition()
@@ -131,7 +136,7 @@ final class CquerySimpleHtml1Test extends TestCase
             ->filter("attr(class, a)", "has", "super")
             ->get();
 
-        $this->assertSame(1, count($result));
+        $this->assertCount(1, $result);
     }
 
     public function testFilterWithEqualSign()
@@ -145,7 +150,7 @@ final class CquerySimpleHtml1Test extends TestCase
             ->filter("attr(class, a)", "=", "test-1-item")
             ->get();
 
-        $this->assertSame(1, count($result));
+        $this->assertCount(1, $result);
     }
 
     public function testWithRefIdAttribute()
@@ -159,7 +164,7 @@ final class CquerySimpleHtml1Test extends TestCase
             ->filter("attr(ref-id, h1)", "=", "23")
             ->get();
 
-        $this->assertSame(1, count($result));
+        $this->assertCount(1, $result);
     }
 
     public function testValueWithRefIdAttribute()
@@ -190,7 +195,7 @@ final class CquerySimpleHtml1Test extends TestCase
             ->filter("attr(class, a)", "like", "%ni%")
             ->get();
 
-        $this->assertSame(4, $result->count());
+        $this->assertCount(4, $result);
     }
 
     public function testWithLikeStartWith()
@@ -204,7 +209,7 @@ final class CquerySimpleHtml1Test extends TestCase
             ->filter("attr(class, a)", "like", "pre%")
             ->get();
 
-        $this->assertSame(4, $result->count());
+        $this->assertCount(4, $result);
     }
 
     public function testWithLikeEndWith()
@@ -218,7 +223,7 @@ final class CquerySimpleHtml1Test extends TestCase
             ->filter("attr(class, a)", "like", "%ed")
             ->get();
 
-        $this->assertSame(6, $result->count());
+        $this->assertCount(6, $result);
     }
 
     public function testWithLikeEndWithNied()
@@ -232,7 +237,7 @@ final class CquerySimpleHtml1Test extends TestCase
             ->filter("attr(class, a)", "like", "%nied")
             ->get();
 
-        $this->assertSame(2, $result->count());
+        $this->assertCount(2, $result);
     }
 
     public function testWithLessThan()
@@ -246,9 +251,7 @@ final class CquerySimpleHtml1Test extends TestCase
             ->filter("attr(customer-id, a)", "<", 18)
             ->get();
 
-        // dd($result);
-
-        $this->assertSame(2, $result->count());
+        $this->assertCount(2, $result);
     }
 
     public function testWithLessThanEqual()
@@ -262,7 +265,7 @@ final class CquerySimpleHtml1Test extends TestCase
             ->filter("attr(customer-id, a)", "<=", "18")
             ->get();
 
-        $this->assertSame(3, $result->count());
+        $this->assertCount(3, $result);
     }
 
     public function testWithGreaterThan()
@@ -276,7 +279,7 @@ final class CquerySimpleHtml1Test extends TestCase
             ->filter("attr(customer-id, a)", ">", "16")
             ->get();
 
-        $this->assertSame(2, $result->count());
+        $this->assertCount(2, $result);
     }
 
     public function testWithGreaterThanEquals()
@@ -290,7 +293,7 @@ final class CquerySimpleHtml1Test extends TestCase
             ->filter("attr(customer-id, a)", ">=", 16)
             ->get();
 
-        $this->assertSame(3, $result->count());
+        $this->assertCount(3, $result);
     }
 
     public function testWithRegex()
@@ -304,7 +307,7 @@ final class CquerySimpleHtml1Test extends TestCase
             ->filter("attr(regex-test, a)", "regex", "/[a-z]+\-[0-9]+\-[a-z]+/im")
             ->get();
 
-        $this->assertSame(3, $result->count());
+        $this->assertCount(3, $result);
     }
 
     public function testForNewColumnDefiner()
@@ -318,7 +321,7 @@ final class CquerySimpleHtml1Test extends TestCase
             ->filter("attr(regex-test, a)", "regex", "/[a-z]+\-[0-9]+\-[a-z]+/im")
             ->get();
 
-        $this->assertSame(3, $result->count());
+        $this->assertCount(3, $result);
     }
 
     public function testNewAdapter()
@@ -331,7 +334,7 @@ final class CquerySimpleHtml1Test extends TestCase
             ->pick("attr(class, a > p) as class_a_p", "attr(class, a) as url", "length(h1) as length")
             ->get();
 
-        $this->assertSame(9, $result->count());
+        $this->assertCount(9, $result);
     }
 
     public function testNewAdapterWithWhereEquals()
@@ -342,11 +345,10 @@ final class CquerySimpleHtml1Test extends TestCase
         $result = $data
             ->from("#lorem .link")
             ->pick("attr(class, a) as class_a_p", "attr(class, a) as url", "length(h1) as length")
-            // ->filter("attr(class, a)", "=", "test-1-item")
             ->filter("a", "=", "Href Attribute Example 90")
             ->get();
 
-        $this->assertSame(1, $result->count());
+        $this->assertCount(1, $result);
     }
 
     public function testWithClosurePicker()
@@ -356,8 +358,8 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick(new Picker(function ($node) {
-                    return strtoupper($node->text());
+            ->pick(new Picker(function ($value) {
+                    return strtoupper($value);
                 }, "a", "title"))
             ->first();
 
@@ -395,7 +397,7 @@ final class CquerySimpleHtml1Test extends TestCase
             ->filter("attr(customer-id, a)", "<=", "18")
             ->get();
 
-        $this->assertSame(3, $result->count());
+        $this->assertCount(3, $result);
     }
 
     public function testUsedFilterLength()
@@ -518,10 +520,10 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#list-test-child > div")
-            ->pick("span > .pluck as title")
+            ->pick(".pluck as title")
             ->get();
 
-        $this->assertCount(3, $result);
+        $this->assertCount(2, $result);
     }
 
     public function testCqueryResultSelectorSingleIdWithFilter()
@@ -534,6 +536,8 @@ final class CquerySimpleHtml1Test extends TestCase
             ->pick("span > .pluck as title")
             ->filter("span > .pluck", "=", "text-pluck-1")
             ->get();
+
+        dump($result);
 
         $this->assertCount(1, $result);
     }

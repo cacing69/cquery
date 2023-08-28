@@ -28,6 +28,14 @@ class UpperCallbackAdapter extends CallbackAdapter
         } else {
             preg_match(CqueryRegex::EXTRACT_FIRST_PARAM_UPPER, $raw, $node);
             $this->node = $node[1];
+
+            $this->call = "extract";
+            $this->callParameter = ["_text"];
+
+            $this->afterCall = function (string $value) {
+                return strtoupper($value);
+            };
+
             $this->callback = function (Crawler $node) {
                 return strtoupper($node->text());
             };

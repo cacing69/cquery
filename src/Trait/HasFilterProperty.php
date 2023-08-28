@@ -5,7 +5,7 @@ namespace Cacing69\Cquery\Trait;
 use Closure;
 
 trait HasFilterProperty {
-    private $filter;
+    protected $filter;
     public function setFilter($filter)
     {
         if(!($filter[0] instanceof Closure)) {

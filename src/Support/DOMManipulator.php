@@ -80,6 +80,12 @@ class DOMManipulator {
         return $this;
     }
 
+    public function resetFilter()
+    {
+        $this->filter = [];
+        return $this;
+    }
+
     public function getDefiner()
     {
         return $this->definer;

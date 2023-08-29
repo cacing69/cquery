@@ -2,7 +2,7 @@
 declare(strict_types = 1);
 namespace Cacing69\Cquery\Loader;
 
-use Cacing69\Cquery\Adapter\HTML\ClosureCallbackAdapter;
+use Cacing69\Cquery\Adapter\ClosureCallbackAdapter;
 use Cacing69\Cquery\Exception\CqueryException;
 use Cacing69\Cquery\Extractor\SourceExtractor;
 use Cacing69\Cquery\Support\DOMManipulator;

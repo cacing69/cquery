@@ -1,24 +1,31 @@
 <?php
-declare(strict_types = 1);
-namespace Cacing69\Cquery\Adapter\HTML;
+
+declare(strict_types=1);
+
+namespace Cacing69\Cquery\Adapter;
 
 use Cacing69\Cquery\Extractor\DefinerExtractor;
 use Cacing69\Cquery\Extractor\SourceExtractor;
 use Cacing69\Cquery\Support\CqueryRegex;
 use Symfony\Component\DomCrawler\Crawler;
 
-class LengthCallbackAdapter extends CallbackAdapter
+class ReverseCallbackAdapter extends CallbackAdapter
 {
+    protected static $signature = CqueryRegex::IS_REVERSE;
+
+    public static function getSignature()
+    {
+        return self::$signature;
+    }
     public function __construct(string $raw, SourceExtractor $source = null)
     {
         $this->raw = $raw;
 
         // check if function is nested
-        if(preg_match('/^\s?length\(\s?([a-z0-9_]*\(.+?\))\s?\)$/', $raw)) {
-            preg_match('/^\s?length\(\s?([a-z0-9_]*\(.+?\))\s?\)$/', $raw, $extract);
+        if (preg_match('/^\s?reverse\(\s?([a-z0-9_]*\(.+?\))\s?\)$/', $raw)) {
+            preg_match('/^\s?reverse\(\s?([a-z0-9_]*\(.+?\))\s?\)$/', $raw, $extract);
 
             $extractor = new DefinerExtractor($extract[1]);
-
             $this->node = $extractor->getAdapter()->getNode();
             $callbackFromExtractor = $extractor->getAdapter()->getCallback();
 
@@ -28,29 +35,26 @@ class LengthCallbackAdapter extends CallbackAdapter
             $afterCallFromExtractor = $extractor->getAdapter()->getAfterCall();
 
             $this->afterCall = function (string $value) use ($afterCallFromExtractor) {
-                return $afterCallFromExtractor ? strlen($afterCallFromExtractor($value)) : strlen($value);
+                return $afterCallFromExtractor ? strrev((string) $afterCallFromExtractor($value)) : strrev((string) $value);
             };
 
             $this->callback = function (Crawler $node) use ($callbackFromExtractor) {
-                return strlen($callbackFromExtractor($node));
+                return strrev((string) $callbackFromExtractor($node));
             };
         } else {
-            preg_match(CqueryRegex::EXTRACT_FIRST_PARAM_LENGTH, $raw, $node);
+            preg_match(CqueryRegex::EXTRACT_FIRST_PARAM_REVERSE, $raw, $node);
             $this->node = $node[1];
 
             $this->call = "extract";
             $this->callParameter = ["_text"];
 
             $this->afterCall = function (string $value) {
-                return strlen($value);
+                return strrev($value);
             };
 
             $this->callback = function (Crawler $node) {
-                return strlen($node->text());
+                return strrev((string) $node->text());
             };
         }
-
-
-
     }
 }

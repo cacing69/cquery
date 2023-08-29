@@ -2,16 +2,11 @@
 
 namespace Cacing69\Cquery\Extractor;
 
-use Cacing69\Cquery\Adapter\HTML\AttributeCallbackAdapter;
-use Cacing69\Cquery\Adapter\HTML\DefaultCallbackAdapter;
-use Cacing69\Cquery\Adapter\HTML\LengthCallbackAdapter;
 use Cacing69\Cquery\Picker;
 use Cacing69\Cquery\Support\CqueryRegex;
 use Cacing69\Cquery\Support\StringHelper;
-use Cacing69\Cquery\Trait\HasSelectorProperty;
-use Cacing69\Cquery\Adapter\HTML\ClosureCallbackAdapter;
-use Cacing69\Cquery\Adapter\HTML\ReverseCallbackAdapter;
-use Cacing69\Cquery\Adapter\HTML\UpperCallbackAdapter;
+use Cacing69\Cquery\Support\RegisterAdapter;
+use Cacing69\Cquery\Adapter\ClosureCallbackAdapter;
 use Cacing69\Cquery\Trait\HasAliasProperty;
 use Cacing69\Cquery\Trait\HasSourceProperty;
 use Closure;
@@ -59,16 +54,16 @@ class DefinerExtractor {
             $this->alias = StringHelper::slug($pickerRaw, "_");
         }
 
-        if (preg_match(CqueryRegex::IS_ATTRIBUTE, $pickerRaw)) {
-            $this->adapter = new AttributeCallbackAdapter($this->definer, $this->source);
-        } else if (preg_match(CqueryRegex::IS_LENGTH, $pickerRaw)) {
-            $this->adapter = new LengthCallbackAdapter($this->definer, $this->source);
-        } else if (preg_match(CqueryRegex::IS_UPPER, $pickerRaw)) {
-            $this->adapter = new UpperCallbackAdapter($this->definer, $this->source);
-        } else if (preg_match(CqueryRegex::IS_REVERSE, $pickerRaw)) {
-            $this->adapter = new ReverseCallbackAdapter($this->definer, $this->source);
-        } else {
-            $this->adapter = new DefaultCallbackAdapter($this->definer, $this->source);
+        foreach (RegisterAdapter::load() as $adapter) {
+            $checkSignature = $adapter::getSignature();
+            if(isset($checkSignature)) {
+                if(preg_match($checkSignature, $pickerRaw)) {
+                    $this->adapter = new $adapter($this->definer, $this->source);
+                    break;
+                }
+            } else {
+                $this->adapter = new $adapter($this->definer, $this->source);
+            }
         }
     }
 

@@ -4,14 +4,8 @@ declare(strict_types=1);
 
 namespace Cacing69\Cquery\Support;
 
-use Cacing69\Cquery\Adapter\HTML\AttributeCallbackAdapter;
-use Cacing69\Cquery\Trait\HasSelectorProperty;
 use Cacing69\Cquery\Trait\HasSourceProperty;
-use Cacing69\Cquery\Adapter\HTML\ClosureCallbackAdapter;
-use Cacing69\Cquery\Adapter\HTML\DefaultCallbackAdapter;
-use Cacing69\Cquery\Adapter\HTML\LengthCallbackAdapter;
-use Cacing69\Cquery\Adapter\HTML\ReverseCallbackAdapter;
-use Cacing69\Cquery\Adapter\HTML\UpperCallbackAdapter;
+use Cacing69\Cquery\Adapter\ClosureCallbackAdapter;
 use Cacing69\Cquery\Exception\CqueryException;
 use Cacing69\Cquery\Extractor\DefinerExtractor;
 use Closure;
@@ -41,7 +35,6 @@ class DOMManipulator {
 
             if(!array_key_exists(1, $filter)) {
                 throw new CqueryException("error processing filter, when used callback filter, please set selector on second parameter");
-
             }
 
             $extractor = new DefinerExtractor($filter[1]);
@@ -52,16 +45,16 @@ class DOMManipulator {
                 // ->setCallback()
                 ->setCallParameter($extractor->getAdapter()->getCallParameter());
         } else {
-            if(preg_match(CqueryRegex::IS_ATTRIBUTE, $filter[0])) {
-                $adapter = new AttributeCallbackAdapter($filter[0], $this->source);
-            } else if (preg_match(CqueryRegex::IS_LENGTH, $filter[0])) {
-                $adapter = new LengthCallbackAdapter($filter[0], $this->source);
-            } else if (preg_match(CqueryRegex::IS_UPPER, $filter[0])) {
-                $adapter = new UpperCallbackAdapter($filter[0], $this->source);
-            } else if (preg_match(CqueryRegex::IS_REVERSE, $filter[0])) {
-                $adapter = new ReverseCallbackAdapter($filter[0], $this->source);
-            } else {
-                $adapter = new DefaultCallbackAdapter($filter[0], $this->source);
+            foreach (RegisterAdapter::load() as $adapter) {
+                $checkSignature = $adapter::getSignature();
+                if(isset($checkSignature)) {
+                    if(preg_match($checkSignature, $filter[0])) {
+                        $adapter = new $adapter($filter[0], $this->source);
+                        break;
+                    }
+                } else {
+                    $adapter = new $adapter($filter[0], $this->source);
+                }
             }
         }
 

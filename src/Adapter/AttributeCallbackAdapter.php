@@ -1,6 +1,6 @@
 <?php
 declare(strict_types = 1);
-namespace Cacing69\Cquery\Adapter\HTML;
+namespace Cacing69\Cquery\Adapter;
 
 use Cacing69\Cquery\Extractor\SourceExtractor;
 use Cacing69\Cquery\Support\CqueryRegex;
@@ -8,6 +8,12 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class AttributeCallbackAdapter extends CallbackAdapter
 {
+    protected static $signature = CqueryRegex::IS_ATTRIBUTE;
+
+    public static function getSignature() {
+        return self::$signature;
+    }
+
     public function __construct(string $raw, SourceExtractor $source = null)
     {
         $this->raw = $raw;

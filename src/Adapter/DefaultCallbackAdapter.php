@@ -2,13 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Cacing69\Cquery\Adapter\HTML;
+namespace Cacing69\Cquery\Adapter;
 
 use Cacing69\Cquery\Extractor\SourceExtractor;
 use Symfony\Component\DomCrawler\Crawler;
 
 class DefaultCallbackAdapter extends CallbackAdapter
 {
+    protected static $signature = null;
+
+    public static function getSignature()
+    {
+        return self::$signature;
+    }
     public function __construct(string $raw, SourceExtractor $source = null)
     {
         $this->raw = $raw;

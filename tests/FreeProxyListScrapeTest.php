@@ -6,7 +6,6 @@ use Cacing69\Cquery\Cquery;
 use PHPUnit\Framework\TestCase;
 
 define("SAMPLE_FREE_PROXY_LIST", "src/Samples/free-proxy-list.html");
-define("SAMPLE_SIMPLE_1", "src/Samples/sample-simple-1.html");
 final class FreeProxyListScrapeTest extends TestCase
 {
     // public function testCqueryFreeProxyListWithUrl()
@@ -53,7 +52,7 @@ final class FreeProxyListScrapeTest extends TestCase
     {
         // enable this when u want to fetch data from remote
         // $content = "https://free-proxy-list.net/";
-        $content = file_get_contents(SAMPLE_FREE_PROXY_LIST);;
+        $content = file_get_contents(SAMPLE_FREE_PROXY_LIST);
 
         $data = new Cquery($content);
 

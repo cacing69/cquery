@@ -4,27 +4,55 @@ declare(strict_types=1);
 namespace Cacing69\Cquery;
 
 use Cacing69\Cquery\Loader\HTMLLoader;
-use Cacing69\Cquery\Loader\Loader;
 use Cacing69\Cquery\Support\DOMManipulator;
+use Symfony\Component\BrowserKit\HttpBrowser;
+use Symfony\Component\HttpClient\HttpClient;
 use Tightenco\Collect\Support\Collection;
 
 
-class Cquery extends Loader{
+/**
+ * Cquery eases query of a list of data given.
+ *
+ * @author Ibnul Mutaki <ibnuu@gmail.com>
+ */
+class Cquery {
+    /**
+     * loader should be an instance of Cacing69\Loader\Loader
+     * Available loader HTMLLoader, JSONLoader(), CSVLoader
+     *
+     * @var Cacing69\Loader\Loader
+     *
+     * The default loader is null, u need to specify when create Cquery instance.
+     */
     private $loader;
 
-    public function __construct(string $content = null, $contentType = "html", string $encoding = "UTF-8")
+    /**
+     * @param \DOMNodeList|\DOMNode|string|null $source A source to use as the the source data, u can put html content/url page to scrape default is null
+     * @param string $contentType Type of Data Content to be Used as Data Source default is 'html'
+     * @param string $encoding Encoding Used in the Content default is 'UTF-8'
+     */
+    public function __construct(string $source = null, $contentType = "html", string $encoding = "UTF-8")
     {
-        if($content !== null) {
-            if (filter_var($content, FILTER_VALIDATE_URL)) {
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, $content);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                $output = curl_exec($ch);
-                $this->loader = new HTMLLoader($output);
-                curl_close($ch);
-            } else {
+        if($source !== null) {
+            if (filter_var($source, FILTER_VALIDATE_URL)) {
+                // $ch = curl_init();
+                // curl_setopt($ch, CURLOPT_URL, $source);
+                // curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                // $output = curl_exec($ch);
+                // $this->loader = new HTMLLoader($output);
+                // curl_close($ch);
 
-                $this->loader = new HTMLLoader($content);
+                $browser = new HttpBrowser(HttpClient::create());
+                $browser->request('GET', $source);
+
+                $response = $browser->getResponse()->getContent();
+
+                $this->loader = new HTMLLoader($response);
+                // dd($browser->);
+            } else {
+                if($contentType === "html") {
+                    $this->loader = new HTMLLoader($source);
+                }
             }
         }
     }

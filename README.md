@@ -98,17 +98,17 @@ Below are the functions you are can use, they may change over time. <br>**Note:*
 x
 | operator | example | description |
 | --------- | ------------- | ------------------ |
-| (= or ==) | `filter("h1", "=", "99")` | retrieve data according to elements that only have the same value = 99 |
-| === | `filter("h1", "===", "99")` | retrieve data according to elements that only have the same and identic with value = 99 |
-| < | `filter("attr(id, a)", "<", 99)` | retrieve data according to elements that only have values smaller than 99 |
-| <= | `filter("attr(id, a)", "<=", 99)` | get data from elements with values that are lesser than or equal to 99 |
-| > | `filter("attr(id, a)", ">", 99)` |  get data from elements with values that are greater than 99 |
-| >= | `filter("attr(id, a)", ">=", 99)` |  Get data from elements with values that are greater than or equal 99 |
-| (<> or !=) | `filter("attr(id, a)", "!=", 99)` |  get data from elements that are not equal to 99 |
-| !== | `filter("attr(id, a)", "!==", 99)` |  get data from elements that are not equal or they are not the same type to 99 |
-| has | `filter("attr(class, a)", "has", "foo")` | get data from elements that only have class "foo" |
-| regex | `filter("attr(class, a)", "regex", "/[a-z]+\-[0-9]+\-[a-z]+/im")` | get data from elements that match the given regex pattern only, with the provided pattern being (a-192-ab, b-12-ac, zx-1223-ac) |
-| like | `filter("attr(class, a)", "like", "%foo%")` <br><br> `filter("attr(class, a)", "like", "%foo")` <br><br> `filter("attr(class, a)", "like", "foo%")` | retrieve data according to elements and value criteria. <br><br> %foo% = anything containing the phrase "foo" <br><br> %foo = all sentences ending with "foo" <br><br> foo% = all sentences starting with "foo"|
+| `(= or ==)` | `filter("h1", "=", "99")` | retrieve data according to elements that only have the same value = 99 |
+| `===` | `filter("h1", "===", "99")` | retrieve data according to elements that only have the same and identic with value = 99 |
+| `<` | `filter("attr(id, a)", "<", 99)` | retrieve data according to elements that only have values smaller than 99 |
+| `<=` | `filter("attr(id, a)", "<=", 99)` | get data from elements with values that are lesser than or equal to 99 |
+| `>` | `filter("attr(id, a)", ">", 99)` |  get data from elements with values that are greater than 99 |
+| `>=` | `filter("attr(id, a)", ">=", 99)` |  Get data from elements with values that are greater than or equal 99 |
+| `(<> or !=)` | `filter("attr(id, a)", "!=", 99)` |  get data from elements that are not equal to 99 |
+| `!==` | `filter("attr(id, a)", "!==", 99)` |  get data from elements that are not equal or they are not the same type to 99 |
+| `has` | `filter("attr(class, a)", "has", "foo")` | get data from elements that only have class "foo" |
+| `regex` | `filter("attr(class, a)", "regex", "/[a-z]+\-[0-9]+\-[a-z]+/im")` | get data from elements that match the given regex pattern only, with the provided pattern being (a-192-ab, b-12-ac, zx-1223-ac) |
+| `like` | `filter("attr(class, a)", "like", "%foo%")` <br><br> `filter("attr(class, a)", "like", "%foo")` <br><br> `filter("attr(class, a)", "like", "foo%")` | retrieve data according to elements and value criteria. <br><br> %foo% = anything containing the phrase "foo" <br><br> %foo = all sentences ending with "foo" <br><br> foo% = all sentences starting with "foo"|
 ---
 
 So, let's start scraping this website.

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Cacing69\Cquery\Loader;
 
-use Tightenco\Collect\Support\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 abstract class Loader
 {
@@ -37,7 +37,7 @@ abstract class Loader
 
     abstract public function filter(...$filter);
     abstract public function OrFilter(...$filter);
-    abstract public function get() : Collection;
+    abstract public function get() : ArrayCollection;
 
     public static function getResultFilter(array $filtered): array
     {

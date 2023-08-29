@@ -7,8 +7,8 @@ use Cacing69\Cquery\Exception\CqueryException;
 use Cacing69\Cquery\Extractor\SourceExtractor;
 use Cacing69\Cquery\Support\DOMManipulator;
 use Cacing69\Cquery\Support\StringHelper;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\DomCrawler\Crawler;
-use Tightenco\Collect\Support\Collection;
 
 class HTMLLoader extends Loader
 {
@@ -70,7 +70,7 @@ class HTMLLoader extends Loader
         return $this;
     }
 
-    public function get(): Collection
+    public function get(): ArrayCollection
     {
         $this->validateSource();
         $this->results[$this->source] = [];
@@ -121,7 +121,7 @@ class HTMLLoader extends Loader
             $_filtered = $this->getResultFilter($_affect);
 
             if (count($_filtered) === 0) {
-                return collect([]);
+                return new ArrayCollection([]);
             }
 
             // if (count($_filtered) > 0) {
@@ -269,7 +269,7 @@ class HTMLLoader extends Loader
         //     # code...
         // }
 
-        return collect($_hold_data);
+        return new ArrayCollection($_hold_data);
 
         // if($limit !== null){
         //     $result_collect = $result_collect->take($limit);

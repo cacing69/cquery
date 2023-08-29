@@ -5,6 +5,7 @@ namespace Cacing69\Cquery;
 
 use Cacing69\Cquery\Loader\HTMLLoader;
 use Cacing69\Cquery\Support\DOMManipulator;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\HttpClient\HttpClient;
 use Tightenco\Collect\Support\Collection;
@@ -91,7 +92,7 @@ class Cquery {
         $this->loader->OrFilter(...$filter);
         return $this;
     }
-    public function get() : Collection
+    public function get() : ArrayCollection
     {
         return $this->loader->get();
     }

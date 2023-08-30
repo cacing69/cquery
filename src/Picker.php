@@ -22,30 +22,31 @@ class Picker
     public function __construct($raw, ...$options)
     {
         $this->options = $options;
+        if($options) {
+            if($options[0] instanceof Closure) {
+                $this->raw = $options[0];
+                if(count($options) === 2) {
+                        $this->node = $raw;
+                        $this->alias = $options[1];
+                    } else if (count($options) === 1) {
+                        $this->node = $raw;
+                        $this->alias = Str::slug($this->node);
+                    }
+                } else {
+                    $this->raw = $raw;
+                    if (preg_match(RegExp::CHECK_AND_EXTRACT_PICKER_WITH_WRAP, $raw)) {
+                        preg_match(RegExp::CHECK_AND_EXTRACT_PICKER_WITH_WRAP, $raw, $extract);
+                        $this->node = $extract[1];
+                    } else {
+                        $this->node = $raw;
+                    }
 
-        if($options[0] instanceof Closure) {
-            $this->raw = $options[0];
-            if(count($options) === 2) {
-                $this->node = $raw;
-                $this->alias = $options[1];
-            } else if (count($options) === 1) {
-                $this->node = $raw;
-                $this->alias = Str::slug($this->node);
-            }
-        } else {
-            $this->raw = $raw;
-            if (preg_match(RegExp::CHECK_AND_EXTRACT_PICKER_WITH_WRAP, $raw)) {
-                preg_match(RegExp::CHECK_AND_EXTRACT_PICKER_WITH_WRAP, $raw, $extract);
-                $this->node = $extract[1];
-            } else {
-                $this->node = $raw;
-            }
+                    $this->alias = Str::slug($this->node);
 
-            $this->alias = Str::slug($this->node);
-
-            if (count($options) === 1) {
-                $this->alias = $options[0];
-            }
+                    if (count($options) === 1) {
+                        $this->alias = $options[0];
+                    }
+                }
         }
     }
 

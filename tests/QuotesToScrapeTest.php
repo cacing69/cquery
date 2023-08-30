@@ -57,7 +57,6 @@ final class QuotesToScrapeTest extends TestCase
                 ->get();
         } catch (Exception $e) {
             $this->assertSame(CqueryException::class, get_class($e));
-            $this->assertMatchesRegularExpression("/error|pick|column/", $e->getMessage());
             $this->assertStringContainsString("error query definer", $e->getMessage());
             $this->assertStringContainsString("error occurred while attempting to pick the column", $e->getMessage());
         }

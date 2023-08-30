@@ -65,8 +65,6 @@ final class QuotesToScrapeTest extends TestCase
 
     public function testScrapeQuotesToScrapeWithGetChildDefiner()
     {
-        // change with this when u want to fetch data from remote
-        // $content = "http://quotes.toscrape.com/";
         $content = file_get_contents(SAMPLE_QUOTES_TO_SCRAPE);
 
         $data = new Cquery($content);
@@ -75,7 +73,7 @@ final class QuotesToScrapeTest extends TestCase
             ->from(".col-md-8 > .quote")
             ->pick(
                 "span.text as text",
-                // "span:nth-child(2) > small as author",
+                "span:nth-child(2) > small as author",
                 "get_node(div > .tags, a)  as tags",
             )
             ->get()
@@ -84,13 +82,5 @@ final class QuotesToScrapeTest extends TestCase
         $this->assertCount(10, $result);
         $this->assertCount(4, $result[0]['tags']);
         $this->assertCount(2, $result[1]['tags']);
-
-        // dump($result);
-        // } catch (Exception $e) {
-        //     $this->assertSame(CqueryException::class, get_class($e));
-        //     $this->assertMatchesRegularExpression("/error|pick|column/", $e->getMessage());
-        //     $this->assertStringContainsString("error query definer", $e->getMessage());
-        //     $this->assertStringContainsString("error occurred while attempting to pick the column", $e->getMessage());
-        // }
     }
 }

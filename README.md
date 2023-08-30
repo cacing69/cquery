@@ -93,6 +93,7 @@ Below are the functions you are can use, they may change over time. <br>**Note:*
 | `length(selector)` | `length(h1)` | will retrieve all length string on the element/container according to the selector. (h1) |
 | `upper(selector)` | `upper(h1)` | will change text to uppercase element/container according to the selector. (h1) |
 | `reverse(selector)` | `reverse(h1)` | will reverse text according to the selector. (h1) |
+| `get_child(selectorParent, selectorChildAfterParent)` | `get_node(div > .tags, a)  as tags` | will add array element each item, for its usage, you can refer to the sample code below in $result_4. |
 
 #### How to use filter
 x
@@ -181,8 +182,7 @@ Here are the result for `$result_2`
 ![Alt text](https://gcdnb.pbrd.co/images/qtItVezcEUq7.png?o=1 "a title")
 
 ```php
-// another example, to load data from url
-// for now it used curl without any config, but i have plan to change it withh browserKit, i hope have much time to realize that
+// another example, to load data from url used browserkit
 
 $url = "https://free-proxy-list.net/";
 $data = new Cquery($url);
@@ -202,6 +202,30 @@ $result_3 = $data
 Here are the result for `$result_3`
 
 ![Alt text](https://gcdnb.pbrd.co/images/We0ea7frlZw1.png?o=1 "a title")
+
+## how to use get_child(a, b)
+
+```php
+// another example, to load data from url used browserkit
+
+$url = "http://quotes.toscrape.com/";
+$data = new Cquery($url);
+
+$result_4 = $data
+    ->from(".fpl-list")
+    ->pick(
+        "td:nth-child(1) as ip_address",
+        "td:nth-child(4) as country",
+        "td:nth-child(7) as https",
+    )->filter('td:nth-child(7)', "=", "no")
+    ->limit(1)
+    ->get();
+
+```
+
+Here are the result for `$result_4`
+
+![Alt text](https://gcdnb.pbrd.co/images/46mETzAatjur.png?o=1 "a title")
 
 ### Note
 

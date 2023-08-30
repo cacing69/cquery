@@ -380,17 +380,17 @@ final class CquerySimpleHtml1Test extends TestCase
         $data = new Cquery($simpleHtml);
 
         $closure = function ($node) {
-            return $node->text() . "-XXX";
+            return $node . "-XXX";
         };
 
         $result = $data
             ->from("#lorem .link")
             ->pick(
-                new Picker("a", "key_2")
+                new Picker("a", $closure, "key_2")
             )
             ->first();
 
-        $this->assertSame("Href Attribute Example 1", $result["key_2"]);
+        $this->assertSame("Href Attribute Example 1 -XXX", $result["key_2"]);
 
     }
 

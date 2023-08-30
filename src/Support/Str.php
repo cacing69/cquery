@@ -4,7 +4,7 @@ namespace Cacing69\Cquery\Support;
 
 class Str {
     // https://stackoverflow.com/a/2955521/10232729
-    public static function slug($text, $divider = "_")
+    public static function slug($text, $divider = "_") : string
     {
         $replace = [
             '<' => '', '>' => '', '-' => ' ', '&' => '', '.' => '',
@@ -67,5 +67,11 @@ class Str {
         $text = preg_replace('~[^-\w.]+~', '', $text);
 
         return strtolower($text);
+    }
+
+    // https://stackoverflow.com/a/33546903
+    public static function isNonEmptyString($val) : bool
+    {
+        return is_string($val) && $val !== '';
     }
 }

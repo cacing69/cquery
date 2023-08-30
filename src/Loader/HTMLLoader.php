@@ -45,6 +45,16 @@ class HTMLLoader extends Loader
         return $this;
     }
 
+    public function define(...$defines)
+    {
+        $this->validateSource();
+        foreach ($defines as $define) {
+            $this->dom[$this->source]->addDefiner($define);
+        }
+
+        return $this;
+    }
+
     public function from(string $value)
     {
         $selector = new SourceExtractor($value);

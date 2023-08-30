@@ -78,6 +78,12 @@ class Cquery {
         return $this;
     }
 
+    public function define(...$defines): Cquery
+    {
+        $this->loader->define(...$defines);
+        return $this;
+    }
+
     /**
      * Adds a source based on data given.
      * This method is used to determine the HTML element selector

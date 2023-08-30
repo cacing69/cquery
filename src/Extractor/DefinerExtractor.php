@@ -2,12 +2,12 @@
 
 namespace Cacing69\Cquery\Extractor;
 
-use Cacing69\Cquery\Picker;
 use Cacing69\Cquery\Support\RegExp;
 use Cacing69\Cquery\Support\Str;
 use Cacing69\Cquery\RegisterAdapter;
 use Cacing69\Cquery\Adapter\ClosureCallbackAdapter;
 use Cacing69\Cquery\Trait\HasAliasProperty;
+use Cacing69\Cquery\Definer;
 use Cacing69\Cquery\Trait\HasSourceProperty;
 use Closure;
 
@@ -18,19 +18,19 @@ class DefinerExtractor {
     private $raw;
     private $definer;
     private $adapter;
-    public function __construct($picker, SourceExtractor $source = null)
+    public function __construct($definer, SourceExtractor $source = null)
     {
         $this->source = $source;
-        $this->raw = $picker;
+        $this->raw = $definer;
 
-        if($picker instanceof Picker) {
-            $this->alias = $picker->getAlias();
+        if($definer instanceof Definer) {
+            $this->alias = $definer->getAlias();
 
-            if($picker->getRaw() instanceof Closure) {
-                $this->definer = $picker;
-                $adapter = new ClosureCallbackAdapter($picker->getRaw(), $this->source);
+            if($definer->getRaw() instanceof Closure) {
+                $this->definer = $definer;
+                $adapter = new ClosureCallbackAdapter($definer->getRaw(), $this->source);
 
-                $extractor = new DefinerExtractor("{$picker->getNode()} as {$picker->getAlias()}");
+                $extractor = new DefinerExtractor("{$definer->getNode()} as {$definer->getAlias()}");
 
                 $adapter = $adapter->setNode($extractor->getAdapter()->getNode())
                     ->setCall($extractor->getAdapter()->getCall())
@@ -39,18 +39,17 @@ class DefinerExtractor {
 
                 $this->adapter = $adapter;
             } else {
-                $this->handlerDefiner($picker->getRawWithAlias());
+                $this->handlerExtractor($definer->getNodeWithAlias());
             }
         } else {
-            $this->handlerDefiner($picker);
+            $this->handlerExtractor($definer);
         }
     }
 
-    private function handlerDefiner($pickerRaw) {
+    private function handlerExtractor($definerRaw) {
         $_alias = null;
-        if (preg_match(RegExp::IS_DEFINER_HAVE_ALIAS, $pickerRaw)) {
-            $decodeSelect = explode(" as ", $pickerRaw);
-
+        if (preg_match(RegExp::IS_DEFINER_HAVE_ALIAS, $definerRaw)) {
+            $decodeSelect = explode(" as ", $definerRaw);
 
             if(preg_match(RegExp::CHECK_AND_EXTRACT_PICKER_WITH_WRAP, $decodeSelect[0])){
                 preg_match(RegExp::CHECK_AND_EXTRACT_PICKER_WITH_WRAP, $decodeSelect[0], $extract);
@@ -60,10 +59,10 @@ class DefinerExtractor {
                 $this->definer = trim($decodeSelect[0]);
             }
 
-            $_alias = Str::slug($decodeSelect[1]);
+            $_alias = $decodeSelect[1];
         } else {
-            $this->definer = $pickerRaw;
-            $_alias = Str::slug(Str::slug($pickerRaw, "_"));
+            $this->definer = $definerRaw;
+            $_alias = Str::slug($definerRaw, "_");
         }
 
         $this->setAlias($_alias);

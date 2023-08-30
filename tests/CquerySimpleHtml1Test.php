@@ -3,6 +3,7 @@
 namespace Cacing69\Cquery\Test;
 
 use Cacing69\Cquery\Cquery;
+use Cacing69\Cquery\Definer;
 use Cacing69\Cquery\Exception\CqueryException;
 use Cacing69\Cquery\Picker;
 use DateTime;
@@ -568,5 +569,46 @@ final class CquerySimpleHtml1Test extends TestCase
             ->get();
 
         $this->assertCount(2, $result);
+    }
+
+    public function testChangePickToDefiner()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem > .link")
+            ->define(
+                "a as title",
+                new Definer("h1", "_test"),
+                new Definer("h1", "_closure", function ($e) {
+                    return strtoupper($e) . " [" . strrev(strtoupper($e)) . "]";
+                })
+            )
+            ->get();
+
+        $this->assertCount(9, $result);
+        $this->assertArrayHasKey("title", $result[0]);
+        $this->assertArrayHasKey("_test", $result[0]);
+        $this->assertSame("TITLE 1 [1 ELTIT]", $result[0]["_closure"]);
+    }
+
+    public function testDefinerErrorAliasOnFirstParameter()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        try {
+            $result = $data
+                ->from("#lorem > .link")
+                ->define(
+                    "a as title",
+                    new Definer("h1 as _test")
+                )
+                ->get();
+        } catch (Exception $e) {
+            $this->assertSame(CqueryException::class, get_class($e));
+            $this->assertSame("error define, please set alias on second parameter", $e->getMessage());
+        }
     }
 }

@@ -2,35 +2,34 @@
 
 namespace Cacing69\Cquery\Test;
 
-use Cacing69\Cquery\Picker;
+use Cacing69\Cquery\Definer;
 use PHPUnit\Framework\TestCase;
 
-final class PickerTest extends TestCase
+final class DefinerTest extends TestCase
 {
-    public function testPickerString()
+    public function testDefinerString()
     {
-        $picker = new Picker("a");
+        $definer = new Definer("a");
 
-        $this->assertSame("a", $picker->getNode());
-        $this->assertSame("a", $picker->getAlias());
-        $this->assertCount(0, $picker->getOptions());
+        $this->assertSame("a", $definer->getNode());
+        $this->assertSame("a", $definer->getAlias());
     }
 
-    public function testPickerStringWithAlias()
+    public function testDefinerStringWithAlias()
     {
-        $picker = new Picker("h1", "title");
+        $definer = new Definer("h1", "title");
 
-        $this->assertSame("h1", $picker->getNode());
-        $this->assertSame("title", $picker->getAlias());
-        $this->assertCount(1, $picker->getOptions());
+        $this->assertSame("h1", $definer->getNode());
+        $this->assertSame("title", $definer->getAlias());
+        $this->assertCount(1, $definer->getOptions());
     }
 
-    public function testPickerStringWithoutAlias()
+    public function testDefinerStringWithoutAlias()
     {
-        $picker = new Picker("(h1 > p > ul)");
+        $definer = new Definer("(h1 > p > ul)");
 
-        $this->assertSame("h1 > p > ul", $picker->getNode());
-        $this->assertSame("h1_p_ul", $picker->getAlias());
-        $this->assertCount(0, $picker->getOptions());
+        $this->assertSame("h1 > p > ul", $definer->getNode());
+        $this->assertSame("h1_p_ul", $definer->getAlias());
+        $this->assertCount(0, $definer->getOptions());
     }
 }

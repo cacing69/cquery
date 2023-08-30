@@ -5,7 +5,6 @@ namespace Cacing69\Cquery\Test;
 use Cacing69\Cquery\Cquery;
 use Cacing69\Cquery\Definer;
 use Cacing69\Cquery\Exception\CqueryException;
-use Cacing69\Cquery\Picker;
 use Exception;
 use PHPUnit\Framework\TestCase;
 
@@ -356,25 +355,25 @@ final class CquerySimpleHtml1Test extends TestCase
         $this->assertCount(1, $result);
     }
 
-    public function testWithClosurePicker()
+    public function testWithClosureDefiner()
     {
         $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
         $data = new Cquery($simpleHtml);
 
-        $picker = new Definer("h1", "alias", function ($value) {
+        $definer = new Definer("h1", "alias", function ($value) {
             return str_replace(" ", "-", strtoupper($value))."-FROM-CLOSURE";
         });
 
         $result = $data
             ->from("#lorem .link")
-            ->define("upper(a)", $picker)
+            ->define("upper(a)", $definer)
             ->first();
 
         $this->assertSame("HREF ATTRIBUTE EXAMPLE 1", $result["upper_a"]);
         $this->assertSame("TITLE-1-FROM-CLOSURE", $result["alias"]);
     }
 
-    public function testPickWithPickerUsedClosure()
+    public function testPickWithDefinerUsedClosure()
     {
         $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
         $data = new Cquery($simpleHtml);

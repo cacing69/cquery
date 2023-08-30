@@ -51,8 +51,8 @@ class DefinerExtractor {
         if (preg_match(RegExp::IS_DEFINER_HAVE_ALIAS, $definerRaw)) {
             $decodeSelect = explode(" as ", $definerRaw);
 
-            if(preg_match(RegExp::CHECK_AND_EXTRACT_PICKER_WITH_WRAP, $decodeSelect[0])){
-                preg_match(RegExp::CHECK_AND_EXTRACT_PICKER_WITH_WRAP, $decodeSelect[0], $extract);
+            if(preg_match(RegExp::CHECK_AND_EXTRACT_DEFINER_WITH_WRAP, $decodeSelect[0])){
+                preg_match(RegExp::CHECK_AND_EXTRACT_DEFINER_WITH_WRAP, $decodeSelect[0], $extract);
 
                 $this->definer = trim($extract[1]);
             } else {

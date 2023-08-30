@@ -1,12 +1,8 @@
 <?php
 declare(strict_types=1);
-
 namespace Cacing69\Cquery;
 
-use Cacing69\Cquery\Exception\CqueryException;
 use Cacing69\Cquery\Loader\HTMLLoader;
-use Cacing69\Cquery\DOMManipulator;
-use Cacing69\Cquery\Support\Str;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\HttpClient\HttpClient;
@@ -73,9 +69,7 @@ class Cquery {
      * that will serve as a property in each array element.
      *
      * @param \Cacing69\Cquery\Picker|string $picks a selector to grab on element
-     *
      * @return \Cacing69\Cquery\Cquery
-     *
      * @throws \Cacing69\Cquery\Exception\CqueryException when the provided parameter is incorrect."
      */
     public function pick(...$picks): Cquery
@@ -86,14 +80,11 @@ class Cquery {
 
     /**
      * Adds a source based on data given.
-     *
      * This method is used to determine the HTML element selector
      * that will serve as a property in each array element.
      *
      * @param string $value set a source element selector to activate query
-     *
      * @return \Cacing69\Cquery\Cquery
-     *
      */
     public function from(string $value)
     {
@@ -103,11 +94,9 @@ class Cquery {
 
     /**
      * Add limit amount when scraping.
-     *
      * This method is used to limit the total length of the data.
      *
      * @param int $limit set a limit
-     *
      * @return \Cacing69\Cquery\Cquery
      *
      */
@@ -140,9 +129,8 @@ class Cquery {
     }
 
     /**
-    *
     * Take a reesult from query
-    *
+
     * @return ArrayCollection
     */
     public function get() : ArrayCollection

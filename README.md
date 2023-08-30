@@ -204,7 +204,7 @@ Here are the result for `$result_3`
 
 ![Alt text](https://gcdnb.pbrd.co/images/We0ea7frlZw1.png?o=1 "a title")
 
-## how to use get_child(a, b)
+### how to use get_child(a, b)
 
 ```php
 // another example, to load data from url used browserkit

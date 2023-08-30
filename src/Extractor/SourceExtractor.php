@@ -4,13 +4,15 @@ declare(strict_types=1);
 namespace Cacing69\Cquery\Extractor;
 
 use Cacing69\Cquery\Support\RegExp;
+use Cacing69\Cquery\Trait\HasAliasProperty;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 
 class SourceExtractor
 {
+    use HasAliasProperty;
     private $raw;
     private $value;
-    private $alias;
+    // private $alias;
     private $xpath;
 
     public function __construct($init)
@@ -56,8 +58,8 @@ class SourceExtractor
         return $this->alias !== "";
     }
 
-    public function getAlias()
-    {
-        return $this->alias;
-    }
+    // public function getAlias()
+    // {
+    //     return $this->alias;
+    // }
 }

@@ -131,30 +131,39 @@ class HTMLLoader extends Loader
         $_hold_data = [];
 
         foreach ($this->getActiveDom()->getDefiner() as $key => $definer) {
-
-            $_data = $dom->getCrawler()
-                        ->filterXPath($dom->getSource()->getXpath())
-                         ->filterXPath($definer->getAdapter()->getNodeXpath());
-
-
-                         if($_filtered !== null) {
-                             $_data = $_data->reduce(function (Crawler $node, $i) use ($_filtered) {
-                                 return in_array($i, $_filtered);
-                                });
-                            }
-
+            $_data = null;
             if($definer->getAdapter()->getCall() === "extract"){
-                $_data = $_data->extract($definer->getAdapter()->getCallParameter());
+                $_data = $dom->getCrawler()
+                        ->filterXPath($dom->getSource()->getXpath())
+                        ->filterXPath($definer->getAdapter()->getNodeXpath());
 
-                if($key === 1) {
-                    $bound = count($_data);
-                } else {
-                    if(count($_data) !== $bound) {
-                        throw new CqueryException("error query definer, it looks like an error occurred while attempting to pick the column");
-                    }
+
+                if($_filtered !== null) {
+                    $_data = $_data->reduce(function (Crawler $node, $i) use ($_filtered) {
+                        return in_array($i, $_filtered);
+                    });
                 }
-            } else if($definer->getAdapter()->getCall() === "filter"){
-                dd($definer);
+
+                $_data = $_data->extract($definer->getAdapter()->getCallParameter());
+            } else if($definer->getAdapter()->getCall() === "filter.extract"){
+                $_data = [];
+                $dom->getCrawler()
+                    ->filterXPath($dom->getSource()->getXpath())
+                    ->filterXPath($definer->getAdapter()->getNodeXpath())
+                    ->each(function (Crawler $node, $i) use (&$_data){
+                    //    dump($node->text());$node-
+                        $node->filter("a")->each(function (Crawler $_node, $_i) use ($i, &$_data) {
+                            $_data[$i][] = $_node->text();
+                        });
+                    });
+            }
+
+            if($key === 0) {
+                $bound = count($_data);
+            } else {
+                if(count($_data) !== $bound) {
+                    throw new CqueryException("error query definer, it looks like an error occurred while attempting to pick the column, It's because there are no matching rows in each column.");
+                }
             }
 
             if($definer->getAdapter()->getAfterCall() !== null) {
@@ -165,7 +174,7 @@ class HTMLLoader extends Loader
             }
 
             foreach ($_data as $_key => $_value) {
-                if(!is_numeric($_value)) {
+                if(is_string($_value)) {
                     $_value = trim(preg_replace('/\s+/', ' ', (string) $_value));
                 }
 

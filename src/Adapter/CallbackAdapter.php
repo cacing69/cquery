@@ -48,6 +48,11 @@ abstract class CallbackAdapter
         return $this->call;
     }
 
+    public function getRef()
+    {
+        return $this->ref;
+    }
+
     public function getAfterCall()
     {
         return $this->afterCall;

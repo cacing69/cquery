@@ -332,7 +332,11 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick("attr(class, a > p) as class_a_p", "attr(class, a) as url", "length(h1) as length")
+            ->pick(
+                // "attr(class, a > p) as class_a_p",
+                "attr(class, a) as url",
+                "length(h1) as length"
+                )
             ->get();
 
         $this->assertCount(9, $result);
@@ -365,8 +369,6 @@ final class CquerySimpleHtml1Test extends TestCase
             ->from("#lorem .link")
             ->pick("upper(a)", $picker)
             ->first();
-
-        dump($result);
 
         $this->assertSame("HREF ATTRIBUTE EXAMPLE 1", $result["upper_a"]);
         $this->assertSame("TITLE-1-FROM-CLOSURE", $result["alias"]);

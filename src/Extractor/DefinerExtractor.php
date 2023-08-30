@@ -47,8 +47,10 @@ class DefinerExtractor {
     }
 
     private function handlerDefiner($pickerRaw) {
+        $_alias = null;
         if (preg_match(RegExp::IS_DEFINER_HAVE_ALIAS, $pickerRaw)) {
             $decodeSelect = explode(" as ", $pickerRaw);
+
 
             if(preg_match(RegExp::CHECK_AND_EXTRACT_PICKER_WITH_WRAP, $decodeSelect[0])){
                 preg_match(RegExp::CHECK_AND_EXTRACT_PICKER_WITH_WRAP, $decodeSelect[0], $extract);
@@ -56,19 +58,20 @@ class DefinerExtractor {
                 $this->definer = trim($extract[1]);
             } else {
                 $this->definer = trim($decodeSelect[0]);
-                $this->alias = Str::slug($decodeSelect[1]);
             }
 
-            $this->alias = Str::slug($decodeSelect[1]);
+            $_alias = Str::slug($decodeSelect[1]);
         } else {
             $this->definer = $pickerRaw;
-            $this->alias = Str::slug($pickerRaw, "_");
+            $_alias = Str::slug(Str::slug($pickerRaw, "_"));
         }
+
+        $this->setAlias($_alias);
 
         foreach (RegisterAdapter::load() as $adapter) {
             $checkSignature = $adapter::getSignature();
             if(isset($checkSignature)) {
-                if(preg_match($checkSignature, $pickerRaw)) {
+                if(preg_match($checkSignature, $this->definer)) {
                     $this->adapter = new $adapter($this->definer, $this->source);
                     break;
                 }
@@ -76,6 +79,17 @@ class DefinerExtractor {
                 $this->adapter = new $adapter($this->definer, $this->source);
             }
         }
+    }
+
+    public function setAlias($alias)
+    {
+        $this->alias = $alias;
+
+        if($this->source) {
+            $this->source->setAlias($alias);
+        }
+
+        return $this;
     }
 
     public function getDefiner() {

@@ -79,6 +79,8 @@ class HTMLLoader extends Loader
         $dom = $this->getActiveDom();
         $_filtered = null;
 
+        $bound = null;
+
         if (count($dom->getFilter()) > 0) {
             $_affect = [
                 "and" => [],
@@ -134,14 +136,23 @@ class HTMLLoader extends Loader
                         ->filterXPath($dom->getSource()->getXpath())
                          ->filterXPath($definer->getAdapter()->getNodeXpath());
 
-            if($_filtered !== null) {
-                $_data = $_data->reduce(function (Crawler $node, $i) use ($_filtered) {
-                    return in_array($i, $_filtered);
-                });
-            }
+
+                         if($_filtered !== null) {
+                             $_data = $_data->reduce(function (Crawler $node, $i) use ($_filtered) {
+                                 return in_array($i, $_filtered);
+                                });
+                            }
 
             if($definer->getAdapter()->getCall() === "extract"){
                 $_data = $_data->extract($definer->getAdapter()->getCallParameter());
+
+                if($key === 1) {
+                    $bound = count($_data);
+                } else {
+                    if(count($_data) !== $bound) {
+                        throw new CqueryException("error query definer, it looks like an error occurred while attempting to pick the column");
+                    }
+                }
             } else if($definer->getAdapter()->getCall() === "filter"){
                 dd($definer);
             }

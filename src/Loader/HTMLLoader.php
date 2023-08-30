@@ -35,16 +35,6 @@ class HTMLLoader extends Loader
         }
     }
 
-    public function pick(...$picks)
-    {
-        $this->validateSource();
-        foreach ($picks as $pick) {
-            $this->dom[$this->source]->addDefiner($pick);
-        }
-
-        return $this;
-    }
-
     public function define(...$defines)
     {
         $this->validateSource();

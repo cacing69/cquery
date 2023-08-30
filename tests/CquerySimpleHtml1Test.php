@@ -6,7 +6,6 @@ use Cacing69\Cquery\Cquery;
 use Cacing69\Cquery\Definer;
 use Cacing69\Cquery\Exception\CqueryException;
 use Cacing69\Cquery\Picker;
-use DateTime;
 use Exception;
 use PHPUnit\Framework\TestCase;
 
@@ -21,7 +20,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick(
+            ->define(
                 "h1 as title",
                 "a as description",
                 "attr(href, a) as url",
@@ -42,7 +41,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->define("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
             ->filter("attr(class, a)", "has", "vip")
             ->first();
 
@@ -56,7 +55,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("footer")
-            ->pick("p")
+            ->define("p")
             ->first();
 
         $this->assertSame('Copyright 2023', $result["p"]);
@@ -69,12 +68,12 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->define("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
             ->first();
 
         $result_clone = $data
             ->from("footer")
-            ->pick("p")
+            ->define("p")
             ->first();
 
         $this->assertSame('Title 1', $result["title"]);
@@ -88,7 +87,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $query = $data
             ->from("(#lorem .link) as _el")
-            ->pick("a > p as title");
+            ->define("a > p as title");
 
         $first = $query->first();
 
@@ -102,7 +101,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         try {
             $query = $data
-                ->pick("_el > a > p as title");
+                ->define("_el > a > p as title");
         } catch (Exception $e) {
             $this->assertSame(CqueryException::class, get_class($e));
             $this->assertSame("no source defined", $e->getMessage());
@@ -116,7 +115,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->define("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
             ->filter("attr(class, a)", "has", "vip")
             ->OrFilter("attr(class, a)", "has", "super")
             ->OrFilter("attr(class, a)", "has", "blocked")
@@ -132,7 +131,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->define("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
             ->filter("attr(class, a)", "has", "vip")
             ->filter("attr(class, a)", "has", "blocked")
             ->filter("attr(class, a)", "has", "super")
@@ -148,7 +147,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->define("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
             ->filter("attr(class, a)", "=", "test-1-item")
             ->get();
 
@@ -162,7 +161,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->define("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
             ->filter("attr(ref-id, h1)", "=", "23")
             ->get();
 
@@ -176,7 +175,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->define("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
             ->filter("attr(ref-id, h1)", "=", "23")
             ->first();
 
@@ -193,7 +192,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->define("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
             ->filter("attr(class, a)", "like", "%ni%")
             ->get();
 
@@ -207,7 +206,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->define("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
             ->filter("attr(class, a)", "like", "pre%")
             ->get();
 
@@ -221,7 +220,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->define("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
             ->filter("attr(class, a)", "like", "%ed")
             ->get();
 
@@ -235,7 +234,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->define("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
             ->filter("attr(class, a)", "like", "%nied")
             ->get();
 
@@ -249,7 +248,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class", "attr(customer-id, a)")
+            ->define("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class", "attr(customer-id, a)")
             ->filter("attr(customer-id, a)", "<", 18)
             ->get();
 
@@ -263,7 +262,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->define("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
             ->filter("attr(customer-id, a)", "<=", "18")
             ->get();
 
@@ -277,7 +276,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->define("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
             ->filter("attr(customer-id, a)", ">", "16")
             ->get();
 
@@ -291,7 +290,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->define("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
             ->filter("attr(customer-id, a)", ">=", 16)
             ->get();
 
@@ -305,7 +304,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->define("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
             ->filter("attr(regex-test, a)", "regex", "/[a-z]+\-[0-9]+\-[a-z]+/im")
             ->get();
 
@@ -319,7 +318,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick("attr(href, a) as url", "attr(class, a) as class")
+            ->define("attr(href, a) as url", "attr(class, a) as class")
             ->filter("attr(regex-test, a)", "regex", "/[a-z]+\-[0-9]+\-[a-z]+/im")
             ->get();
 
@@ -333,7 +332,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick(
+            ->define(
                 // "attr(class, a > p) as class_a_p",
                 "attr(class, a) as url",
                 "length(h1) as length"
@@ -350,7 +349,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick("attr(class, a) as class_a_p", "attr(class, a) as url", "length(h1) as length")
+            ->define("attr(class, a) as class_a_p", "attr(class, a) as url", "length(h1) as length")
             ->filter("a", "=", "Href Attribute Example 90")
             ->get();
 
@@ -362,13 +361,13 @@ final class CquerySimpleHtml1Test extends TestCase
         $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
         $data = new Cquery($simpleHtml);
 
-        $picker = new Picker("h1", function ($value) {
+        $picker = new Definer("h1", "alias", function ($value) {
             return str_replace(" ", "-", strtoupper($value))."-FROM-CLOSURE";
-        }, "alias");
+        });
 
         $result = $data
             ->from("#lorem .link")
-            ->pick("upper(a)", $picker)
+            ->define("upper(a)", $picker)
             ->first();
 
         $this->assertSame("HREF ATTRIBUTE EXAMPLE 1", $result["upper_a"]);
@@ -386,8 +385,8 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick(
-                new Picker("a", $closure, "key_2")
+            ->define(
+                new Definer("a", "key_2", $closure)
             )
             ->first();
 
@@ -402,7 +401,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick("attr(customer-id, a) as cust_id", "attr(class, a) as class")
+            ->define("attr(customer-id, a) as cust_id", "attr(class, a) as class")
             ->filter("attr(customer-id, a)", "<=", "18")
             ->get();
 
@@ -416,7 +415,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick("h1 as title")
+            ->define("h1 as title")
             ->filter("length(h1)", "=", 5)
             ->get();
 
@@ -430,7 +429,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->define("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
             ->filter("h1", function ($e) {
                 return $e === "Title 3";
             })
@@ -447,7 +446,7 @@ final class CquerySimpleHtml1Test extends TestCase
         try {
             $result = $data
             ->from("#lorem .link")
-            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
+            ->define("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
             ->filter(function ($e) {
                 return $e === "Title 3";
             })
@@ -466,7 +465,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick("length(attr(class, a)) as length_attr_class_a")
+            ->define("length(attr(class, a)) as length_attr_class_a")
             ->get();
 
         $this->assertSame(15, $result[0]["length_attr_class_a"]);
@@ -487,7 +486,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick("upper(h1)")
+            ->define("upper(h1)")
             ->get();
 
         $this->assertSame("TITLE 1", $result[0]['upper_h1']);
@@ -508,7 +507,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem > .link")
-            ->pick("reverse(length(attr(class, a))) as reverse_length_attr_class_a")
+            ->define("reverse(length(attr(class, a))) as reverse_length_attr_class_a")
             ->get();
 
         $this->assertEquals(51, $result[0]["reverse_length_attr_class_a"]);
@@ -529,7 +528,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#list-test-child > div")
-            ->pick(".pluck as title")
+            ->define(".pluck as title")
             ->get();
 
         $this->assertCount(2, $result);
@@ -542,7 +541,7 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#list-test-child > div")
-            ->pick("span > .pluck as title")
+            ->define("span > .pluck as title")
             ->filter("span > .pluck", "=", "text-pluck-1")
             ->get();
 
@@ -558,11 +557,11 @@ final class CquerySimpleHtml1Test extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->pick(
+            ->define(
                 "upper(h1) as title_upper",
-                new Picker("a", function($value) use ($date) {
+                new Definer("a", "col_2", function($value) use ($date) {
                     return "{$value} fetched on: {$date}";
-                }, "col_2")
+                })
             )
             ->filter("attr(class, a)", "has", "vip")
             ->limit(2)

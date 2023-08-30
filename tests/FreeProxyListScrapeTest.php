@@ -18,7 +18,7 @@ final class FreeProxyListScrapeTest extends TestCase
 
         $resultYes = $data
             ->from("#list")
-            ->pick(
+            ->define(
                 "td:nth-child(1) as ip_address",
                 "td:nth-child(2) as port",
                 "td:nth-child(3) as code",
@@ -32,7 +32,7 @@ final class FreeProxyListScrapeTest extends TestCase
 
         $resultNo = $data
             ->from("#list")
-            ->pick(
+            ->define(
                 "td:nth-child(1) as ip_address",
                 "td:nth-child(2) as port",
                 "td:nth-child(3) as code",
@@ -58,7 +58,7 @@ final class FreeProxyListScrapeTest extends TestCase
 
         $result = $data
             ->from(".fpl-list")
-            ->pick(
+            ->define(
             // "td:nth-child(1):contains('209'),td:nth-child(1):contains('240') as ip_address",
             // "td:nth-child(1):contains('114'):contains('209') as ip_address",
             // "td:nth-child(1):contains('114'):td:nth-child(7):contains('no') as ip_address",

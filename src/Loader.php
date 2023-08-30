@@ -23,7 +23,7 @@ abstract class Loader
     }
 
     abstract protected function validateSource();
-    abstract public function pick(...$pick);
+    abstract public function define(...$defines);
     abstract public function from(string $value);
     abstract public function setContent(string $value);
 

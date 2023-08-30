@@ -122,7 +122,7 @@ $data = new Cacing69\Cquery\Cquery($html);
 
 $result = $query
         ->from("#lorem .link") // next will be from("(#lorem .link) as el")
-        ->pick(
+        ->define(
             "h1 as title",
             "a as description",
             "attr(href, a) as url", // get href attribute from all element at #lorem .link a
@@ -144,16 +144,17 @@ And here are the results
 ```php
 require_once 'vendor/autoload.php';
 
+use Cacing69\Cquery\Definer;
 $html = file_get_contents("src/Samples/sample-simple-1.html");
 $data = new Cacing69\Cquery\Cquery($html);
 
 $result_1 = $data
           ->from("#lorem .link")
-          ->pick(
+          ->define(
               "upper(h1) as title_upper",
-              new Picker( "a", function($value) use ($date) {
+              new Definer( "a", "col_2", function($value) use ($date) {
                   return "{$value} fetched on: {$date}";
-              }, "col_2")
+              })
           )
           ->filter("attr(class, a)", "has", "vip")
           ->limit(2)
@@ -169,7 +170,7 @@ Here are the result for `$result_1`
 // another example, filter with closure
 $result_2 = $data
             ->from("#lorem .link")
-            ->pick("reverse(h1) as title", "attr(href, a) as url")
+            ->define("reverse(h1) as title", "attr(href, a) as url")
             ->filter("h1", function ($e) {
                 return $e->text() === "Title 3";
             })
@@ -212,14 +213,14 @@ $url = "http://quotes.toscrape.com/";
 $data = new Cquery($url);
 
 $result_4 = $data
-    ->from(".fpl-list")
-    ->pick(
-        "td:nth-child(1) as ip_address",
-        "td:nth-child(4) as country",
-        "td:nth-child(7) as https",
-    )->filter('td:nth-child(7)', "=", "no")
-    ->limit(1)
-    ->get();
+              ->from(".col-md-8 > .quote")
+              ->define(
+                  "span.text as text",
+                  "span:nth-child(2) > small as author",
+                  "get_node(div > .tags, a)  as tags",
+              )
+              ->get()
+              ->toArray();
 
 ```
 

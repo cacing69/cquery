@@ -68,16 +68,10 @@ class Cquery {
      * This method is used to determine the HTML element selector
      * that will serve as a property in each array element.
      *
-     * @param \Cacing69\Cquery\Picker|string $picks a selector to grab on element
+     * @param \Cacing69\Cquery\Definer|string $picks a selector to grab on element
      * @return \Cacing69\Cquery\Cquery
      * @throws \Cacing69\Cquery\Exception\CqueryException when the provided parameter is incorrect."
      */
-    public function pick(...$picks): Cquery
-    {
-        $this->loader->pick(...$picks);
-        return $this;
-    }
-
     public function define(...$defines): Cquery
     {
         $this->loader->define(...$defines);

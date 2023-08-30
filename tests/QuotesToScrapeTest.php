@@ -20,7 +20,7 @@ final class QuotesToScrapeTest extends TestCase
 
         $result = $data
             ->from(".col-md-8 > .quote")
-            ->pick(
+            ->define(
                 "span.text as text",
                 "span:nth-child(2) > small as author",
                 "(div > .tags) as tags",
@@ -29,7 +29,7 @@ final class QuotesToScrapeTest extends TestCase
 
         $resultTopTen = $data
             ->from(".tags-box")
-            ->pick(
+            ->define(
                 ".tag-item > a as text"
             )
             ->get();
@@ -49,7 +49,7 @@ final class QuotesToScrapeTest extends TestCase
         try {
             $result = $data
                 ->from(".col-md-8 > .quote")
-                ->pick(
+                ->define(
                     "span.text as text",
                     "span:nth-child(2) > small as author",
                     "(div > .tags > a)  as tags",
@@ -70,7 +70,7 @@ final class QuotesToScrapeTest extends TestCase
 
         $result = $data
             ->from(".col-md-8 > .quote")
-            ->pick(
+            ->define(
                 "span.text as text",
                 "span:nth-child(2) > small as author",
                 "get_node(div > .tags, a)  as tags",

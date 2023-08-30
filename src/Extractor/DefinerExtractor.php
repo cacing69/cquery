@@ -49,7 +49,16 @@ class DefinerExtractor {
     private function handlerDefiner($pickerRaw) {
         if (preg_match(RegExp::IS_DEFINER_HAVE_ALIAS, $pickerRaw)) {
             $decodeSelect = explode(" as ", $pickerRaw);
-            $this->definer = trim($decodeSelect[0]);
+
+            if(preg_match(RegExp::CHECK_AND_EXTRACT_PICKER_WITH_WRAP, $decodeSelect[0])){
+                preg_match(RegExp::CHECK_AND_EXTRACT_PICKER_WITH_WRAP, $decodeSelect[0], $extract);
+
+                $this->definer = trim($extract[1]);
+            } else {
+                $this->definer = trim($decodeSelect[0]);
+                $this->alias = Str::slug($decodeSelect[1]);
+            }
+
             $this->alias = Str::slug($decodeSelect[1]);
         } else {
             $this->definer = $pickerRaw;

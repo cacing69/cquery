@@ -357,14 +357,19 @@ final class CquerySimpleHtml1Test extends TestCase
         $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
         $data = new Cquery($simpleHtml);
 
+        $picker = new Picker("h1", function ($value) {
+            return str_replace(" ", "-", strtoupper($value))."-FROM-CLOSURE";
+        }, "alias");
+
         $result = $data
             ->from("#lorem .link")
-            ->pick(new Picker(function ($value) {
-                    return strtoupper($value);
-                }, "a", "title"))
+            ->pick("upper(a)", $picker)
             ->first();
 
-        $this->assertSame("HREF ATTRIBUTE EXAMPLE 1", $result["title"]);
+        dump($result);
+
+        $this->assertSame("HREF ATTRIBUTE EXAMPLE 1", $result["upper_a"]);
+        $this->assertSame("TITLE-1-FROM-CLOSURE", $result["alias"]);
     }
 
     public function testPickWithPickerUsedClosure()
@@ -423,25 +428,9 @@ final class CquerySimpleHtml1Test extends TestCase
         $result = $data
             ->from("#lorem .link")
             ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
-            ->filter(function ($e) {
-                return $e->text() === "Title 3";
-            }, "h1")
-            ->get();
-
-        $this->assertCount(1, $result);
-    }
-
-    public function testUsedFilterAnonymousFunctionButWithCustomAdapterFunc()
-    {
-        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
-        $data = new Cquery($simpleHtml);
-
-        $result = $data
-            ->from("#lorem .link")
-            ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
-            ->filter(function ($e) {
-                return $e->text() === "Title 3";
-            }, "h1")
+            ->filter("h1", function ($e) {
+                return $e === "Title 3";
+            })
             ->get();
 
         $this->assertCount(1, $result);
@@ -457,12 +446,12 @@ final class CquerySimpleHtml1Test extends TestCase
             ->from("#lorem .link")
             ->pick("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
             ->filter(function ($e) {
-                return $e->text() === "Title 3";
+                return $e === "Title 3";
             })
             ->get();
         } catch (Exception $e) {
             $this->assertSame(CqueryException::class, get_class($e));
-            $this->assertSame("error processing filter, when used callback filter, please set selector on second parameter", $e->getMessage());
+            $this->assertSame("when used closure, u need to place it on second parameter", $e->getMessage());
         }
 
     }
@@ -568,9 +557,9 @@ final class CquerySimpleHtml1Test extends TestCase
             ->from("#lorem .link")
             ->pick(
                 "upper(h1) as title_upper",
-                new Picker(function($value) use ($date) {
+                new Picker("a", function($value) use ($date) {
                     return "{$value} fetched on: {$date}";
-                }, "a", "col_2")
+                }, "col_2")
             )
             ->filter("attr(class, a)", "has", "vip")
             ->limit(2)

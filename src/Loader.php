@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Cacing69\Cquery\Loader;
+namespace Cacing69\Cquery;
 
 use Doctrine\Common\Collections\ArrayCollection;
 

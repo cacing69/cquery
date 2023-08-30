@@ -4,11 +4,10 @@ declare(strict_types=1);
 namespace Cacing69\Cquery;
 
 use Cacing69\Cquery\Loader\HTMLLoader;
-use Cacing69\Cquery\Support\DOMManipulator;
+use Cacing69\Cquery\DOMManipulator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\HttpClient\HttpClient;
-use Tightenco\Collect\Support\Collection;
 
 
 /**
@@ -21,7 +20,7 @@ class Cquery {
      * loader should be an instance of Cacing69\Loader\Loader
      * Available loader HTMLLoader, JSONLoader(), CSVLoader
      *
-     * @var Cacing69\Loader\Loader
+     * @var \Cacing69\Cquery\Loader
      *
      * The default loader is null, u need to specify when create Cquery instance.
      */
@@ -49,7 +48,6 @@ class Cquery {
                 $response = $browser->getResponse()->getContent();
 
                 $this->loader = new HTMLLoader($response);
-                // dd($browser->);
             } else {
                 if($contentType === "html") {
                     $this->loader = new HTMLLoader($source);

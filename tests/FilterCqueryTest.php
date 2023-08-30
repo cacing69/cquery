@@ -2,7 +2,7 @@
 
 namespace Cacing69\Cquery\Test;
 
-use Cacing69\Cquery\Loader\Loader;
+use Cacing69\Cquery\Loader;
 use PHPUnit\Framework\TestCase;
 
 final class FilterCqueryTest extends TestCase

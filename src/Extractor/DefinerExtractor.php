@@ -3,9 +3,9 @@
 namespace Cacing69\Cquery\Extractor;
 
 use Cacing69\Cquery\Picker;
-use Cacing69\Cquery\Support\CqueryRegex;
-use Cacing69\Cquery\Support\StringHelper;
-use Cacing69\Cquery\Support\RegisterAdapter;
+use Cacing69\Cquery\Support\RegExp;
+use Cacing69\Cquery\Support\Str;
+use Cacing69\Cquery\RegisterAdapter;
 use Cacing69\Cquery\Adapter\ClosureCallbackAdapter;
 use Cacing69\Cquery\Trait\HasAliasProperty;
 use Cacing69\Cquery\Trait\HasSourceProperty;
@@ -29,11 +29,13 @@ class DefinerExtractor {
             if($picker->getRaw() instanceof Closure) {
                 $this->definer = $picker;
                 $adapter = new ClosureCallbackAdapter($picker->getRaw(), $this->source);
+
                 $extractor = new DefinerExtractor("{$picker->getNode()} as {$picker->getAlias()}");
 
                 $adapter = $adapter->setNode($extractor->getAdapter()->getNode())
-                            ->setCall($extractor->getAdapter()->getCall())
-                            ->setCallParameter($extractor->getAdapter()->getCallParameter());
+                    ->setCall($extractor->getAdapter()->getCall())
+                    ->setCallParameter($extractor->getAdapter()->getCallParameter())
+                    ->setAfterCall($adapter->getAfterCall());
 
                 $this->adapter = $adapter;
             } else {
@@ -45,13 +47,13 @@ class DefinerExtractor {
     }
 
     private function handlerDefiner($pickerRaw) {
-        if (preg_match(CqueryRegex::IS_DEFINER_HAVE_ALIAS, $pickerRaw)) {
+        if (preg_match(RegExp::IS_DEFINER_HAVE_ALIAS, $pickerRaw)) {
             $decodeSelect = explode(" as ", $pickerRaw);
             $this->definer = trim($decodeSelect[0]);
-            $this->alias = StringHelper::slug($decodeSelect[1]);
+            $this->alias = Str::slug($decodeSelect[1]);
         } else {
             $this->definer = $pickerRaw;
-            $this->alias = StringHelper::slug($pickerRaw, "_");
+            $this->alias = Str::slug($pickerRaw, "_");
         }
 
         foreach (RegisterAdapter::load() as $adapter) {

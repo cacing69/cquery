@@ -150,9 +150,9 @@ $result_1 = $data
           ->from("#lorem .link")
           ->pick(
               "upper(h1) as title_upper",
-              new Picker(function($value) use ($date) {
+              new Picker( "a", function($value) use ($date) {
                   return "{$value} fetched on: {$date}";
-              }, "a", "col_2")
+              }, "col_2")
           )
           ->filter("attr(class, a)", "has", "vip")
           ->limit(2)
@@ -169,9 +169,9 @@ Here are the result for `$result_1`
 $result_2 = $data
             ->from("#lorem .link")
             ->pick("reverse(h1) as title", "attr(href, a) as url")
-            ->filter(function ($e) {
+            ->filter("h1", function ($e) {
                 return $e->text() === "Title 3";
-            }, "h1")
+            })
             ->get();
 
 ```

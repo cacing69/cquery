@@ -1,7 +1,7 @@
 <?php
 namespace Cacing69\Cquery\Support;
 
-class CqueryRegex {
+class RegExp {
     const EXTRACT_FIRST_PARAM_ATTRIBUTE = '/^attr\(\s*?(.*?),\s*?.*\)$/is';
     const EXTRACT_SECOND_PARAM_ATTRIBUTE = '/^attr\(\s*?.*\s?,\s*?(.*?)\)$/is';
     const EXTRACT_FIRST_PARAM_LENGTH = '/^length\(\s?(.*?)\s?\)$/is';

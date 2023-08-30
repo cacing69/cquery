@@ -2,11 +2,10 @@
 
 namespace Cacing69\Cquery\Support;
 
-class StringHelper {
+class Str {
     // https://stackoverflow.com/a/2955521/10232729
     public static function slug($text, $divider = "_")
     {
-
         $replace = [
             '<' => '', '>' => '', '-' => ' ', '&' => '', '.' => '',
             '"' => '', 'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A',

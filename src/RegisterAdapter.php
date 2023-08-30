@@ -1,6 +1,6 @@
 <?php
 
-namespace Cacing69\Cquery\Support;
+namespace Cacing69\Cquery;
 
 use Cacing69\Cquery\Adapter\AttributeCallbackAdapter;
 use Cacing69\Cquery\Adapter\DefaultCallbackAdapter;

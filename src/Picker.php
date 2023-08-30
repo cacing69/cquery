@@ -3,10 +3,9 @@ declare(strict_types=1);
 
 namespace Cacing69\Cquery;
 
-use Cacing69\Cquery\Support\CqueryRegex;
-use Cacing69\Cquery\Support\StringHelper;
+use Cacing69\Cquery\Support\RegExp;
+use Cacing69\Cquery\Support\Str;
 use Cacing69\Cquery\Trait\HasRawProperty;
-use Cacing69\Cquery\Extractor\DefinerExtractor;
 use Closure;
 use Cacing69\Cquery\Trait\HasAliasProperty;
 use Cacing69\Cquery\Trait\HasNodeProperty;
@@ -22,32 +21,31 @@ class Picker
 
     public function __construct($raw, ...$options)
     {
-        $this->raw = $raw;
         $this->options = $options;
 
-        if($raw instanceof Closure) {
+        if($options[0] instanceof Closure) {
+            $this->raw = $options[0];
             if(count($options) === 2) {
-                $this->node = $options[0];
+                $this->node = $raw;
                 $this->alias = $options[1];
             } else if (count($options) === 1) {
-                $this->node = $options[0];
-                $this->alias = StringHelper::slug($this->node);
+                $this->node = $raw;
+                $this->alias = Str::slug($this->node);
             }
         } else {
-
-            if (preg_match(CqueryRegex::CHECK_AND_EXTRACT_PICKER_WITH_WRAP, $raw)) {
-                preg_match(CqueryRegex::CHECK_AND_EXTRACT_PICKER_WITH_WRAP, $raw, $extract);
+            $this->raw = $raw;
+            if (preg_match(RegExp::CHECK_AND_EXTRACT_PICKER_WITH_WRAP, $raw)) {
+                preg_match(RegExp::CHECK_AND_EXTRACT_PICKER_WITH_WRAP, $raw, $extract);
                 $this->node = $extract[1];
             } else {
                 $this->node = $raw;
             }
 
-            $this->alias = StringHelper::slug($this->node);
+            $this->alias = Str::slug($this->node);
 
             if (count($options) === 1) {
                 $this->alias = $options[0];
             }
-
         }
     }
 

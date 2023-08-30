@@ -3,12 +3,11 @@ declare(strict_types = 1);
 namespace Cacing69\Cquery\Adapter;
 
 use Cacing69\Cquery\Extractor\SourceExtractor;
-use Cacing69\Cquery\Support\CqueryRegex;
-use Symfony\Component\DomCrawler\Crawler;
+use Cacing69\Cquery\Support\RegExp;
 
 class AttributeCallbackAdapter extends CallbackAdapter
 {
-    protected static $signature = CqueryRegex::IS_ATTRIBUTE;
+    protected static $signature = RegExp::IS_ATTRIBUTE;
 
     public static function getSignature() {
         return self::$signature;
@@ -18,18 +17,13 @@ class AttributeCallbackAdapter extends CallbackAdapter
     {
         $this->raw = $raw;
 
-        preg_match(CqueryRegex::EXTRACT_FIRST_PARAM_ATTRIBUTE, $raw, $attr);
-        preg_match(CqueryRegex::EXTRACT_SECOND_PARAM_ATTRIBUTE, $raw, $node);
+        preg_match(RegExp::EXTRACT_FIRST_PARAM_ATTRIBUTE, $raw, $attr);
+        preg_match(RegExp::EXTRACT_SECOND_PARAM_ATTRIBUTE, $raw, $node);
 
         $this->ref = $attr[1];
         $this->node = $node[1];
 
         $this->call = "extract";
         $this->callParameter = [$this->ref];
-
-        $ref = $this->ref;
-        $this->callback = function (Crawler $crawlNode) use ($ref) {
-            return $crawlNode->attr($ref);
-        };
     }
 }

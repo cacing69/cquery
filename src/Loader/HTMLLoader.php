@@ -50,7 +50,7 @@ class HTMLLoader extends Loader
 
     protected function fetchContent()
     {
-        if($this->remote) {
+        if($this->isRemote) {
             $browser = new HttpBrowser(HttpClient::create());
             $browser->request('GET', $this->uri);
 

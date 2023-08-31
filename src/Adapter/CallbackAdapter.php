@@ -9,8 +9,6 @@ use Cacing69\Cquery\Support\RegExp;
 use Cacing69\Cquery\Trait\HasOperatorProperty;
 use Closure;
 use Cacing69\Cquery\Trait\HasNodeProperty;
-use Cacing69\Cquery\Trait\HasCriteriaProperty;
-use Cacing69\Cquery\Trait\HasClauseProperty;
 use Cacing69\Cquery\Trait\HasSelectorProperty;
 use Cacing69\Cquery\Trait\HasFilterProperty;
 use Cacing69\Cquery\Trait\HasRawProperty;
@@ -21,8 +19,6 @@ abstract class CallbackAdapter
     use HasOperatorProperty;
     use HasFilterProperty;
     use HasSelectorProperty;
-    use HasClauseProperty;
-    use HasCriteriaProperty;
     use HasRawProperty;
     use HasNodeProperty;
     protected $ref;
@@ -98,73 +94,54 @@ abstract class CallbackAdapter
             return false;
         }
 
-        if (in_array($this->clause, ["=", "==", "==="])) {
-            if (in_array($this->clause, ["=", "=="])) {
-                $this->clauseType = "equals";
-                return $this->criteria == $value;
+        if (in_array($this->filter->getOperator(), ["=", "==", "==="])) {
+            if (in_array($this->filter->getOperator(), ["=", "=="])) {
+                return $this->filter->getValue() == $value;
             } else {
-                $this->clauseType = "identical";
-                return $this->criteria === $value;
+                return $this->filter->getValue() === $value;
             }
-        } elseif ($this->clause === "regex") {
-            $this->clauseType = "regular expressions";
-
-            return (empty($value)) ? false : preg_match($this->criteria, $value);
-        } elseif ($this->clause === "has") {
-            $this->clauseType = 'has value';
-            return preg_match("/^\s?{$this->criteria}|\s{$this->criteria}\s|\s{$this->criteria}$/im", $value);
-        } elseif ($this->clause === ">") {
-            $this->clauseType = "greater than";
-
-            return (int) $value > (int) $this->criteria;
-        } elseif ($this->clause === ">=") {
-            $this->clauseType = "greater than equals";
-
-            return (int) $value >= (int) $this->criteria;
-        } elseif ($this->clause === "<") {
-            $this->clauseType = "less than";
-            $criteria = $this->criteria;
-
+        } elseif ($this->filter->getOperator() === "regex") {
+            return (empty($value)) ? false : preg_match($this->filter->getValue(), $value);
+        } elseif ($this->filter->getOperator() === "has") {
+            return preg_match("/^\s?{$this->filter->getValue()}|\s{$this->filter->getValue()}\s|\s{$this->filter->getValue()}$/im", $value);
+        } elseif ($this->filter->getOperator() === ">") {
+            return (int) $value > (int) $this->filter->getValue();
+        } elseif ($this->filter->getOperator() === ">=") {
+            return (int) $value >= (int) $this->filter->getValue();
+        } elseif ($this->filter->getOperator() === "<") {
+            $criteria = $this->filter->getValue();
             return  (int) $value < (int) $criteria;
-        } elseif ($this->clause === "<=") {
-            $this->clauseType = "less than equals";
+        } elseif ($this->filter->getOperator() === "<=") {
 
-            return (int) $value <= (int) $this->criteria;
-        } elseif ($this->clause === "like") {
-            if (preg_match(RegExp::IS_FILTER_LIKE_CONTAINS_VALUE, $this->criteria)) {
-                $this->clauseType = "contains value '{$this->criteria}'";
+            return (int) $value <= (int) $this->filter->getValue();
+        } elseif ($this->filter->getOperator() === "like") {
+            if (preg_match(RegExp::IS_FILTER_LIKE_CONTAINS_VALUE, $this->filter->getValue())) {
 
-                preg_match(RegExp::EXTRACT_FIRST_PARAM_FILTER_LIKE_CONTAINS_VALUE, $this->criteria, $extract);
+                preg_match(RegExp::EXTRACT_FIRST_PARAM_FILTER_LIKE_CONTAINS_VALUE, $this->filter->getValue(), $extract);
 
                 return preg_match("/{$extract[1]}/im", $value);
-            } elseif (preg_match(RegExp::IS_FILTER_LIKE_END_WITH, $this->criteria)) {
-                $this->clauseType = "end with '{$this->criteria}'";
+            } elseif (preg_match(RegExp::IS_FILTER_LIKE_END_WITH, $this->filter->getValue())) {
 
-                preg_match(RegExp::EXTRACT_FIRST_PARAM_FILTER_LIKE_END_WITH, $this->criteria, $extract);
+                preg_match(RegExp::EXTRACT_FIRST_PARAM_FILTER_LIKE_END_WITH, $this->filter->getValue(), $extract);
 
                 return preg_match("/.*{$extract[1]}$/im", $value);
-            } elseif (preg_match(RegExp::IS_FILTER_LIKE_START_WITH, $this->criteria)) {
-                $this->clauseType = "start with '{$this->criteria}'";
+            } elseif (preg_match(RegExp::IS_FILTER_LIKE_START_WITH, $this->filter->getValue())) {
 
-                preg_match(RegExp::EXTRACT_FIRST_PARAM_FILTER_LIKE_START_WITH, $this->criteria, $extract);
+                preg_match(RegExp::EXTRACT_FIRST_PARAM_FILTER_LIKE_START_WITH, $this->filter->getValue(), $extract);
 
                 return preg_match("/^{$extract[1]}.*/im", $value);
             }
-
-            return  $value > $this->criteria;
-        } elseif (in_array($this->clause, ["<>", "!=", "!=="])) {
-            if (in_array($this->clause, ["<>", "!="])) {
-                $this->clauseType = 'not equal';
-                return $value != $this->criteria;
+        } elseif (in_array($this->filter->getOperator(), ["<>", "!=", "!=="])) {
+            if (in_array($this->filter->getOperator(), ["<>", "!="])) {
+                return $value != $this->filter->getValue();
             } else {
-                $this->clauseType = 'not identical';
-                return $value != $this->criteria;
+                return $value != $this->filter->getValue();
             }
-        } elseif ($this->clause instanceof Closure) {
-            $clause = $this->clause;
-            return $clause($value);
+        } elseif ($this->filter->getOperator() instanceof Closure) {
+            $_closure = $this->filter->getOperator();
+            return $_closure($value);
         } else {
-            throw new CqueryException("operator {$this->clause} doesn't support");
+            throw new CqueryException("operator {$this->filter->getOperator()} doesn't support");
         }
     }
 }

@@ -28,20 +28,20 @@ class DOMManipulator
     public function addFilter($filter, $operator = "and")
     {
 
-        if($filter[0] instanceof Closure) {
-            throw new CqueryException("when used closure, u need to place it on second parameter");
-        }
+        // if($filter[0] instanceof Closure) {
+        //     throw new CqueryException("when used closure, u need to place it on second parameter");
+        // }
 
         $adapter = null;
 
-        if($filter[1] instanceof Closure) {
+        if($filter->operatorIsCallback()) {
             $adapter = new ClosureCallbackAdapter(null, $this->source);
 
-            if(!array_key_exists(1, $filter)) {
-                throw new CqueryException("error processing filter, when used callback filter, please set selector and \Closure");
-            }
+            // if(!array_key_exists(1, $filter)) {
+            //     throw new CqueryException("error processing filter, when used callback filter, please set selector and \Closure");
+            // }
 
-            $extractor = new DefinerExtractor($filter[0]);
+            $extractor = new DefinerExtractor($filter->getNode());
 
             $adapter = $adapter
                 ->setNode($extractor->getAdapter()->getNode())
@@ -51,12 +51,12 @@ class DOMManipulator
             foreach (RegisterAdapter::load() as $adapter) {
                 $checkSignature = $adapter::getSignature();
                 if(isset($checkSignature)) {
-                    if(preg_match($checkSignature, $filter[0])) {
-                        $adapter = new $adapter($filter[0], $this->source);
+                    if(preg_match($checkSignature, $filter->getNode())) {
+                        $adapter = new $adapter($filter->getNode(), $this->source);
                         break;
                     }
                 } else {
-                    $adapter = new $adapter($filter[0], $this->source);
+                    $adapter = new $adapter($filter->getNode(), $this->source);
                 }
             }
         }

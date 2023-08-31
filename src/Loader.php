@@ -35,8 +35,9 @@ abstract class Loader
             ->first();
     }
 
-    abstract public function filter(...$filter);
-    abstract public function OrFilter(...$filter);
+    // abstract public function filter(...$filter);
+    abstract public function filter(Filter $filter);
+    abstract public function OrFilter(Filter $filter);
     abstract public function get(): ArrayCollection;
 
     public static function getResultFilter(array $filtered): array

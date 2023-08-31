@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Cacing69\Cquery;
 
+use Cacing69\Cquery\Exception\CqueryException;
 use Cacing69\Cquery\Loader\HTMLLoader;
+use Closure;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\HttpClient\HttpClient;
@@ -118,21 +120,44 @@ class Cquery
         return $this->loader->first();
     }
 
-    public function filter(...$filter): Cquery
+    private function makeFilter($node, $operator = null, $value = null): Filter
     {
-        $this->loader->filter(...$filter);
+
+        if($node instanceof Filter) {
+            $filter = $node;
+        } else {
+            $filter = new Filter($node, $operator);
+            if($node instanceof Closure){
+                throw new CqueryException("when used closure, u need to place it on second parameter");
+            }
+
+            if(!($operator instanceof Closure) && empty($value)) {
+                throw new CqueryException("non closure operator need a value for comparison");
+            } else {
+                $filter->setValue($value);
+            }
+        }
+
+        return $filter;
+    }
+
+    public function filter($node, $operator = null, $value = null): Cquery
+    {
+        $filter = $this->makeFilter($node, $operator, $value);
+        $this->loader->filter($filter);
         return $this;
     }
 
-    public function OrFilter(...$filter): Cquery
+    public function orFilter($node, $operator = null, $value = null): Cquery
     {
-        $this->loader->OrFilter(...$filter);
+        $filter = $this->makeFilter($node, $operator, $value);
+        $this->loader->orFilter($filter);
         return $this;
     }
 
     /**
-    * Take a reesult from query
-
+    * Take a result from query
+    *
     * @return ArrayCollection
     */
     public function get(): ArrayCollection

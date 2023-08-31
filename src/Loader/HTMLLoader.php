@@ -56,7 +56,7 @@ class HTMLLoader extends Loader
         return $this;
     }
 
-    public function filter(...$filter)
+    public function filter($filter)
     {
         $this->validateSource();
         $this->dom[$this->source]->addFilter($filter, "and");
@@ -64,7 +64,7 @@ class HTMLLoader extends Loader
         return $this;
     }
 
-    public function OrFilter(...$filter)
+    public function orFilter($filter)
     {
         $this->validateSource();
         $this->dom[$this->source]->addFilter($filter, "or");

@@ -136,7 +136,7 @@ $result = $query
         )
         // just imagine this is your table, and every element as your column
         ->filter("attr(class, a)", "has", "vip") // add some filter here
-        // ->OrFilter("attr(class, a)", "has", "super") // add another condition its has OR condition SQL
+        // ->orFilter("attr(class, a)", "has", "super") // add another condition its has OR condition SQL
         // ->filter("attr(class, a)", "has", "blocked") // add another condition its has AND condition SQL
         ->get();
 ```

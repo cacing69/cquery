@@ -5,6 +5,7 @@ namespace Cacing69\Cquery\Test;
 use Cacing69\Cquery\Cquery;
 use Cacing69\Cquery\Definer;
 use Cacing69\Cquery\Exception\CqueryException;
+use Cacing69\Cquery\Filter;
 use Exception;
 use PHPUnit\Framework\TestCase;
 
@@ -116,8 +117,8 @@ final class CquerySimpleHtml1Test extends TestCase
             ->from("#lorem .link")
             ->define("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
             ->filter("attr(class, a)", "has", "vip")
-            ->OrFilter("attr(class, a)", "has", "super")
-            ->OrFilter("attr(class, a)", "has", "blocked")
+            ->orFilter("attr(class, a)", "has", "super")
+            ->orFilter("attr(class, a)", "has", "blocked")
             ->get();
 
         $this->assertCount(5, $result);
@@ -448,7 +449,7 @@ final class CquerySimpleHtml1Test extends TestCase
             ->define("h1 as title", "a as description", "attr(href, a) as url", "attr(class, a) as class")
             ->filter(function ($e) {
                 return $e === "Title 3";
-            })
+            }, "h1")
             ->get();
         } catch (Exception $e) {
             $this->assertSame(CqueryException::class, get_class($e));
@@ -608,5 +609,24 @@ final class CquerySimpleHtml1Test extends TestCase
             $this->assertSame(CqueryException::class, get_class($e));
             $this->assertSame("error define, please set alias on second parameter", $e->getMessage());
         }
+    }
+
+    public function testWithFilterClass()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem > .link")
+            ->define(
+                "a as title",
+                new Definer("h1", "_test")
+            )
+            ->filter(
+                new Filter("h1", "=", "Title 331")
+            )
+            ->get();
+
+        $this->assertCount(2, $result);
     }
 }

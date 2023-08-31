@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace Cacing69\Cquery;
 
-use Cacing69\Cquery\Exception\CqueryException;
+use Cacing69\Cquery\CqueryException;
 use Cacing69\Cquery\Loader\HTMLLoader;
 use Closure;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\BrowserKit\HttpBrowser;
-use Symfony\Component\HttpClient\HttpClient;
 
 /**
  * An implementation Cquery of a Loader to wrap all loader available.
@@ -62,7 +60,7 @@ class Cquery
      *
      * @param \Cacing69\Cquery\Definer|string $picks a selector to grab on element
      * @return \Cacing69\Cquery\Cquery
-     * @throws \Cacing69\Cquery\Exception\CqueryException when the provided parameter is incorrect."
+     * @throws \Cacing69\Cquery\CqueryException when the provided parameter is incorrect."
      */
     public function define(...$defines): Cquery
     {
@@ -171,5 +169,10 @@ class Cquery
     {
         $this->loader->setContent($args);
         return $this;
+    }
+
+    public function getSource()
+    {
+        return $this->loader->getSource();
     }
 }

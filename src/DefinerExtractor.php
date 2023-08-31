@@ -1,6 +1,6 @@
 <?php
 
-namespace Cacing69\Cquery\Extractor;
+namespace Cacing69\Cquery;
 
 use Cacing69\Cquery\Support\RegExp;
 use Cacing69\Cquery\Support\Str;

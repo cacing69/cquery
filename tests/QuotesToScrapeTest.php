@@ -3,7 +3,7 @@
 namespace Cacing69\Cquery\Test;
 
 use Cacing69\Cquery\Cquery;
-use Cacing69\Cquery\Exception\CqueryException;
+use Cacing69\Cquery\CqueryException;
 use Exception;
 use PHPUnit\Framework\TestCase;
 

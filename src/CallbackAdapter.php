@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Cacing69\Cquery;
 
-use Cacing69\Cquery\Exception\CqueryException;
+use Cacing69\Cquery\CqueryException;
 use Cacing69\Cquery\Support\RegExp;
 use Cacing69\Cquery\Trait\HasOperatorProperty;
-use Cacing69\Cquery\Extractor\DefinerExtractor;
+use Cacing69\Cquery\DefinerExtractor;
 use Closure;
 use Cacing69\Cquery\Trait\HasNodeProperty;
 use Cacing69\Cquery\Trait\HasSelectorProperty;

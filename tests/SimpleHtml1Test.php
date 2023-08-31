@@ -4,7 +4,7 @@ namespace Cacing69\Cquery\Test;
 
 use Cacing69\Cquery\Cquery;
 use Cacing69\Cquery\Definer;
-use Cacing69\Cquery\Exception\CqueryException;
+use Cacing69\Cquery\CqueryException;
 use Cacing69\Cquery\Filter;
 use Exception;
 use PHPUnit\Framework\TestCase;
@@ -119,7 +119,7 @@ final class SimpleHtml1Test extends TestCase
                 ->get();
         } catch (Exception $e) {
             $this->assertSame(CqueryException::class, get_class($e));
-            $this->assertSame("no definer foud", $e->getMessage());
+            $this->assertSame("no definer found", $e->getMessage());
         }
     }
 

@@ -16,7 +16,7 @@ final class SourceTest extends TestCase
 
         $data->from("#lorem .link");
 
-        $selector = $data->getActiveSource()->getSource();
+        $selector = $data->getSource();
 
         $this->assertSame('#lorem .link', $selector->getValue());
         $this->assertSame("", $selector->getAlias());
@@ -29,7 +29,7 @@ final class SourceTest extends TestCase
 
         $data->from("(#lorem .link) as _el");
 
-        $selector = $data->getActiveSource()->getSource();
+        $selector = $data->getSource();
 
         $this->assertSame('(#lorem .link) as _el', $selector->getRaw());
         $this->assertSame('#lorem .link', $selector->getValue());

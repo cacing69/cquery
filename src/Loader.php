@@ -5,19 +5,18 @@ declare(strict_types=1);
 namespace Cacing69\Cquery;
 
 use Cacing69\Cquery\Adapter\ClosureCallbackAdapter;
-use Cacing69\Cquery\Extractor\DefinerExtractor;
+use Cacing69\Cquery\DefinerExtractor;
+use Cacing69\Cquery\Trait\HasSourceProperty;
 use Doctrine\Common\Collections\ArrayCollection;
 
 abstract class Loader
 {
+    use HasSourceProperty;
     protected $limit = null;
-    protected $selector = null;
-
-    protected $results = null;
 
     protected $uri = null;
-    protected $remote = false;
-    protected $source;
+    protected $isRemote = false;
+    protected $isFetched = false;
 
     protected $content;
 
@@ -46,7 +45,7 @@ abstract class Loader
     }
 
     abstract public function filter(Filter $filter);
-    abstract public function OrFilter(Filter $filter);
+    abstract public function orFilter(Filter $filter);
     abstract public function get(): ArrayCollection;
 
     public static function getResultFilter(array $filtered): array
@@ -71,7 +70,12 @@ abstract class Loader
         return $filterResult;
     }
 
-    // TODO From DOMManipulator
+    protected function addDefiner($definer)
+    {
+        array_push($this->definer, new DefinerExtractor($definer, $this->source));
+        return $this;
+    }
+
     // TODO From DOM Manipulator
     public function addFilter($filter, $operator = "and")
     {

@@ -4,13 +4,9 @@ declare(strict_types=1);
 
 namespace Cacing69\Cquery\Loader;
 
-use Cacing69\Cquery\Exception\CqueryException;
-use Cacing69\Cquery\DOMManipulator;
+use Cacing69\Cquery\CqueryException;
 use Cacing69\Cquery\Loader;
 use Cacing69\Cquery\Source;
-use Cacing69\Cquery\Trait\HasSourceProperty;
-use Cacing69\Cquery\Extractor\DefinerExtractor;
-use Cacing69\Cquery\Adapter\ClosureCallbackAdapter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\DomCrawler\Crawler;
@@ -18,14 +14,13 @@ use Symfony\Component\HttpClient\HttpClient;
 
 class HTMLLoader extends Loader
 {
-    private $dom;
     private $crawler;
 
-    public function __construct(string $content = null, $remote = false)
+    public function __construct(string $content = null, $isRemote = false)
     {
-        $this->remote = $remote;
+        $this->isRemote = $isRemote;
 
-        if ($content !== null && !$remote) {
+        if ($content !== null && !$isRemote) {
             $this->crawler = new Crawler($content);
         } else {
             $this->uri = $content;
@@ -41,15 +36,15 @@ class HTMLLoader extends Loader
 
     protected function validateSource()
     {
-        if ($this->dom === null) {
+        if ($this->source === null) {
             throw new CqueryException("no source defined");
         }
     }
 
     protected function validateDefiners()
     {
-        if (count($this->dom->getDefiner()) === 0) {
-            throw new CqueryException("no definer foud");
+        if (count($this->definer) === 0) {
+            throw new CqueryException("no definer found");
         }
     }
 
@@ -66,8 +61,14 @@ class HTMLLoader extends Loader
     public function define(...$defines)
     {
         $this->validateSource();
+
+        if($this->isFetched) {
+            $this->definer = [];
+            $this->isFetched = false;
+        }
+
         foreach ($defines as $define) {
-            $this->dom->addDefiner($define);
+            $this->addDefiner($define);
         }
 
         return $this;
@@ -76,9 +77,7 @@ class HTMLLoader extends Loader
     public function from(string $value)
     {
         $this->fetchContent();
-
-        $this->dom = new DOMManipulator(new Source($value));
-
+        $this->source = new Source($value);
         return $this;
     }
 
@@ -116,7 +115,8 @@ class HTMLLoader extends Loader
 
             foreach ($this->filter as $key => $filterAdapter) {
                 $_data = $this->crawler
-                    ->filterXPath($this->dom->getSource()->getXpath())
+                    // ->filterXPath($this->getSource()->getXpath())
+                    ->filterXPath($this->getSource()->getXpath())
                     ->filterXPath($filterAdapter->getNodeXpath());
 
                 if ($filterAdapter->getCallMethod() === "extract") {
@@ -157,12 +157,13 @@ class HTMLLoader extends Loader
 
         $_hold_data = [];
 
-        foreach ($this->dom->getDefiner() as $key => $definer) {
+        foreach ($this->definer as $key => $definer) {
             $_data = null;
             if($definer->getAdapter()->getCallMethod() === "extract") {
                 $_data = $this
                         ->crawler
-                        ->filterXPath($this->dom->getSource()->getXpath())
+                        // ->filterXPath($this->getSource()->getXpath())
+                        ->filterXPath($this->getSource()->getXpath())
                         ->filterXPath($definer->getAdapter()->getNodeXpath());
 
 
@@ -177,7 +178,8 @@ class HTMLLoader extends Loader
                 $_data = [];
                 $this
                     ->crawler
-                    ->filterXPath($this->dom->getSource()->getXpath())
+                    // ->filterXPath($this->getSource()->getXpath())
+                    ->filterXPath($this->getSource()->getXpath())
                     ->filterXPath($definer->getAdapter()->getNodeXpath())
                     ->each(function (Crawler $node, $i) use (&$_data, $definer) {
                         $node->filter("a")->each(function (Crawler $_node, $_i) use ($i, &$_data, $definer) {
@@ -200,7 +202,7 @@ class HTMLLoader extends Loader
             } else {
                 // TODO tambahkan metode ambil data dengan filter->each, walaupun itu akan sedikit lambat, buts its ok, karena hanya untuk kasus tertentu
                 if(count($_data) !== $bound) {
-                    throw new CqueryException("error query definer, it looks like an error occurred while attempting to pick the column, It's because there are no matching rows in each column.");
+                    throw new CqueryException("error query definer, it looks like an error occurred while attempting to pick the column, it's because there are no matching rows in each column.");
                 }
             }
 
@@ -256,11 +258,9 @@ class HTMLLoader extends Loader
                 }
             }
         }
-        return new ArrayCollection($_hold_data);
-    }
 
-    public function getActiveDom(): DOMManipulator
-    {
-        return $this->dom;
+        $this->isFetched = true;
+
+        return new ArrayCollection($_hold_data);
     }
 }

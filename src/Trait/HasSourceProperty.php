@@ -6,7 +6,7 @@ namespace Cacing69\Cquery\Trait;
 
 trait HasSourceProperty
 {
-    private $source;
+    protected $source;
 
     public function setSource($source)
     {

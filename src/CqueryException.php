@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Cacing69\Cquery\Exception;
+namespace Cacing69\Cquery;
 
 use Exception;
 use Throwable;

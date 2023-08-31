@@ -6,7 +6,7 @@ namespace Cacing69\Cquery;
 
 use Cacing69\Cquery\Trait\HasAliasProperty;
 use Cacing69\Cquery\Support\RegExp;
-use Cacing69\Cquery\Exception\CqueryException;
+use Cacing69\Cquery\CqueryException;
 use Cacing69\Cquery\Support\Str;
 use Cacing69\Cquery\Trait\HasRawProperty;
 use Cacing69\Cquery\Trait\HasNodeProperty;

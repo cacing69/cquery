@@ -6,9 +6,7 @@ namespace Cacing69\Cquery;
 
 use Cacing69\Cquery\Trait\HasSourceProperty;
 use Cacing69\Cquery\Adapter\ClosureCallbackAdapter;
-use Cacing69\Cquery\Exception\CqueryException;
 use Cacing69\Cquery\Extractor\DefinerExtractor;
-use Closure;
 use Symfony\Component\DomCrawler\Crawler;
 
 class DOMManipulator
@@ -28,18 +26,10 @@ class DOMManipulator
     public function addFilter($filter, $operator = "and")
     {
 
-        // if($filter[0] instanceof Closure) {
-        //     throw new CqueryException("when used closure, u need to place it on second parameter");
-        // }
-
         $adapter = null;
 
         if($filter->operatorIsCallback()) {
             $adapter = new ClosureCallbackAdapter(null, $this->source);
-
-            // if(!array_key_exists(1, $filter)) {
-            //     throw new CqueryException("error processing filter, when used callback filter, please set selector and \Closure");
-            // }
 
             $extractor = new DefinerExtractor($filter->getNode());
 

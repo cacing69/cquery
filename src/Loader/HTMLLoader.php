@@ -16,7 +16,7 @@ use Symfony\Component\HttpClient\HttpClient;
 
 class HTMLLoader extends Loader
 {
-    private $dom = [];
+    private $dom;
 
     public function __construct(string $content = null, $remote = false, string $encoding = "UTF-8")
     {
@@ -38,14 +38,14 @@ class HTMLLoader extends Loader
 
     protected function validateSource()
     {
-        if (count($this->dom) === 0) {
+        if ($this->dom === null) {
             throw new CqueryException("no source defined");
         }
     }
 
     protected function validateDefiners()
     {
-        if (count($this->dom[$this->source]->getDefiner()) === 0) {
+        if (count($this->dom->getDefiner()) === 0) {
             throw new CqueryException("no definer foud");
         }
     }
@@ -64,7 +64,7 @@ class HTMLLoader extends Loader
     {
         $this->validateSource();
         foreach ($defines as $define) {
-            $this->dom[$this->source]->addDefiner($define);
+            $this->dom->addDefiner($define);
         }
 
         return $this;
@@ -77,14 +77,14 @@ class HTMLLoader extends Loader
 
         $this->fetchContent();
 
-        $this->dom[$this->source] = new DOMManipulator($this->content, $this->selector);
+        $this->dom = new DOMManipulator($this->content, $this->selector);
         return $this;
     }
 
     public function filter($filter)
     {
         $this->validateSource();
-        $this->dom[$this->source]->addFilter($filter, "and");
+        $this->dom->addFilter($filter, "and");
 
         return $this;
     }
@@ -92,7 +92,7 @@ class HTMLLoader extends Loader
     public function orFilter($filter)
     {
         $this->validateSource();
-        $this->dom[$this->source]->addFilter($filter, "or");
+        $this->dom->addFilter($filter, "or");
 
         return $this;
     }
@@ -102,7 +102,7 @@ class HTMLLoader extends Loader
         $this->validateDefiners();
 
         // WHERE CHECKING
-        $dom = $this->getActiveDom();
+        $dom = $this->dom;
         $_filtered = null;
 
         $bound = null;
@@ -156,7 +156,7 @@ class HTMLLoader extends Loader
 
         $_hold_data = [];
 
-        foreach ($this->getActiveDom()->getDefiner() as $key => $definer) {
+        foreach ($this->dom->getDefiner() as $key => $definer) {
             $_data = null;
             if($definer->getAdapter()->getCallMethod() === "extract") {
                 $_data = $dom->getCrawler()
@@ -259,6 +259,6 @@ class HTMLLoader extends Loader
 
     public function getActiveDom(): DOMManipulator
     {
-        return $this->dom[$this->source];
+        return $this->dom;
     }
 }

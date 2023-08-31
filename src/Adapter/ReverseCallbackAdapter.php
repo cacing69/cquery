@@ -19,6 +19,7 @@ class ReverseCallbackAdapter extends CallbackAdapter
     public function __construct(string $raw, SourceExtractor $source = null)
     {
         $this->raw = $raw;
+        $_childCallback = null;
 
         // check if function is nested
         if (preg_match('/^\s?reverse\(\s?([a-z0-9_]*\(.+?\))\s?\)$/', $raw)) {

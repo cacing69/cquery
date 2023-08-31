@@ -25,6 +25,8 @@ class UpperCallbackAdapter extends CallbackAdapter
             return strtoupper($value);
         };
         $_childCallback = null;
+        $_childCallback = null;
+
         // check if function is nested
         if (preg_match('/^\s?upper\(\s?([a-z0-9_]*\(.+?\))\s?\)$/', $raw)) {
             preg_match('/^\s?upper\(\s?([a-z0-9_]*\(.+?\))\s?\)$/', $raw, $extract);

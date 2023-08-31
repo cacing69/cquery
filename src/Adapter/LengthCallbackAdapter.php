@@ -19,7 +19,7 @@ class LengthCallbackAdapter extends CallbackAdapter
     public function __construct(string $raw, SourceExtractor $source = null)
     {
         $this->raw = $raw;
-
+        $_childCallback = null;
         // check if function is nested
         if(preg_match('/^\s?length\(\s?([a-z0-9_]*\(.+?\))\s?\)$/', $raw)) {
             preg_match('/^\s?length\(\s?([a-z0-9_]*\(.+?\))\s?\)$/', $raw, $extract);

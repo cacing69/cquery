@@ -167,10 +167,11 @@ $result_1 = $data
           ->get();
 
 ```
-
-Here are the result for `$result_1`
+<details>
+  <summary>Click to show output : <code>$result_2</code></summary>
 
 ![Alt text](https://gcdnb.pbrd.co/images/qtItVezcEUq7.png?o=1 "a title")
+</details>
 
 ```php
 // another example, filter with closure
@@ -184,9 +185,11 @@ $result_2 = $data
 
 ```
 
-Here are the result for `$result_2`
+<details>
+  <summary>Click to show output : <code>$result_2</code></summary>
 
-![Alt text](https://gcdnb.pbrd.co/images/qtItVezcEUq7.png?o=1 "a title")
+  ![Alt text](https://gcdnb.pbrd.co/images/qtItVezcEUq7.png?o=1 "a title")
+</details>
 
 ```php
 // another example, to load data from url used browserkit
@@ -206,11 +209,14 @@ $result_3 = $data
 
 ```
 
-Here are the result for `$result_3`
+<details>
+  <summary>Click to show output : <code>$result_3</code></summary>
 
-![Alt text](https://gcdnb.pbrd.co/images/We0ea7frlZw1.png?o=1 "a title")
+  ![Alt text](https://gcdnb.pbrd.co/images/We0ea7frlZw1.png?o=1 "a title")
+</details>
 
-### how to use get_child(a, b)
+
+#### how to use append_node(a, b)
 
 ```php
 // another example, to load data from url used browserkit
@@ -230,9 +236,38 @@ $result_4 = $data
 
 ```
 
-Here are the result for `$result_4`
+<details>
+  <summary>Click to show output : <code>$result_4</code></summary>
 
-![Alt text](https://gcdnb.pbrd.co/images/46mETzAatjur.png?o=1 "a title")
+  ![Alt text](https://gcdnb.pbrd.co/images/46mETzAatjur.png?o=1 "a title")
+</details>
+
+#### Another example how to use append_child() with custom key each item
+
+```php
+// another example, to load data from url used browserkit
+
+$url = "http://quotes.toscrape.com/";
+$data = new Cquery($url);
+
+$result_5 = $data
+              ->from(".col-md-8 > .quote")
+              ->define(
+                  "span.text as text",
+                  "append_node(div > .tags, a) as _tags",
+                  "append_node(div > .tags, a) as tags[*][text]",
+                  "append_node(div > .tags, attr(href, a)) as tags[*][url]", // [*] means each index, for now ots limitd only one level
+              )
+              ->get()
+              ->toArray();
+
+```
+
+<details>
+  <summary>Click to show output : <code>$result_5</code></summary>
+
+  ![Alt text](https://gcdnb.pbrd.co/images/lXhhw7hA8LYf.png?o=1 "a title")
+</details>
 
 ### Note
 

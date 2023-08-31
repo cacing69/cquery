@@ -335,7 +335,7 @@ final class CquerySimpleHtml1Test extends TestCase
                 // "attr(class, a > p) as class_a_p",
                 "attr(class, a) as url",
                 "length(h1) as length"
-                )
+            )
             ->get();
 
         $this->assertCount(9, $result);
@@ -558,7 +558,7 @@ final class CquerySimpleHtml1Test extends TestCase
             ->from("#lorem .link")
             ->define(
                 "upper(h1) as title_upper",
-                new Definer("a", "col_2", function($value) use ($date) {
+                new Definer("a", "col_2", function ($value) use ($date) {
                     return "{$value} fetched on: {$date}";
                 })
             )

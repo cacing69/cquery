@@ -24,7 +24,7 @@ final class QuotesToScrapeTest extends TestCase
                 "span.text as text",
                 "span:nth-child(2) > small as author",
                 "(div > .tags) as tags",
-                )
+            )
             ->get();
 
         $resultTopTen = $data
@@ -53,7 +53,7 @@ final class QuotesToScrapeTest extends TestCase
                     "span.text as text",
                     "span:nth-child(2) > small as author",
                     "(div > .tags > a)  as tags",
-                    )
+                )
                 ->get();
         } catch (Exception $e) {
             $this->assertSame(CqueryException::class, get_class($e));

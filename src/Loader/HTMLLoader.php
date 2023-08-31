@@ -27,28 +27,7 @@ class HTMLLoader extends Loader
         }
     }
 
-    public function setContent(string $content)
-    {
-        $this->content = $content;
-
-        return $this;
-    }
-
-    protected function validateSource()
-    {
-        if ($this->source === null) {
-            throw new CqueryException("no source defined");
-        }
-    }
-
-    protected function validateDefiners()
-    {
-        if (count($this->definer) === 0) {
-            throw new CqueryException("no definer found");
-        }
-    }
-
-    protected function fetchContent()
+    protected function fetchCrawler()
     {
         if($this->isRemote) {
             $browser = new HttpBrowser(HttpClient::create());
@@ -58,25 +37,9 @@ class HTMLLoader extends Loader
         }
     }
 
-    public function define(...$defines)
-    {
-        $this->validateSource();
-
-        if($this->isFetched) {
-            $this->definer = [];
-            $this->isFetched = false;
-        }
-
-        foreach ($defines as $define) {
-            $this->addDefiner($define);
-        }
-
-        return $this;
-    }
-
     public function from(string $value)
     {
-        $this->fetchContent();
+        $this->fetchCrawler();
         $this->source = new Source($value);
         return $this;
     }

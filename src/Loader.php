@@ -18,8 +18,6 @@ abstract class Loader
     protected $isRemote = false;
     protected $isFetched = false;
 
-    protected $content;
-
     protected $definer = [];
     protected $filter = [];
 
@@ -28,13 +26,8 @@ abstract class Loader
         $this->limit = $limit;
         return $this;
     }
-
-    abstract protected function validateSource();
-    abstract protected function validateDefiners();
-    abstract protected function fetchContent();
-    abstract public function define(...$defines);
+    abstract protected function fetchCrawler();
     abstract public function from(string $value);
-    abstract public function setContent(string $value);
 
     public function first()
     {
@@ -74,6 +67,36 @@ abstract class Loader
     {
         array_push($this->definer, new DefinerExtractor($definer, $this->source));
         return $this;
+    }
+
+    public function define(...$defines)
+    {
+        $this->validateSource();
+
+        if($this->isFetched) {
+            $this->definer = [];
+            $this->isFetched = false;
+        }
+
+        foreach ($defines as $define) {
+            $this->addDefiner($define);
+        }
+
+        return $this;
+    }
+
+    protected function validateSource()
+    {
+        if ($this->source === null) {
+            throw new CqueryException("no source defined");
+        }
+    }
+
+    protected function validateDefiners()
+    {
+        if (count($this->definer) === 0) {
+            throw new CqueryException("no definer found");
+        }
     }
 
     // TODO From DOM Manipulator

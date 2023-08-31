@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Cacing69\Cquery\Adapter;
 
+use Cacing69\Cquery\Extractor\DefinerExtractor;
 use Cacing69\Cquery\Extractor\SourceExtractor;
 
 class AppendNodeCallbackAdapter extends CallbackAdapter
@@ -20,10 +21,12 @@ class AppendNodeCallbackAdapter extends CallbackAdapter
 
         preg_match('/^\s*?append_node\(\s?(.+?),\s?(.+?)\s?\)\s*?$/', $raw, $extract);
 
-        $this->ref = $extract[2];
+        $extractRefNode = new DefinerExtractor($extract[2]);
+
+        $this->ref = $extractRefNode->getDefiner();
         $this->node = $extract[1];
 
-        $this->call = "filter.extract";
-        $this->callParameter = ["_text"];
+        $this->callMethod = "filter.each";
+        $this->callMethodParameter = $extractRefNode->getAdapter()->getCallMethodParameter();
     }
 }

@@ -7,6 +7,7 @@ namespace Cacing69\Cquery\Adapter;
 use Cacing69\Cquery\Exception\CqueryException;
 use Cacing69\Cquery\Support\RegExp;
 use Cacing69\Cquery\Trait\HasOperatorProperty;
+use Cacing69\Cquery\Extractor\DefinerExtractor;
 use Closure;
 use Cacing69\Cquery\Trait\HasNodeProperty;
 use Cacing69\Cquery\Trait\HasSelectorProperty;
@@ -22,26 +23,31 @@ abstract class CallbackAdapter
     use HasRawProperty;
     use HasNodeProperty;
     protected $ref;
-    protected $call;
-    protected $callParameter;
-    protected $afterCall;
-
+    protected $callMethod;
+    protected $callMethodParameter;
     protected $callback;
 
-    public function getCallback()
+    public function setCallMethod($callMethod)
     {
-        return $this->callback;
-    }
-
-    public function setCall($call)
-    {
-        $this->call = $call;
+        $this->callMethod = $callMethod;
         return $this;
     }
 
-    public function getCall()
+    public function getCallMethod()
     {
-        return $this->call;
+        return $this->callMethod;
+    }
+
+    protected function extractChild($raw)
+    {
+        $extractChild = new DefinerExtractor($raw);
+
+        $this->node = $extractChild->getAdapter()->getNode();
+
+        $this->callMethod = $extractChild->getAdapter()->getCallMethod();
+        $this->callMethodParameter = $extractChild->getAdapter()->getCallMethodParameter();
+
+        return $extractChild;
     }
 
     public function getRef()
@@ -49,25 +55,25 @@ abstract class CallbackAdapter
         return $this->ref;
     }
 
-    public function getAfterCall()
+    public function getCallback()
     {
-        return $this->afterCall;
+        return $this->callback;
     }
 
-    public function setAfterCall($afterCall)
+    public function setCallback($callback)
     {
-        $this->afterCall = $afterCall;
+        $this->callback = $callback;
         return $this;
     }
 
-    public function getCallParameter()
+    public function getCallMethodParameter()
     {
-        return $this->callParameter;
+        return $this->callMethodParameter;
     }
 
-    public function setCallParameter($callParameter)
+    public function setCallMethodParameter($callMethodParameter)
     {
-        $this->callParameter = $callParameter;
+        $this->callMethodParameter = $callMethodParameter;
         return $this;
     }
 

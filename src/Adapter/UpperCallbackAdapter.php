@@ -16,26 +16,36 @@ class UpperCallbackAdapter extends CallbackAdapter
     {
         return self::$signature;
     }
+
     public function __construct(string $raw, SourceExtractor $source = null)
     {
         $this->raw = $raw;
+
+        $this->callback = function (string $value) {
+            return strtoupper($value);
+        };
+        $_childCallback = null;
         // check if function is nested
         if (preg_match('/^\s?upper\(\s?([a-z0-9_]*\(.+?\))\s?\)$/', $raw)) {
             preg_match('/^\s?upper\(\s?([a-z0-9_]*\(.+?\))\s?\)$/', $raw, $extract);
 
-            $extractor = new DefinerExtractor($extract[1]);
-            $this->node = $extractor->getAdapter()->getNode();
+            $extractChild = $this->extractChild($extract[1]);
+            $_childCallback = $extractChild->getAdapter()->getCallback();
 
         } else {
             preg_match(RegExp::EXTRACT_FIRST_PARAM_UPPER, $raw, $node);
             $this->node = $node[1];
 
-            $this->call = "extract";
-            $this->callParameter = ["_text"];
-
-            $this->afterCall = function (string $value) {
-                return strtoupper($value);
-            };
+            $this->callMethod = "extract";
+            $this->callMethodParameter = ["_text"];
         }
+
+        $this->callback = function (string $value) use ($_childCallback){
+            if(empty($_childCallback)) {
+                return strtoupper((string) $value);
+            } else {
+                return strtoupper((string) $_childCallback($value));
+            }
+        };
     }
 }

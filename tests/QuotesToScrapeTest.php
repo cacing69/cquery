@@ -82,4 +82,27 @@ final class QuotesToScrapeTest extends TestCase
         $this->assertCount(4, $result[0]['tags']);
         $this->assertCount(2, $result[1]['tags']);
     }
+
+    public function testScrapeQuotesToScrapeWithAppendNodeHrefAttributeDefiner()
+    {
+        $content = file_get_contents(SAMPLE_QUOTES_TO_SCRAPE);
+
+        $data = new Cquery($content);
+
+        $result = $data
+            ->from(".col-md-8 > .quote")
+            ->define(
+                "span.text as text",
+                "span:nth-child(2) > small as author",
+                // "append_node(div > .tags, a)  as tags",
+                "append_node(div > .tags, attr(href, a))  as tags_url",
+            )
+            ->get();
+
+        $this->assertCount(10, $result);
+        // $this->assertCount(4, $result[0]['tags']);
+        // $this->assertCount(2, $result[1]['tags']);
+        $this->assertCount(4, $result[0]['tags_url']);
+        $this->assertCount(2, $result[1]['tags_url']);
+    }
 }

@@ -52,4 +52,12 @@ final class DefinerTest extends TestCase
         $this->assertSame("_header_closure_1", $definer->getAlias());
         $this->assertSame(Closure::class, get_class($definer->getRaw()));
     }
+
+    public function testDefinerNestedWithAlias()
+    {
+        $definer = new Definer("length(attr(class, a))");
+
+        $this->assertSame("length(attr(class, a))", $definer->getNode());
+        $this->assertSame("length_attr_class_a", $definer->getAlias());
+    }
 }

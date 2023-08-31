@@ -19,7 +19,7 @@ class DefaultCallbackAdapter extends CallbackAdapter
         $this->raw = $raw;
 
         $this->node = $raw;
-        $this->call = "extract";
-        $this->callParameter = ["_text"];
+        $this->callMethod = "extract";
+        $this->callMethodParameter = ["_text"];
     }
 }

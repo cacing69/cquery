@@ -24,31 +24,23 @@ class LengthCallbackAdapter extends CallbackAdapter
         if(preg_match('/^\s?length\(\s?([a-z0-9_]*\(.+?\))\s?\)$/', $raw)) {
             preg_match('/^\s?length\(\s?([a-z0-9_]*\(.+?\))\s?\)$/', $raw, $extract);
 
-            $extractor = new DefinerExtractor($extract[1]);
+            $extractChild = $this->extractChild($extract[1]);
+            $_childCallback = $extractChild->getAdapter()->getCallback();
 
-            $this->node = $extractor->getAdapter()->getNode();
-
-            $this->call = $extractor->getAdapter()->getCall();
-            $this->callParameter = $extractor->getAdapter()->getCallParameter();
-
-            $afterCallFromExtractor = $extractor->getAdapter()->getAfterCall();
-
-            $this->afterCall = function (string $value) use ($afterCallFromExtractor) {
-                return $afterCallFromExtractor ? strlen($afterCallFromExtractor($value)) : strlen($value);
-            };
         } else {
             preg_match(RegExp::EXTRACT_FIRST_PARAM_LENGTH, $raw, $node);
             $this->node = $node[1];
 
-            $this->call = "extract";
-            $this->callParameter = ["_text"];
-
-            $this->afterCall = function (string $value) {
-                return strlen($value);
-            };
+            $this->callMethod = "extract";
+            $this->callMethodParameter = ["_text"];
         }
 
-
-
+        $this->callback = function (string $value) use ($_childCallback){
+            if(empty($_childCallback)) {
+                return strlen((string) $value);
+            } else {
+                return strlen((string) $_childCallback($value));
+            }
+        };
     }
 }

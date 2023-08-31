@@ -34,9 +34,9 @@ class DefinerExtractor
                 $extractor = new DefinerExtractor("{$definer->getNode()} as {$definer->getAlias()}");
 
                 $adapter = $adapter->setNode($extractor->getAdapter()->getNode())
-                    ->setCall($extractor->getAdapter()->getCall())
-                    ->setCallParameter($extractor->getAdapter()->getCallParameter())
-                    ->setAfterCall($adapter->getAfterCall());
+                    ->setCallMethod($extractor->getAdapter()->getCallMethod())
+                    ->setCallMethodParameter($extractor->getAdapter()->getCallMethodParameter())
+                    ->setCallback($adapter->getCallback());
 
                 $this->adapter = $adapter;
             } else {

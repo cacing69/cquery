@@ -94,17 +94,17 @@ class HTMLLoader extends Loader
                     ->filterXPath($dom->getSource()->getXpath())
                     ->filterXPath($filterAdapter->getNodeXpath());
 
-                if ($filterAdapter->getCall() === "extract") {
-                    $_data = $_data->extract($filterAdapter->getCallParameter());
-                } elseif ($filterAdapter->getCall() === "filter") {
+                if ($filterAdapter->getCallMethod() === "extract") {
+                    $_data = $_data->extract($filterAdapter->getCallMethodParameter());
+                } elseif ($filterAdapter->getCallMethod() === "filter") {
                     dd($filterAdapter);
                 }
 
-                if ($filterAdapter->getAfterCall() !== null) {
-                    $_afterCall = $filterAdapter->getAfterCall();
+                if ($filterAdapter->getCallback() !== null) {
+                    $_callback = $filterAdapter->getCallback();
 
-                    $_data = array_map(function ($_mapValue) use ($_afterCall) {
-                        return $_afterCall($_mapValue);
+                    $_data = array_map(function ($_mapValue) use ($_callback) {
+                        return $_callback($_mapValue);
                     }, $_data);
                 }
 
@@ -134,7 +134,7 @@ class HTMLLoader extends Loader
 
         foreach ($this->getActiveDom()->getDefiner() as $key => $definer) {
             $_data = null;
-            if($definer->getAdapter()->getCall() === "extract") {
+            if($definer->getAdapter()->getCallMethod() === "extract") {
                 $_data = $dom->getCrawler()
                         ->filterXPath($dom->getSource()->getXpath())
                         ->filterXPath($definer->getAdapter()->getNodeXpath());
@@ -146,16 +146,26 @@ class HTMLLoader extends Loader
                     });
                 }
 
-                $_data = $_data->extract($definer->getAdapter()->getCallParameter());
-            } elseif($definer->getAdapter()->getCall() === "filter.extract") {
+                $_data = $_data->extract($definer->getAdapter()->getCallMethodParameter());
+            } elseif($definer->getAdapter()->getCallMethod() === "filter.each") {
                 $_data = [];
                 $dom->getCrawler()
                     ->filterXPath($dom->getSource()->getXpath())
                     ->filterXPath($definer->getAdapter()->getNodeXpath())
-                    ->each(function (Crawler $node, $i) use (&$_data) {
-                        //    dump($node->text());$node-
-                        $node->filter("a")->each(function (Crawler $_node, $_i) use ($i, &$_data) {
-                            $_data[$i][] = $_node->text();
+                    ->each(function (Crawler $node, $i) use (&$_data, $definer) {
+                        //    dump($node->text());
+                        $node->filter("a")->each(function (Crawler $_node, $_i) use ($i, &$_data, $definer) {
+                            if(is_array($definer->getAdapter()->getCallMethodParameter()) && count($definer->getAdapter()->getCallMethodParameter()) === 1) {
+                                $__callParameter = $definer->getAdapter()->getCallMethodParameter()[0];
+                                if($__callParameter === "_text") {
+                                    $_data[$i][] = $_node->text();
+                                } else {
+                                    $_data[$i][] = $_node->attr($__callParameter);
+                                }
+
+                            } else {
+                                dd('not_supported_yet');
+                            }
                         });
                     });
             }
@@ -168,8 +178,8 @@ class HTMLLoader extends Loader
                 }
             }
 
-            if($definer->getAdapter()->getAfterCall() !== null) {
-                $_afterCall = $definer->getAdapter()->getAfterCall();
+            if($definer->getAdapter()->getCallback() !== null) {
+                $_afterCall = $definer->getAdapter()->getCallback();
                 $_data = array_map(function ($_mapValue) use ($_afterCall) {
                     return $_afterCall($_mapValue);
                 }, $_data);

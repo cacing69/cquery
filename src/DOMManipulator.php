@@ -45,8 +45,8 @@ class DOMManipulator
 
             $adapter = $adapter
                 ->setNode($extractor->getAdapter()->getNode())
-                ->setCall($extractor->getAdapter()->getCall())
-                ->setCallParameter($extractor->getAdapter()->getCallParameter());
+                ->setCallMethod($extractor->getAdapter()->getCallMethod())
+                ->setCallMethodParameter($extractor->getAdapter()->getCallMethodParameter());
         } else {
             foreach (RegisterAdapter::load() as $adapter) {
                 $checkSignature = $adapter::getSignature();

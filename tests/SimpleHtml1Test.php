@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 define("SAMPLE_SIMPLE_1", "src/Samples/sample-simple-1.html");
 
-final class CquerySimpleHtml1Test extends TestCase
+final class SimpleHtml1Test extends TestCase
 {
     public function testCollectFirst()
     {

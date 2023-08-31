@@ -106,22 +106,36 @@ final class QuotesToScrapeTest extends TestCase
         $this->assertCount(2, $result[1]['tags_url']);
     }
 
-    // public function testScrapeQuotesToScrapeWithAppendNodeAndAppendOnKeyDefiner()
-    // {
-    //     $content = file_get_contents(SAMPLE_QUOTES_TO_SCRAPE);
+    public function testScrapeQuotesToScrapeWithAppendNodeAndAppendOnKeyDefiner()
+    {
+        $content = file_get_contents(SAMPLE_QUOTES_TO_SCRAPE);
 
-    //     $data = new Cquery($content);
+        $data = new Cquery($content);
 
-    //     $result = $data
-    //         ->from(".col-md-8 > .quote")
-    //         ->define(
-    //             "span.text as text",
-    //             "append_node(div > .tags, attr(href, a)) as tags[url]",
-    //         )
-    //         ->get();
+        $result = $data
+            ->from(".col-md-8 > .quote")
+            ->define(
+                "span.text as text",
+                "append_node(div > .tags, a) as _tags",
+                "append_node(div > .tags, a) as tags[*][text]",
+                "append_node(div > .tags, attr(href, a)) as tags[*][url]", // * means each index, for now ots limitd only one level
+            )
+            ->get();
 
-    //     $this->assertCount(10, $result);
-    //     $this->assertCount(4, $result[0]['tags']['url']);
-    //     $this->assertCount(2, $result[1]['tags']['url']);
-    // }
+        dump($result);
+        $this->assertCount(10, $result);
+        $this->assertCount(4, $result[0]['tags']);
+
+        $this->assertSame('change', $result[0]['tags'][0]['text']);
+        $this->assertSame('/tag/change/page/1/', $result[0]['tags'][0]['url']);
+
+        $this->assertSame('deep-thoughts', $result[0]['tags'][1]['text']);
+        $this->assertSame('/tag/deep-thoughts/page/1/', $result[0]['tags'][1]['url']);
+
+        $this->assertSame('thinking', $result[0]['tags'][2]['text']);
+        $this->assertSame('/tag/thinking/page/1/', $result[0]['tags'][2]['url']);
+
+        $this->assertSame('world', $result[0]['tags'][3]['text']);
+        $this->assertSame('/tag/world/page/1/', $result[0]['tags'][3]['url']);
+    }
 }

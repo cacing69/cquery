@@ -177,7 +177,6 @@ class HTMLLoader extends Loader
                     ->filterXPath($dom->getSource()->getXpath())
                     ->filterXPath($definer->getAdapter()->getNodeXpath())
                     ->each(function (Crawler $node, $i) use (&$_data, $definer) {
-                        //    dump($node->text());
                         $node->filter("a")->each(function (Crawler $_node, $_i) use ($i, &$_data, $definer) {
                             if(is_array($definer->getAdapter()->getCallMethodParameter()) && count($definer->getAdapter()->getCallMethodParameter()) === 1) {
                                 $__callParameter = $definer->getAdapter()->getCallMethodParameter()[0];
@@ -186,7 +185,6 @@ class HTMLLoader extends Loader
                                 } else {
                                     $_data[$i][] = $_node->attr($__callParameter);
                                 }
-
                             } else {
                                 dd('not_supported_yet');
                             }
@@ -221,7 +219,19 @@ class HTMLLoader extends Loader
                         $_hold_data[$_key][$definer->getAlias()] = $_value;
                     }
                 } else {
-                    $_hold_data[$_key][$definer->getAlias()] = $_value;
+                    if(preg_match('/^\s*([A-Za-z0-9\-\_]+?)\[\*\]\[([A-Za-z0-9\-\_]*?)\]\s*?/', $definer->getAlias())) {
+                        preg_match('/^\s*([A-Za-z0-9\-\_]+?)\[\*\]\[([A-Za-z0-9\-\_]*?)\]\s*?/', $definer->getAlias(), $_extractAlias);
+
+                        $_hold_child = $_hold_data[$_key][$_extractAlias[1]];
+
+                        foreach ($_value as $__key => $__value) {
+                            $_hold_child[$__key][$_extractAlias[2]] = $__value;
+                        }
+
+                        $_hold_data[$_key][$_extractAlias[1]] = $_hold_child;
+                    } else {
+                        $_hold_data[$_key][$definer->getAlias()] = $_value;
+                    }
                 }
             }
         }

@@ -11,14 +11,12 @@ use Cacing69\Cquery\Extractor\DefinerExtractor;
 use Closure;
 use Cacing69\Cquery\Trait\HasNodeProperty;
 use Cacing69\Cquery\Trait\HasSelectorProperty;
-use Cacing69\Cquery\Trait\HasFilterProperty;
 use Cacing69\Cquery\Trait\HasRawProperty;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 
 abstract class CallbackAdapter
 {
     use HasOperatorProperty;
-    use HasFilterProperty;
     use HasSelectorProperty;
     use HasRawProperty;
     use HasNodeProperty;
@@ -26,6 +24,18 @@ abstract class CallbackAdapter
     protected $callMethod;
     protected $callMethodParameter;
     protected $callback;
+
+    protected $filter;
+    public function setFilter($filter)
+    {
+        $this->filter = $filter;
+        return $this;
+    }
+
+    public function getFilter()
+    {
+        return $this->filter;
+    }
 
     public function setCallMethod($callMethod)
     {

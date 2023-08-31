@@ -13,7 +13,6 @@ class Filter
 {
     use HasNodeProperty;
     use HasOperatorProperty;
-    use HasValueProperty;
 
     public function __construct($node, $operator, $value = null)
     {
@@ -29,5 +28,19 @@ class Filter
     public function operatorIsCallback()
     {
         return $this->operator instanceof Closure;
+    }
+
+    private $value;
+
+    public function setValue($value)
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
+    public function getValue()
+    {
+        return $this->value;
     }
 }

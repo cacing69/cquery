@@ -3,6 +3,7 @@
 namespace Cacing69\Cquery\Test;
 
 use Cacing69\Cquery\Definer;
+use Closure;
 use PHPUnit\Framework\TestCase;
 
 final class DefinerTest extends TestCase
@@ -13,6 +14,7 @@ final class DefinerTest extends TestCase
 
         $this->assertSame("a", $definer->getNode());
         $this->assertSame("a", $definer->getAlias());
+        $this->assertSame(true, is_string($definer->getRaw()));
     }
 
     public function testDefinerStringWithAlias()
@@ -21,7 +23,7 @@ final class DefinerTest extends TestCase
 
         $this->assertSame("h1", $definer->getNode());
         $this->assertSame("title", $definer->getAlias());
-        $this->assertCount(1, $definer->getOptions());
+        $this->assertSame(true, is_string($definer->getRaw()));
     }
 
     public function testDefinerStringWithoutAlias()
@@ -30,6 +32,24 @@ final class DefinerTest extends TestCase
 
         $this->assertSame("h1 > p > ul", $definer->getNode());
         $this->assertSame("h1_p_ul", $definer->getAlias());
-        $this->assertCount(0, $definer->getOptions());
+        $this->assertSame(true, is_string($definer->getRaw()));
+    }
+
+    public function testDefinerStringWithoutAliasArgument()
+    {
+        $definer = new Definer("(h1 > p > ul)", "_header_1");
+
+        $this->assertSame("h1 > p > ul", $definer->getNode());
+        $this->assertSame("_header_1", $definer->getAlias());
+        $this->assertSame(true, is_string($definer->getRaw()));
+    }
+
+    public function testDefinerWithCallback()
+    {
+        $definer = new Definer("(h1 > p > ul)", "_header_closure_1", function ($e) {return $e . "-TEST";});
+
+        $this->assertSame("h1 > p > ul", $definer->getNode());
+        $this->assertSame("_header_closure_1", $definer->getAlias());
+        $this->assertSame(Closure::class, get_class($definer->getRaw()));
     }
 }

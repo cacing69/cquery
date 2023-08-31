@@ -4,9 +4,9 @@ namespace Cacing69\Cquery\Adapter;
 
 use Cacing69\Cquery\Extractor\SourceExtractor;
 
-class GetNodeCallbackAdapter extends CallbackAdapter
+class AppendNodeCallbackAdapter extends CallbackAdapter
 {
-    protected static $signature = '/^\s*?get_node\(\s?(.+?),\s?(.+?)\s?\)\s*?$/';
+    protected static $signature = '/^\s*?append_node\(\s?(.+?),\s?(.+?)\s?\)\s*?$/';
     public static function getSignature() {
         return self::$signature;
     }
@@ -15,7 +15,7 @@ class GetNodeCallbackAdapter extends CallbackAdapter
     {
         $this->raw = $raw;
 
-        preg_match('/^\s*?get_node\(\s?(.+?),\s?(.+?)\s?\)\s*?$/', $raw, $extract);
+        preg_match('/^\s*?append_node\(\s?(.+?),\s?(.+?)\s?\)\s*?$/', $raw, $extract);
 
         $this->ref = $extract[2];
         $this->node = $extract[1];

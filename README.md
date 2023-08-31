@@ -1,6 +1,12 @@
 # Cquery (Crawl Query)
 
-## Currently experimenting to attempt scraping a webpage using different methods
+## Please Read
+
+### Currently experimenting
+
+to attempt extract data from webpage which, in my opinion, becomes more enjoyable. All methods and usage instructions provided here are designed according to the i needs. If you have any suggestions or feedback to improve them, it would be highly appreciated and
+
+## What kind of thing is this
 
 Cquery is an acronym for crawl query, used to extract text from an HTML element using PHP, simply its tool for crawling/scraping web page. It called a query, as it adopts the structure present in an SQL query, so you can analogize that your DOM/HTML Document is a table you will query.
 
@@ -93,7 +99,7 @@ Below are the functions you are can use, they may change over time. <br>**Note:*
 | `length(selector)` | `length(h1)` | will retrieve all length string on the element/container according to the selector. (h1) |
 | `upper(selector)` | `upper(h1)` | will change text to uppercase element/container according to the selector. (h1) |
 | `reverse(selector)` | `reverse(h1)` | will reverse text according to the selector. (h1) |
-| `get_child(selectorParent, selectorChildAfterParent)` | `get_node(div > .tags, a)  as tags` | will add array element each item, for its usage, you can refer to the sample code below in $result_4. |
+| `append_node(selectorParent, selectorChildAfterParent)` | `append_node(div > .tags, a)  as tags` | will append array element as a child each item, for its usage, you can refer to the sample code below in $result_4. |
 
 #### How to use filter
 x
@@ -217,7 +223,7 @@ $result_4 = $data
               ->define(
                   "span.text as text",
                   "span:nth-child(2) > small as author",
-                  "get_node(div > .tags, a)  as tags",
+                  "append_node(div > .tags, a)  as tags",
               )
               ->get()
               ->toArray();

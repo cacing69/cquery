@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Cacing69\Cquery;
 use Cacing69\Cquery\Trait\HasAliasProperty;
+use Cacing69\Cquery\Support\RegExp;
 use Cacing69\Cquery\Exception\CqueryException;
 use Cacing69\Cquery\Support\Str;
 use Cacing69\Cquery\Trait\HasRawProperty;
@@ -19,10 +20,15 @@ class Definer
 
         if(preg_match('/^\s?.+\s+(as)\s+.+/', $node)){
             throw new CqueryException("error define, please set alias on second parameter");
-
         }
 
-        $this->node = $node;
+        if (preg_match(RegExp::CHECK_AND_EXTRACT_DEFINER_HAVE_WRAP, $node)) {
+            preg_match(RegExp::CHECK_AND_EXTRACT_DEFINER_HAVE_WRAP, $node, $extract);
+            $this->node = $extract[1];
+        } else {
+            $this->node = $node;
+        }
+
 
         if($alias) {
             $this->alias = $alias;

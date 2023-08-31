@@ -62,7 +62,7 @@ final class QuotesToScrapeTest extends TestCase
         }
     }
 
-    public function testScrapeQuotesToScrapeWithGetChildDefiner()
+    public function testScrapeQuotesToScrapeWithAppendNodeDefiner()
     {
         $content = file_get_contents(SAMPLE_QUOTES_TO_SCRAPE);
 
@@ -73,7 +73,7 @@ final class QuotesToScrapeTest extends TestCase
             ->define(
                 "span.text as text",
                 "span:nth-child(2) > small as author",
-                "get_node(div > .tags, a)  as tags",
+                "append_node(div > .tags, a)  as tags",
             )
             ->get()
             ->toArray();

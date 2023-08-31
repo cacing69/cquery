@@ -214,7 +214,9 @@ class HTMLLoader extends Loader
                     $_value = trim(preg_replace('/\s+/', ' ', (string) $_value));
                 }
 
-                $_value = strlen((string) $_value) > 0 ? $_value : null;
+                if(is_string($_value) || is_numeric($_value)) {
+                    $_value = strlen((string) $_value) > 0 ? $_value : null;
+                }
 
                 if ($limit !== null) {
                     if ($_key === $limit) {

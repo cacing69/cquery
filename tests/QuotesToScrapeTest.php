@@ -75,8 +75,7 @@ final class QuotesToScrapeTest extends TestCase
                 "span:nth-child(2) > small as author",
                 "append_node(div > .tags, a)  as tags",
             )
-            ->get()
-            ->toArray();
+            ->get();
 
         $this->assertCount(10, $result);
         $this->assertCount(4, $result[0]['tags']);
@@ -113,6 +112,14 @@ final class QuotesToScrapeTest extends TestCase
 
         $this->assertCount(4, $result[0]['tags_url']);
         $this->assertCount(2, $result[1]['tags_url']);
+        $this->assertCount(5, $result[2]['tags_url']);
+        $this->assertCount(4, $result[3]['tags_url']);
+        $this->assertCount(2, $result[4]['tags_url']);
+        $this->assertCount(3, $result[5]['tags_url']);
+        $this->assertCount(2, $result[6]['tags_url']);
+        $this->assertCount(4, $result[7]['tags_url']);
+        $this->assertCount(1, $result[8]['tags_url']);
+        $this->assertCount(3, $result[9]['tags_url']);
     }
 
     public function testScrapeQuotesToScrapeWithAppendNodeAndAppendOnKeyDefiner()

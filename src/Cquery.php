@@ -127,7 +127,7 @@ class Cquery
             $filter = $node;
         } else {
             $filter = new Filter($node, $operator);
-            if($node instanceof Closure){
+            if($node instanceof Closure) {
                 throw new CqueryException("when used closure, u need to place it on second parameter");
             }
 

@@ -35,7 +35,7 @@ class ReverseCallbackAdapter extends CallbackAdapter
             $this->callMethodParameter = ["_text"];
         }
 
-        $this->callback = function (string $value) use ($_childCallback){
+        $this->callback = function (string $value) use ($_childCallback) {
             if(empty($_childCallback)) {
                 return strrev((string) $value);
             } else {

@@ -26,7 +26,8 @@ class Filter
         }
     }
 
-    public function operatorIsCallback() {
+    public function operatorIsCallback()
+    {
         return $this->operator instanceof Closure;
     }
 }

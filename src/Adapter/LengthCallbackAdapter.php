@@ -35,7 +35,7 @@ class LengthCallbackAdapter extends CallbackAdapter
             $this->callMethodParameter = ["_text"];
         }
 
-        $this->callback = function (string $value) use ($_childCallback){
+        $this->callback = function (string $value) use ($_childCallback) {
             if(empty($_childCallback)) {
                 return strlen((string) $value);
             } else {

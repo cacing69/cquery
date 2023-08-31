@@ -1,9 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Cacing69\Cquery\Trait;
 
-trait HasRawProperty {
+trait HasRawProperty
+{
     protected $raw;
 
     public function setRaw($raw)

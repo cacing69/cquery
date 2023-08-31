@@ -1,9 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Cacing69\Cquery\Trait;
 
-trait HasValueProperty {
+trait HasValueProperty
+{
     private $value;
 
     public function setValue($value)

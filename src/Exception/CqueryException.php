@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Cacing69\Cquery\Exception;
 
 use Exception;

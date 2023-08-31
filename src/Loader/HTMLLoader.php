@@ -1,5 +1,7 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
+
 namespace Cacing69\Cquery\Loader;
 
 use Cacing69\Cquery\Exception\CqueryException;
@@ -94,7 +96,7 @@ class HTMLLoader extends Loader
 
                 if ($filterAdapter->getCall() === "extract") {
                     $_data = $_data->extract($filterAdapter->getCallParameter());
-                } else if ($filterAdapter->getCall() === "filter") {
+                } elseif ($filterAdapter->getCall() === "filter") {
                     dd($filterAdapter);
                 }
 
@@ -132,7 +134,7 @@ class HTMLLoader extends Loader
 
         foreach ($this->getActiveDom()->getDefiner() as $key => $definer) {
             $_data = null;
-            if($definer->getAdapter()->getCall() === "extract"){
+            if($definer->getAdapter()->getCall() === "extract") {
                 $_data = $dom->getCrawler()
                         ->filterXPath($dom->getSource()->getXpath())
                         ->filterXPath($definer->getAdapter()->getNodeXpath());
@@ -145,13 +147,13 @@ class HTMLLoader extends Loader
                 }
 
                 $_data = $_data->extract($definer->getAdapter()->getCallParameter());
-            } else if($definer->getAdapter()->getCall() === "filter.extract"){
+            } elseif($definer->getAdapter()->getCall() === "filter.extract") {
                 $_data = [];
                 $dom->getCrawler()
                     ->filterXPath($dom->getSource()->getXpath())
                     ->filterXPath($definer->getAdapter()->getNodeXpath())
-                    ->each(function (Crawler $node, $i) use (&$_data){
-                    //    dump($node->text());$node-
+                    ->each(function (Crawler $node, $i) use (&$_data) {
+                        //    dump($node->text());$node-
                         $node->filter("a")->each(function (Crawler $_node, $_i) use ($i, &$_data) {
                             $_data[$i][] = $_node->text();
                         });

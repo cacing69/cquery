@@ -1,5 +1,7 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
+
 namespace Cacing69\Cquery\Adapter;
 
 use Cacing69\Cquery\Extractor\SourceExtractor;
@@ -7,7 +9,8 @@ use Cacing69\Cquery\Extractor\SourceExtractor;
 class AppendNodeCallbackAdapter extends CallbackAdapter
 {
     protected static $signature = '/^\s*?append_node\(\s?(.+?),\s?(.+?)\s?\)\s*?$/';
-    public static function getSignature() {
+    public static function getSignature()
+    {
         return self::$signature;
     }
 

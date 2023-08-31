@@ -1,5 +1,7 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
+
 namespace Cacing69\Cquery\Adapter;
 
 use Cacing69\Cquery\Extractor\SourceExtractor;

@@ -1,9 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Cacing69\Cquery\Trait;
 
-trait HasSelectorProperty {
+trait HasSelectorProperty
+{
     private $selector;
 
     public function setSelector($selector)

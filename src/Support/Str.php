@@ -2,9 +2,10 @@
 
 namespace Cacing69\Cquery\Support;
 
-class Str {
+class Str
+{
     // https://stackoverflow.com/a/2955521/10232729
-    public static function slug($text, $divider = "_") : string
+    public static function slug($text, $divider = "_"): string
     {
         $replace = [
             '<' => '', '>' => '', '-' => ' ', '&' => '', '.' => '',
@@ -70,7 +71,7 @@ class Str {
     }
 
     // https://stackoverflow.com/a/33546903
-    public static function isNonEmptyString($val) : bool
+    public static function isNonEmptyString($val): bool
     {
         return is_string($val) && $val !== '';
     }

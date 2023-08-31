@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Cacing69\Cquery\Extractor;
 
 use Cacing69\Cquery\Support\RegExp;

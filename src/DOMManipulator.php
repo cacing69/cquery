@@ -11,7 +11,8 @@ use Cacing69\Cquery\Extractor\DefinerExtractor;
 use Closure;
 use Symfony\Component\DomCrawler\Crawler;
 
-class DOMManipulator {
+class DOMManipulator
+{
     use HasSourceProperty;
     private $crawler;
     private $definer = [];
@@ -27,7 +28,9 @@ class DOMManipulator {
     public function addFilter($filter, $operator = "and")
     {
 
-        if($filter[0] instanceof Closure) throw new CqueryException("when used closure, u need to place it on second parameter");
+        if($filter[0] instanceof Closure) {
+            throw new CqueryException("when used closure, u need to place it on second parameter");
+        }
 
         $adapter = null;
 

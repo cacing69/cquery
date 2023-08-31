@@ -1,12 +1,13 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Cacing69\Cquery;
 
 use Cacing69\Cquery\Loader\HTMLLoader;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\HttpClient\HttpClient;
-
 
 /**
  * An implementation Cquery of a Loader to wrap all loader available.
@@ -16,7 +17,8 @@ use Symfony\Component\HttpClient\HttpClient;
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-class Cquery {
+class Cquery
+{
     /**
      * The base Loader instance.
      * loader should be an instance of Cacing69\Loader\Loader
@@ -36,7 +38,7 @@ class Cquery {
      * @param string $client client used to fetch data from internet, default is browserkit
      * @param string $encoding Encoding Used in the Content default is 'UTF-8'
      */
-    public function __construct(string $source = null, $contentType = "html", $client = "browserkit",string $encoding = "UTF-8")
+    public function __construct(string $source = null, $contentType = "html", $client = "browserkit", string $encoding = "UTF-8")
     {
         if($source !== null) {
             if (filter_var($source, FILTER_VALIDATE_URL)) {
@@ -122,7 +124,7 @@ class Cquery {
         return $this;
     }
 
-    public function OrFilter(...$filter) : Cquery
+    public function OrFilter(...$filter): Cquery
     {
         $this->loader->OrFilter(...$filter);
         return $this;
@@ -133,7 +135,7 @@ class Cquery {
 
     * @return ArrayCollection
     */
-    public function get() : ArrayCollection
+    public function get(): ArrayCollection
     {
         return $this->loader->get();
     }

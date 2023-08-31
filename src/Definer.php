@@ -1,7 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Cacing69\Cquery;
+
 use Cacing69\Cquery\Trait\HasAliasProperty;
 use Cacing69\Cquery\Support\RegExp;
 use Cacing69\Cquery\Exception\CqueryException;
@@ -18,7 +20,7 @@ class Definer
     public function __construct($node, $alias = null, $callback = null)
     {
 
-        if(preg_match('/^\s?.+\s+(as)\s+.+/', $node)){
+        if(preg_match('/^\s?.+\s+(as)\s+.+/', $node)) {
             throw new CqueryException("error define, please set alias on second parameter");
         }
 

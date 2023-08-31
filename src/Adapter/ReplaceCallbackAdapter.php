@@ -1,5 +1,7 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
+
 namespace Cacing69\Cquery\Adapter;
 
 use Cacing69\Cquery\Extractor\SourceExtractor;
@@ -9,7 +11,8 @@ class ReplaceCallbackAdapter extends CallbackAdapter
 {
     protected static $signature = '/^\s*replace\(\s*(.*?)\s*,\s*(.*?),\s*(.*?)\)\s*/';
 
-    public static function getSignature() {
+    public static function getSignature()
+    {
         return self::$signature;
     }
 

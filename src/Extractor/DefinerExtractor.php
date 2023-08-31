@@ -11,7 +11,8 @@ use Cacing69\Cquery\Definer;
 use Cacing69\Cquery\Trait\HasSourceProperty;
 use Closure;
 
-class DefinerExtractor {
+class DefinerExtractor
+{
     // use HasSelectorProperty;
     use HasSourceProperty;
     use HasAliasProperty;
@@ -46,12 +47,13 @@ class DefinerExtractor {
         }
     }
 
-    private function handlerExtractor($definerRaw) {
+    private function handlerExtractor($definerRaw)
+    {
         $_alias = null;
         if (preg_match(RegExp::IS_DEFINER_HAVE_ALIAS, $definerRaw)) {
             $decodeSelect = explode(" as ", $definerRaw);
 
-            if(preg_match(RegExp::CHECK_AND_EXTRACT_DEFINER_HAVE_WRAP, $decodeSelect[0])){
+            if(preg_match(RegExp::CHECK_AND_EXTRACT_DEFINER_HAVE_WRAP, $decodeSelect[0])) {
                 preg_match(RegExp::CHECK_AND_EXTRACT_DEFINER_HAVE_WRAP, $decodeSelect[0], $extract);
 
                 $this->definer = trim($extract[1]);
@@ -91,7 +93,8 @@ class DefinerExtractor {
         return $this;
     }
 
-    public function getDefiner() {
+    public function getDefiner()
+    {
         return $this->definer;
     }
 

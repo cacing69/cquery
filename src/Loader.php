@@ -37,7 +37,7 @@ abstract class Loader
 
     abstract public function filter(...$filter);
     abstract public function OrFilter(...$filter);
-    abstract public function get() : ArrayCollection;
+    abstract public function get(): ArrayCollection;
 
     public static function getResultFilter(array $filtered): array
     {

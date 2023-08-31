@@ -1,5 +1,7 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
+
 namespace Cacing69\Cquery\Adapter;
 
 use Cacing69\Cquery\Extractor\SourceExtractor;
@@ -9,7 +11,8 @@ class AttributeCallbackAdapter extends CallbackAdapter
 {
     protected static $signature = RegExp::IS_ATTRIBUTE;
 
-    public static function getSignature() {
+    public static function getSignature()
+    {
         return self::$signature;
     }
 

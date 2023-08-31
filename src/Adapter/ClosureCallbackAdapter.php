@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Cacing69\Cquery\Adapter;
 
 use Cacing69\Cquery\CallbackAdapter;
-use Cacing69\Cquery\Extractor\SourceExtractor;
 use Closure;
 
 class ClosureCallbackAdapter extends CallbackAdapter
 {
-    public function __construct(Closure $rawDefiner = null, SourceExtractor $source = null)
+    public function __construct(Closure $rawDefiner = null)
     {
         $this->raw = $rawDefiner;
 

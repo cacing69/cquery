@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Cacing69\Cquery\Adapter;
 
 use Cacing69\Cquery\CallbackAdapter;
-use Cacing69\Cquery\Extractor\SourceExtractor;
 use Cacing69\Cquery\Support\RegExp;
 
 class LengthCallbackAdapter extends CallbackAdapter
@@ -16,7 +15,7 @@ class LengthCallbackAdapter extends CallbackAdapter
     {
         return self::$signature;
     }
-    public function __construct(string $raw, SourceExtractor $source = null)
+    public function __construct(string $raw)
     {
         $this->raw = $raw;
 
@@ -25,8 +24,8 @@ class LengthCallbackAdapter extends CallbackAdapter
         };
 
         // check if function is nested
-        if(preg_match('/^\s?length\(\s?([a-z0-9_]*\(.+?\))\s?\)$/', $raw)) {
-            preg_match('/^\s?length\(\s?([a-z0-9_]*\(.+?\))\s?\)$/', $raw, $extract);
+        if(preg_match('/^\s*length\(\s*([a-z0-9_]*\(.*\))\s*\)$/', $raw)) {
+            preg_match('/^\s*length\(\s*([a-z0-9_]*\(.*\))\s*\)$/', $raw, $extract);
 
             $extractChild = $this->extractChild($extract[1]);
             $_childCallback = $extractChild->getAdapter()->getCallback();

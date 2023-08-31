@@ -3,11 +3,11 @@
 namespace Cacing69\Cquery\Test;
 
 use Cacing69\Cquery\Cquery;
-use Cacing69\Cquery\Extractor\SourceExtractor;
+use Cacing69\Cquery\Source;
 use PHPUnit\Framework\TestCase;
 
 define("SAMPLE_SIMPLE_1", "src/Samples/sample-simple-1.html");
-final class SourceExtractorTest extends TestCase
+final class SourceTest extends TestCase
 {
     public function testSetSelector()
     {
@@ -38,7 +38,7 @@ final class SourceExtractorTest extends TestCase
 
     public function SourceExtractorToString()
     {
-        $selector = new SourceExtractor("(a > ul) as _el");
+        $selector = new Source("(a > ul) as _el");
 
         $this->assertEquals('a > ul', $selector);
     }

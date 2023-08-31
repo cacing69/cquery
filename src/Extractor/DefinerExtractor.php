@@ -7,19 +7,19 @@ use Cacing69\Cquery\Support\Str;
 use Cacing69\Cquery\RegisterAdapter;
 use Cacing69\Cquery\Adapter\ClosureCallbackAdapter;
 use Cacing69\Cquery\Trait\HasAliasProperty;
+use Cacing69\Cquery\Source;
 use Cacing69\Cquery\Definer;
 use Cacing69\Cquery\Trait\HasSourceProperty;
 use Closure;
 
 class DefinerExtractor
 {
-    // use HasSelectorProperty;
     use HasSourceProperty;
     use HasAliasProperty;
     private $raw;
     private $definer;
     private $adapter;
-    public function __construct($definer, SourceExtractor $source = null)
+    public function __construct($definer, Source $source = null)
     {
         $this->source = $source;
         $this->raw = $definer;
@@ -29,7 +29,7 @@ class DefinerExtractor
 
             if($definer->getRaw() instanceof Closure) {
                 $this->definer = $definer;
-                $adapter = new ClosureCallbackAdapter($definer->getRaw(), $this->source);
+                $adapter = new ClosureCallbackAdapter($definer->getRaw());
 
                 $extractor = new DefinerExtractor("{$definer->getNode()} as {$definer->getAlias()}");
 
@@ -73,11 +73,11 @@ class DefinerExtractor
             $checkSignature = $adapter::getSignature();
             if(isset($checkSignature)) {
                 if(preg_match($checkSignature, $this->definer)) {
-                    $this->adapter = new $adapter($this->definer, $this->source);
+                    $this->adapter = new $adapter($this->definer);
                     break;
                 }
             } else {
-                $this->adapter = new $adapter($this->definer, $this->source);
+                $this->adapter = new $adapter($this->definer);
             }
         }
     }

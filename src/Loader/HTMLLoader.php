@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Cacing69\Cquery\Loader;
 
 use Cacing69\Cquery\Exception\CqueryException;
-use Cacing69\Cquery\Extractor\SourceExtractor;
 use Cacing69\Cquery\DOMManipulator;
 use Cacing69\Cquery\Loader;
+use Cacing69\Cquery\Source;
 use Cacing69\Cquery\Support\Str;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\BrowserKit\HttpBrowser;
@@ -72,7 +72,7 @@ class HTMLLoader extends Loader
 
     public function from(string $value)
     {
-        $this->selector = new SourceExtractor($value);
+        $this->selector = new Source($value);
         $this->source = Str::slug($this->selector->getXpath());
 
         $this->fetchContent();
@@ -199,7 +199,6 @@ class HTMLLoader extends Loader
                 if(count($_data) !== $bound) {
                     throw new CqueryException("error query definer, it looks like an error occurred while attempting to pick the column, It's because there are no matching rows in each column.");
                 }
-
             }
 
             if($definer->getAdapter()->getCallback() !== null) {
@@ -243,8 +242,8 @@ class HTMLLoader extends Loader
 
                         $_hold_data[$_key][$_extractAlias[1]] = $_hold_child;
 
-                    // IF ALIAS tags[text]
-                    } else if(preg_match('/^\s*([A-Za-z0-9\-\_]+?)\[([A-Za-z0-9\-\_]*?)\]\s*?/', $definer->getAlias())) {
+                        // IF ALIAS tags[text]
+                    } elseif(preg_match('/^\s*([A-Za-z0-9\-\_]+?)\[([A-Za-z0-9\-\_]*?)\]\s*?/', $definer->getAlias())) {
                         preg_match('/^\s*([A-Za-z0-9\-\_]+?)\[([A-Za-z0-9\-\_]*?)\]\s*?/', $definer->getAlias(), $_extractAlias);
 
                         $_hold_data[$_key][$_extractAlias[1]][$_extractAlias[2]] = $_value;

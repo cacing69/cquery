@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Cacing69\Cquery\Extractor;
+namespace Cacing69\Cquery;
 
 use Cacing69\Cquery\Support\RegExp;
 use Cacing69\Cquery\Trait\HasAliasProperty;
+use Cacing69\Cquery\Trait\HasRawProperty;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 
-class SourceExtractor
+class Source
 {
     use HasAliasProperty;
-    private $raw;
+    use HasRawProperty;
     private $value;
     private $xpath;
 

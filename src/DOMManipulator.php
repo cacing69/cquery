@@ -15,7 +15,6 @@ class DOMManipulator
     private $crawler;
     private $definer = [];
     private $filter = [];
-    private $limit = null;
 
     public function __construct($content, $source)
     {

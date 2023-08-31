@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Cacing69\Cquery\Adapter;
 
 use Cacing69\Cquery\CallbackAdapter;
-use Cacing69\Cquery\Extractor\SourceExtractor;
 
 class DefaultCallbackAdapter extends CallbackAdapter
 {
@@ -15,7 +14,7 @@ class DefaultCallbackAdapter extends CallbackAdapter
     {
         return self::$signature;
     }
-    public function __construct(string $raw, SourceExtractor $source = null)
+    public function __construct(string $raw)
     {
         $this->raw = $raw;
 

@@ -17,6 +17,7 @@ class AppendNodeCallbackAdapter extends CallbackAdapter
 
     public function __construct(string $raw)
     {
+        // TODO Check if append node doesnt not support for nested
         $this->raw = $raw;
 
         preg_match(self::$signature, $raw, $extract);

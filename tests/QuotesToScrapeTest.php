@@ -181,4 +181,56 @@ final class QuotesToScrapeTest extends TestCase
         $this->assertCount(1, $result[8]['tags']['key']);
         $this->assertCount(3, $result[9]['tags']['key']);
     }
+
+    public function testScrapeQuotesToScrapeWithReplaceDefiner()
+    {
+        $content = file_get_contents(SAMPLE_QUOTES_TO_SCRAPE);
+
+        $data = new Cquery($content);
+
+        $result = $data
+            ->from(".col-md-8 > .quote")
+            ->define(
+                "replace('The ', 'Lorem ', span.text) as text",
+            )
+            ->get();
+
+        $this->assertCount(10, $result);
+        $this->assertSame("“Lorem world as we have created it is a process of our thinking. It cannot be changed without changing our thinking.”", $result[0]["text"]);
+        $this->assertSame("“It is our choices, Harry, that show what we truly are, far more than our abilities.”", $result[1]["text"]);
+        $this->assertSame("“There are only two ways to live your life. One is as though nothing is a miracle. Lorem other is as though everything is a miracle.”", $result[2]["text"]);
+        $this->assertSame("“Lorem person, be it gentleman or lady, who has not pleasure in a good novel, must be intolerably stupid.”", $result[3]["text"]);
+        $this->assertSame("“Imperfection is beauty, madness is genius and it's better to be absolutely ridiculous than absolutely boring.”", $result[4]["text"]);
+        $this->assertSame("“Try not to become a man of success. Rather become a man of value.”", $result[5]["text"]);
+        $this->assertSame("“It is better to be hated for what you are than to be loved for what you are not.”", $result[6]["text"]);
+        $this->assertSame("“I have not failed. I've just found 10,000 ways that won't work.”", $result[7]["text"]);
+        $this->assertSame("“A woman is like a tea bag; you never know how strong it is until it's in hot water.”", $result[8]["text"]);
+        $this->assertSame("“A day without sunshine is like, you know, night.”", $result[9]["text"]);
+    }
+
+    public function testScrapeQuotesToScrapeWithReplaceArrayDefiner()
+    {
+        $content = file_get_contents(SAMPLE_QUOTES_TO_SCRAPE);
+
+        $data = new Cquery($content);
+
+        $result = $data
+            ->from(".col-md-8 > .quote")
+            ->define(
+                "replace(['The ', 'are'], ['Please ', 'son'], span.text) as text",
+            )
+            ->get();
+
+        $this->assertCount(10, $result);
+        $this->assertSame("“Please world as we have created it is a process of our thinking. It cannot be changed without changing our thinking.”", $result[0]["text"]);
+        $this->assertSame("“It is our choices, Harry, that show what we truly son, far more than our abilities.”", $result[1]["text"]);
+        $this->assertSame("“There son only two ways to live your life. One is as though nothing is a miracle. Please other is as though everything is a miracle.”", $result[2]["text"]);
+        $this->assertSame("“Please person, be it gentleman or lady, who has not pleasure in a good novel, must be intolerably stupid.”", $result[3]["text"]);
+        $this->assertSame("“Imperfection is beauty, madness is genius and it's better to be absolutely ridiculous than absolutely boring.”", $result[4]["text"]);
+        $this->assertSame("“Try not to become a man of success. Rather become a man of value.”", $result[5]["text"]);
+        $this->assertSame("“It is better to be hated for what you son than to be loved for what you son not.”", $result[6]["text"]);
+        $this->assertSame("“I have not failed. I've just found 10,000 ways that won't work.”", $result[7]["text"]);
+        $this->assertSame("“A woman is like a tea bag; you never know how strong it is until it's in hot water.”", $result[8]["text"]);
+        $this->assertSame("“A day without sunshine is like, you know, night.”", $result[9]["text"]);
+    }
 }

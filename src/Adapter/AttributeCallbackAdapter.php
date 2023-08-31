@@ -18,6 +18,7 @@ class AttributeCallbackAdapter extends CallbackAdapter
 
     public function __construct(string $raw)
     {
+        // TODO Check if attribute adapter doesnt support for nested
         $this->raw = $raw;
 
         preg_match(self::$signature, $raw, $extractParams);

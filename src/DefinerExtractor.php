@@ -70,14 +70,30 @@ class DefinerExtractor
         $this->setAlias($_alias);
 
         foreach (RegisterAdapter::load() as $adapter) {
-            $checkSignature = $adapter::getSignature();
-            if(isset($checkSignature)) {
-                if(preg_match($checkSignature, $this->definer)) {
-                    $this->adapter = new $adapter($this->definer);
+            $_checkSignature = $adapter::getSignature();
+
+            if(is_array($_checkSignature)) {
+                $_founded = false;
+                foreach ($_checkSignature as $signature) {
+                    if(preg_match($signature, $this->definer)) {
+                        $this->adapter = new $adapter($this->definer);
+                        $_founded = true;
+                        break;
+                    }
+                }
+
+                if($_founded) {
                     break;
                 }
             } else {
-                $this->adapter = new $adapter($this->definer);
+                if(isset($_checkSignature)) {
+                    if(preg_match($_checkSignature, $this->definer)) {
+                        $this->adapter = new $adapter($this->definer);
+                        break;
+                    }
+                } else {
+                    $this->adapter = new $adapter($this->definer);
+                }
             }
         }
     }

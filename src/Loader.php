@@ -116,11 +116,27 @@ abstract class Loader
                 ->setCallMethodParameter($extractor->getAdapter()->getCallMethodParameter());
         } else {
             foreach (RegisterAdapter::load() as $adapter) {
-                $checkSignature = $adapter::getSignature();
-                if(isset($checkSignature)) {
-                    if(preg_match($checkSignature, $filter->getNode())) {
-                        $adapter = new $adapter($filter->getNode(), $this->source);
-                        break;
+                $_checkSignature = $adapter::getSignature();
+                if(isset($_checkSignature)) {
+                    if(is_array($_checkSignature)) {
+                        $_founded = false;
+                        foreach ($_checkSignature as $signature) {
+                            if(preg_match($signature, $filter->getNode())) {
+                                $adapter = new $adapter($filter->getNode(), $this->source);
+
+                                $_founded = true;
+                                break;
+                            }
+                        }
+
+                        if($_founded) {
+                            break;
+                        }
+                    } else {
+                        if(preg_match($_checkSignature, $filter->getNode())) {
+                            $adapter = new $adapter($filter->getNode(), $this->source);
+                            break;
+                        }
                     }
                 } else {
                     $adapter = new $adapter($filter->getNode(), $this->source);

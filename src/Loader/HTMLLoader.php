@@ -164,6 +164,7 @@ class HTMLLoader extends Loader
                 $bound = count($_data);
             } else {
                 // TODO tambahkan metode ambil data dengan filter->each, walaupun itu akan sedikit lambat, buts its ok, karena hanya untuk kasus tertentu
+                // TODO index kolom yang menjadi acuan utama adalah index pertama di definer
                 if(count($_data) !== $bound) {
                     throw new CqueryException("error query definer, it looks like an error occurred while attempting to pick the column, it's because there are no matching rows in each column.");
                 }

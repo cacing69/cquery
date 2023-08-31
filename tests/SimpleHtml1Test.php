@@ -515,6 +515,48 @@ final class SimpleHtml1Test extends TestCase
         $this->assertSame("12345", $result[8]['upper_h1']);
     }
 
+    public function testCqueryWithReplaceFromMultiToSingleFunction()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem .link")
+            ->define("replace(['Title', '331'], 'LOREM', h1)  as title")
+            ->get();
+
+        $this->assertSame("LOREM 1", $result[0]['title']);
+        $this->assertSame("LOREM 2", $result[1]['title']);
+        $this->assertSame("LOREM 3", $result[2]['title']);
+        $this->assertSame("LOREM 11", $result[3]['title']);
+        $this->assertSame("LOREM 22", $result[4]['title']);
+        $this->assertSame("LOREM 323", $result[5]['title']);
+        $this->assertSame("LOREM LOREM", $result[6]['title']);
+        $this->assertSame("LOREM LOREM", $result[7]['title']);
+        $this->assertSame("12345", $result[8]['title']);
+    }
+
+    public function testCqueryWithReplaceFromMultiToSingleButWithNestedAttrFunction()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem .link")
+            ->define("replace('http', 'https', attr(href, a))  as title")
+            ->get();
+
+        $this->assertSame("https://ini-url-1.com", $result[0]['title']);
+        $this->assertSame("https://ini-url-2.com", $result[1]['title']);
+        $this->assertSame("https://ini-url-3.com", $result[2]['title']);
+        $this->assertSame("https://ini-url-11.com", $result[3]['title']);
+        $this->assertSame("https://ini-url-22.com", $result[4]['title']);
+        $this->assertSame("https://ini-url-33-1.com", $result[5]['title']);
+        $this->assertSame("https://ini-url-33-2.com", $result[6]['title']);
+        $this->assertSame("https://ini-url-33-2.com", $result[7]['title']);
+        $this->assertSame("https://ini-url-33-0.com", $result[8]['title']);
+    }
+
     public function testCqueryWithNestedThreeDefiner()
     {
         $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
@@ -643,6 +685,31 @@ final class SimpleHtml1Test extends TestCase
             ->get();
 
         $this->assertCount(2, $result);
+    }
+
+    public function testWithReplaceArrayMultiWithArraySingleClass()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem > .link")
+            ->define(
+                "replace(['Attribute', 'Example'], ['Replaced'], a) as text",
+            )
+            ->get();
+
+        $this->assertCount(9, $result);
+        $this->assertSame("Href Replaced Replaced 1", $result[0]['text']);
+        $this->assertSame("Href Replaced Replaced 2 Lorem pilsum", $result[1]['text']);
+        $this->assertSame("Href Replaced Replaced 4", $result[2]['text']);
+        $this->assertSame("Href Replaced Replaced 78", $result[3]['text']);
+        $this->assertSame("Href Replaced Replaced 90", $result[4]['text']);
+        $this->assertSame("Href Replaced Replaced 5", $result[5]['text']);
+        $this->assertSame("Href Replaced Replaced 51", $result[6]['text']);
+        $this->assertSame("Href Replaced Replaced 51", $result[7]['text']);
+        $this->assertSame("Href Replaced Replaced 52", $result[8]['text']);
     }
 
     public function testWithLowerFunc()

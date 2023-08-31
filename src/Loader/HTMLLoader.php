@@ -225,19 +225,25 @@ class HTMLLoader extends Loader
                         $_hold_data[$_key][$definer->getAlias()] = $_value;
                     }
                 } else {
+                    // IF ALIAS tags[*][text]
                     if(preg_match('/^\s*([A-Za-z0-9\-\_]+?)\[\*\]\[([A-Za-z0-9\-\_]*?)\]\s*?/', $definer->getAlias())) {
                         preg_match('/^\s*([A-Za-z0-9\-\_]+?)\[\*\]\[([A-Za-z0-9\-\_]*?)\]\s*?/', $definer->getAlias(), $_extractAlias);
 
                         // TODO perlu di check, panjang setiap element dari setiap key harus sama, jika tidak sama, ambil ulang data dengan dengan filter->each
-                        $_hold_child = $_hold_data[$_key][$_extractAlias[1]];
+                        if(array_key_exists($_extractAlias[1], $_hold_data[$_key])) {
+                            $_hold_child = $_hold_data[$_key][$_extractAlias[1]];
+                        }
 
                         foreach ($_value as $__key => $__value) {
                             $__value = strlen((string) $__value) > 0 ? $__value : null;
 
                             $_hold_child[$__key][$_extractAlias[2]] = $__value;
+
                         }
 
                         $_hold_data[$_key][$_extractAlias[1]] = $_hold_child;
+
+                    // IF ALIAS tags[text]
                     } else if(preg_match('/^\s*([A-Za-z0-9\-\_]+?)\[([A-Za-z0-9\-\_]*?)\]\s*?/', $definer->getAlias())) {
                         preg_match('/^\s*([A-Za-z0-9\-\_]+?)\[([A-Za-z0-9\-\_]*?)\]\s*?/', $definer->getAlias(), $_extractAlias);
 

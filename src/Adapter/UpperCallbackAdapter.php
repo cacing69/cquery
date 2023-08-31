@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Cacing69\Cquery\Adapter;
 
-use Cacing69\Cquery\Extractor\DefinerExtractor;
+use Cacing69\Cquery\CallbackAdapter;
 use Cacing69\Cquery\Extractor\SourceExtractor;
 use Cacing69\Cquery\Support\RegExp;
 

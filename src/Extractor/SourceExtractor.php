@@ -13,7 +13,6 @@ class SourceExtractor
     use HasAliasProperty;
     private $raw;
     private $value;
-    // private $alias;
     private $xpath;
 
     public function __construct($init)
@@ -58,9 +57,4 @@ class SourceExtractor
     {
         return $this->alias !== "";
     }
-
-    // public function getAlias()
-    // {
-    //     return $this->alias;
-    // }
 }

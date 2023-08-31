@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 define("SAMPLE_QUOTES_TO_SCRAPE", "src/Samples/quotes-toscrape.html");
 final class QuotesToScrapeTest extends TestCase
 {
-    public function testScrapeQuotesToScrape()
+    public function testScrapeQuotesWithUrlToScrape()
     {
         // change with this when u want to fetch data from remote
         // $content = "http://quotes.toscrape.com/";
@@ -94,15 +94,34 @@ final class QuotesToScrapeTest extends TestCase
             ->define(
                 "span.text as text",
                 "span:nth-child(2) > small as author",
-                // "append_node(div > .tags, a)  as tags",
+                "append_node(div > .tags, a)  as tags",
                 "append_node(div > .tags, attr(href, a))  as tags_url",
             )
             ->get();
 
         $this->assertCount(10, $result);
-        // $this->assertCount(4, $result[0]['tags']);
-        // $this->assertCount(2, $result[1]['tags']);
+        $this->assertCount(4, $result[0]['tags']);
+        $this->assertCount(2, $result[1]['tags']);
         $this->assertCount(4, $result[0]['tags_url']);
         $this->assertCount(2, $result[1]['tags_url']);
     }
+
+    // public function testScrapeQuotesToScrapeWithAppendNodeAndAppendOnKeyDefiner()
+    // {
+    //     $content = file_get_contents(SAMPLE_QUOTES_TO_SCRAPE);
+
+    //     $data = new Cquery($content);
+
+    //     $result = $data
+    //         ->from(".col-md-8 > .quote")
+    //         ->define(
+    //             "span.text as text",
+    //             "append_node(div > .tags, attr(href, a)) as tags[url]",
+    //         )
+    //         ->get();
+
+    //     $this->assertCount(10, $result);
+    //     $this->assertCount(4, $result[0]['tags']['url']);
+    //     $this->assertCount(2, $result[1]['tags']['url']);
+    // }
 }

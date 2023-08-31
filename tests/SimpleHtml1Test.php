@@ -108,6 +108,21 @@ final class SimpleHtml1Test extends TestCase
         }
     }
 
+    public function testShouldGetAnExceptionNoDefinerFound()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        try {
+            $query = $data
+                ->from("(#lorem .link) as _el")
+                ->get();
+        } catch (Exception $e) {
+            $this->assertSame(CqueryException::class, get_class($e));
+            $this->assertSame("no definer foud", $e->getMessage());
+        }
+    }
+
     public function testMultipleWhereWithUsedOrCondition()
     {
         $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);

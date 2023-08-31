@@ -10,16 +10,22 @@ use Cacing69\Cquery\DOMManipulator;
 use Cacing69\Cquery\Loader;
 use Cacing69\Cquery\Support\Str;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\HttpClient\HttpClient;
 
 class HTMLLoader extends Loader
 {
     private $dom = [];
 
-    public function __construct(string $content = null, string $encoding = "UTF-8")
+    public function __construct(string $content = null, $remote = false, string $encoding = "UTF-8")
     {
-        if ($content !== null) {
+        $this->remote = $remote;
+
+        if ($content !== null && !$remote) {
             $this->content = $content;
+        } else {
+            $this->uri = $content;
         }
     }
 
@@ -37,6 +43,23 @@ class HTMLLoader extends Loader
         }
     }
 
+    protected function validateDefiners()
+    {
+        if (count($this->dom[$this->source]->getDefiner()) === 0) {
+            throw new CqueryException("no definer foud");
+        }
+    }
+
+    protected function fetchContent()
+    {
+        if($this->remote) {
+            $browser = new HttpBrowser(HttpClient::create());
+            $browser->request('GET', $this->uri);
+
+            $this->content = $browser->getResponse()->getContent();
+        }
+    }
+
     public function define(...$defines)
     {
         $this->validateSource();
@@ -49,10 +72,12 @@ class HTMLLoader extends Loader
 
     public function from(string $value)
     {
-        $selector = new SourceExtractor($value);
-        $this->source = Str::slug($selector->getXpath());
+        $this->selector = new SourceExtractor($value);
+        $this->source = Str::slug($this->selector->getXpath());
 
-        $this->dom[$this->source] = new DOMManipulator($this->content, $selector);
+        $this->fetchContent();
+
+        $this->dom[$this->source] = new DOMManipulator($this->content, $this->selector);
         return $this;
     }
 
@@ -74,8 +99,7 @@ class HTMLLoader extends Loader
 
     public function get(): ArrayCollection
     {
-        $this->validateSource();
-        $this->results[$this->source] = [];
+        $this->validateDefiners();
 
         // WHERE CHECKING
         $dom = $this->getActiveDom();

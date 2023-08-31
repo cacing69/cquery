@@ -37,27 +37,14 @@ class Cquery
      *
      * @param \DOMNodeList|\DOMNode|string|null $source A source to use as the the source data, u can put html content/url page to scrape default is null
      * @param string $contentType Type of Data Content to be Used as Data Source default is 'html'
-     * @param string $client client used to fetch data from internet, default is browserkit
      * @param string $encoding Encoding Used in the Content default is 'UTF-8'
      */
-    public function __construct(string $source = null, $contentType = "html", $client = "browserkit", string $encoding = "UTF-8")
+    public function __construct(string $source = null, $contentType = "html", string $encoding = "UTF-8")
     {
         if($source !== null) {
             if (filter_var($source, FILTER_VALIDATE_URL)) {
-
-                // $ch = curl_init();
-                // curl_setopt($ch, CURLOPT_URL, $source);
-                // curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                // $output = curl_exec($ch);
-                // $this->loader = new HTMLLoader($output);
-                // curl_close($ch);
-
-                $browser = new HttpBrowser(HttpClient::create());
-                $browser->request('GET', $source);
-
-                $response = $browser->getResponse()->getContent();
-
-                $this->loader = new HTMLLoader($response);
+                $remote = true;
+                $this->loader = new HTMLLoader($source, $remote);
             } else {
                 if($contentType === "html") {
                     $this->loader = new HTMLLoader($source);

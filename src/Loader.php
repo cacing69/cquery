@@ -9,9 +9,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 abstract class Loader
 {
     protected $limit = null;
+    protected $selector = null;
 
-    protected $results = [];
+    protected $results = null;
 
+    protected $uri = null;
+    protected $remote = false;
     protected $source;
 
     protected $content;
@@ -23,6 +26,8 @@ abstract class Loader
     }
 
     abstract protected function validateSource();
+    abstract protected function validateDefiners();
+    abstract protected function fetchContent();
     abstract public function define(...$defines);
     abstract public function from(string $value);
     abstract public function setContent(string $value);
@@ -35,7 +40,6 @@ abstract class Loader
             ->first();
     }
 
-    // abstract public function filter(...$filter);
     abstract public function filter(Filter $filter);
     abstract public function OrFilter(Filter $filter);
     abstract public function get(): ArrayCollection;

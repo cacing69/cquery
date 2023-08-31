@@ -35,11 +35,12 @@ class Cquery
     /**
      * Create a new Cquery instance.
      *
-     * @param \DOMNodeList|\DOMNode|string|null $source A source to use as the the source data, u can put html content/url page to scrape default is null
+     * @param \DOMNodeList|\DOMNode|string|null $source A source to use as the the source data, u can put html
+     * content/url page to scrape default is null
+     *
      * @param string $contentType Type of Data Content to be Used as Data Source default is 'html'
-     * @param string $encoding Encoding Used in the Content default is 'UTF-8'
      */
-    public function __construct(string $source = null, $contentType = "html", string $encoding = "UTF-8")
+    public function __construct(string $source = null, $contentType = "html")
     {
         if($source !== null) {
             if (filter_var($source, FILTER_VALIDATE_URL)) {

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Cacing69\Cquery;
 
+use Cacing69\Cquery\Adapter\ClosureCallbackAdapter;
+use Cacing69\Cquery\Extractor\DefinerExtractor;
 use Doctrine\Common\Collections\ArrayCollection;
 
 abstract class Loader
@@ -18,6 +20,9 @@ abstract class Loader
     protected $source;
 
     protected $content;
+
+    protected $definer = [];
+    protected $filter = [];
 
     public function limit(int $limit)
     {
@@ -64,5 +69,41 @@ abstract class Loader
         sort($filterResult, SORT_NUMERIC);
 
         return $filterResult;
+    }
+
+    // TODO From DOMManipulator
+    // TODO From DOM Manipulator
+    public function addFilter($filter, $operator = "and")
+    {
+
+        $adapter = null;
+
+        if($filter->operatorIsCallback()) {
+            $adapter = new ClosureCallbackAdapter(null);
+
+            $extractor = new DefinerExtractor($filter->getNode());
+
+            $adapter = $adapter
+                ->setNode($extractor->getAdapter()->getNode())
+                ->setCallMethod($extractor->getAdapter()->getCallMethod())
+                ->setCallMethodParameter($extractor->getAdapter()->getCallMethodParameter());
+        } else {
+            foreach (RegisterAdapter::load() as $adapter) {
+                $checkSignature = $adapter::getSignature();
+                if(isset($checkSignature)) {
+                    if(preg_match($checkSignature, $filter->getNode())) {
+                        $adapter = new $adapter($filter->getNode(), $this->source);
+                        break;
+                    }
+                } else {
+                    $adapter = new $adapter($filter->getNode(), $this->source);
+                }
+            }
+        }
+
+        $adapter->setOperator($operator);
+        $adapter->setFilter($filter);
+
+        $this->filter[] = $adapter;
     }
 }

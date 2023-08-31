@@ -8,7 +8,9 @@ use Cacing69\Cquery\Exception\CqueryException;
 use Cacing69\Cquery\DOMManipulator;
 use Cacing69\Cquery\Loader;
 use Cacing69\Cquery\Source;
-use Cacing69\Cquery\Support\Str;
+use Cacing69\Cquery\Trait\HasSourceProperty;
+use Cacing69\Cquery\Extractor\DefinerExtractor;
+use Cacing69\Cquery\Adapter\ClosureCallbackAdapter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\DomCrawler\Crawler;
@@ -17,13 +19,14 @@ use Symfony\Component\HttpClient\HttpClient;
 class HTMLLoader extends Loader
 {
     private $dom;
+    private $crawler;
 
-    public function __construct(string $content = null, $remote = false, string $encoding = "UTF-8")
+    public function __construct(string $content = null, $remote = false)
     {
         $this->remote = $remote;
 
         if ($content !== null && !$remote) {
-            $this->content = $content;
+            $this->crawler = new Crawler($content);
         } else {
             $this->uri = $content;
         }
@@ -56,7 +59,7 @@ class HTMLLoader extends Loader
             $browser = new HttpBrowser(HttpClient::create());
             $browser->request('GET', $this->uri);
 
-            $this->content = $browser->getResponse()->getContent();
+            $this->crawler = new Crawler($browser->getResponse()->getContent());
         }
     }
 
@@ -72,19 +75,17 @@ class HTMLLoader extends Loader
 
     public function from(string $value)
     {
-        $this->selector = new Source($value);
-        $this->source = Str::slug($this->selector->getXpath());
-
         $this->fetchContent();
 
-        $this->dom = new DOMManipulator($this->content, $this->selector);
+        $this->dom = new DOMManipulator(new Source($value));
+
         return $this;
     }
 
     public function filter($filter)
     {
         $this->validateSource();
-        $this->dom->addFilter($filter, "and");
+        $this->addFilter($filter, "and");
 
         return $this;
     }
@@ -92,7 +93,7 @@ class HTMLLoader extends Loader
     public function orFilter($filter)
     {
         $this->validateSource();
-        $this->dom->addFilter($filter, "or");
+        $this->addFilter($filter, "or");
 
         return $this;
     }
@@ -102,20 +103,20 @@ class HTMLLoader extends Loader
         $this->validateDefiners();
 
         // WHERE CHECKING
-        $dom = $this->dom;
+        // $dom = $this->dom;
         $_filtered = null;
 
         $bound = null;
 
-        if (count($dom->getFilter()) > 0) {
+        if (count($this->filter) > 0) {
             $_affect = [
                 "and" => [],
                 "or" => [],
             ];
 
-            foreach ($dom->getFilter() as $key => $filterAdapter) {
-                $_data = $dom->getCrawler()
-                    ->filterXPath($dom->getSource()->getXpath())
+            foreach ($this->filter as $key => $filterAdapter) {
+                $_data = $this->crawler
+                    ->filterXPath($this->dom->getSource()->getXpath())
                     ->filterXPath($filterAdapter->getNodeXpath());
 
                 if ($filterAdapter->getCallMethod() === "extract") {
@@ -159,8 +160,9 @@ class HTMLLoader extends Loader
         foreach ($this->dom->getDefiner() as $key => $definer) {
             $_data = null;
             if($definer->getAdapter()->getCallMethod() === "extract") {
-                $_data = $dom->getCrawler()
-                        ->filterXPath($dom->getSource()->getXpath())
+                $_data = $this
+                        ->crawler
+                        ->filterXPath($this->dom->getSource()->getXpath())
                         ->filterXPath($definer->getAdapter()->getNodeXpath());
 
 
@@ -173,8 +175,9 @@ class HTMLLoader extends Loader
                 $_data = $_data->extract($definer->getAdapter()->getCallMethodParameter());
             } elseif($definer->getAdapter()->getCallMethod() === "filter.each") {
                 $_data = [];
-                $dom->getCrawler()
-                    ->filterXPath($dom->getSource()->getXpath())
+                $this
+                    ->crawler
+                    ->filterXPath($this->dom->getSource()->getXpath())
                     ->filterXPath($definer->getAdapter()->getNodeXpath())
                     ->each(function (Crawler $node, $i) use (&$_data, $definer) {
                         $node->filter("a")->each(function (Crawler $_node, $_i) use ($i, &$_data, $definer) {

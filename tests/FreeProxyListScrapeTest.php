@@ -13,7 +13,6 @@ final class FreeProxyListScrapeTest extends TestCase
         // change with this when u want to fetch data from remote
         // $content = "https://free-proxy-list.net/";
         $content = file_get_contents(SAMPLE_FREE_PROXY_LIST);
-        ;
 
         $data = new Cquery($content);
 

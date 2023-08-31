@@ -8,9 +8,9 @@ use Cacing69\Cquery\CallbackAdapter;
 use Cacing69\Cquery\Extractor\SourceExtractor;
 use Cacing69\Cquery\Support\RegExp;
 
-class UpperCallbackAdapter extends CallbackAdapter
+class LowerCallbackAdapter extends CallbackAdapter
 {
-    protected static $signature = RegExp::IS_UPPER;
+    protected static $signature = RegExp::IS_LOWER;
 
     public static function getSignature()
     {
@@ -22,24 +22,23 @@ class UpperCallbackAdapter extends CallbackAdapter
         $this->raw = $raw;
 
         $this->callback = function (string $value) {
-            return strtoupper($value);
+            return strtolower($value);
         };
 
         // check if function is nested
-        if (preg_match('/^\s?upper\(\s?([a-z0-9_]*\(.+?\))\s?\)$/', $raw)) {
-            preg_match('/^\s?upper\(\s?([a-z0-9_]*\(.+?\))\s?\)$/', $raw, $extract);
+        if (preg_match('/^\s?lower\(\s?([a-z0-9_]*\(.+?\))\s?\)$/', $raw)) {
+            preg_match('/^\s?lower\(\s?([a-z0-9_]*\(.+?\))\s?\)$/', $raw, $extract);
 
             $extractChild = $this->extractChild($extract[1]);
             $_childCallback = $extractChild->getAdapter()->getCallback();
 
             if($_childCallback) {
                 $this->callback = function (string $value) use ($_childCallback) {
-                    return strtoupper((string) $_childCallback($value));
+                    return strtolower((string) $_childCallback($value));
                 };
             }
-
         } else {
-            preg_match(RegExp::EXTRACT_FIRST_PARAM_UPPER, $raw, $node);
+            preg_match(RegExp::EXTRACT_FIRST_PARAM_LOWER, $raw, $node);
             $this->node = $node[1];
 
             $this->callMethod = "extract";

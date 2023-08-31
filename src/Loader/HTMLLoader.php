@@ -195,15 +195,17 @@ class HTMLLoader extends Loader
             if($key === 0) {
                 $bound = count($_data);
             } else {
+                // TODO tambahkan metode ambil data dengan filter->each, walaupun itu akan sedikit lambat, buts its ok, karena hanya untuk kasus tertentu
                 if(count($_data) !== $bound) {
                     throw new CqueryException("error query definer, it looks like an error occurred while attempting to pick the column, It's because there are no matching rows in each column.");
                 }
+
             }
 
             if($definer->getAdapter()->getCallback() !== null) {
-                $_afterCall = $definer->getAdapter()->getCallback();
-                $_data = array_map(function ($_mapValue) use ($_afterCall) {
-                    return $_afterCall($_mapValue);
+                $_callback = $definer->getAdapter()->getCallback();
+                $_data = array_map(function ($_mapValue) use ($_callback) {
+                    return $_callback((string) $_mapValue);
                 }, $_data);
             }
 
@@ -211,6 +213,8 @@ class HTMLLoader extends Loader
                 if(is_string($_value)) {
                     $_value = trim(preg_replace('/\s+/', ' ', (string) $_value));
                 }
+
+                $_value = strlen((string) $_value) > 0 ? $_value : null;
 
                 if ($limit !== null) {
                     if ($_key === $limit) {
@@ -222,6 +226,7 @@ class HTMLLoader extends Loader
                     if(preg_match('/^\s*([A-Za-z0-9\-\_]+?)\[\*\]\[([A-Za-z0-9\-\_]*?)\]\s*?/', $definer->getAlias())) {
                         preg_match('/^\s*([A-Za-z0-9\-\_]+?)\[\*\]\[([A-Za-z0-9\-\_]*?)\]\s*?/', $definer->getAlias(), $_extractAlias);
 
+                        // TODO perlu di check, panjang setiap element dari setiap key harus sama, jika tidak sama, ambil ulang data dengan dengan filter->each
                         $_hold_child = $_hold_data[$_key][$_extractAlias[1]];
 
                         foreach ($_value as $__key => $__value) {

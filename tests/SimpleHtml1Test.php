@@ -349,7 +349,7 @@ final class SimpleHtml1Test extends TestCase
             ->from("#lorem .link")
             ->define(
                 // "attr(class, a > p) as class_a_p",
-                "attr(class, a) as url",
+                // "attr(class, a) as url",
                 "length(h1) as length"
             )
             ->get();
@@ -643,5 +643,43 @@ final class SimpleHtml1Test extends TestCase
             ->get();
 
         $this->assertCount(2, $result);
+    }
+
+    public function testWithLowerFunc()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem > .link")
+            ->define(
+                "lower(h1) as title",
+                "lower(attr(data-check, h1)) as data_check",
+            )
+            ->get();
+
+        dump($result);
+
+        $this->assertCount(9, $result);
+        $this->assertSame("title 1", $result[0]['title']);
+        $this->assertSame("title 2", $result[1]['title']);
+        $this->assertSame("title 3", $result[2]['title']);
+        $this->assertSame("title 11", $result[3]['title']);
+        $this->assertSame("title 22", $result[4]['title']);
+        $this->assertSame("title 323", $result[5]['title']);
+        $this->assertSame("title 331", $result[6]['title']);
+        $this->assertSame("title 331", $result[7]['title']);
+        $this->assertSame("12345", $result[8]['title']);
+
+        // CHECK ATTR
+        $this->assertSame("ini test lagi", $result[0]['data_check']);
+        $this->assertSame("ini juga test 2x", $result[1]['data_check']);
+        $this->assertSame("ini juga test 2x3x", $result[2]['data_check']);
+        $this->assertSame(null, $result[3]['data_check']);
+        $this->assertSame(null, $result[4]['data_check']);
+        $this->assertSame(null, $result[5]['data_check']);
+        $this->assertSame(null, $result[6]['data_check']);
+        $this->assertSame(null, $result[7]['data_check']);
+        $this->assertSame(null, $result[8]['data_check']);
     }
 }

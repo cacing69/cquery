@@ -19,7 +19,10 @@ class ReverseCallbackAdapter extends CallbackAdapter
     public function __construct(string $raw, SourceExtractor $source = null)
     {
         $this->raw = $raw;
-        $_childCallback = null;
+
+        $this->callback = function (string $value) {
+            return strrev((string) $value);
+        };
 
         // check if function is nested
         if (preg_match('/^\s?reverse\(\s?([a-z0-9_]*\(.+?\))\s?\)$/', $raw)) {
@@ -28,6 +31,11 @@ class ReverseCallbackAdapter extends CallbackAdapter
             $extractChild = $this->extractChild($extract[1]);
             $_childCallback = $extractChild->getAdapter()->getCallback();
 
+            if($_childCallback) {
+                $this->callback = function (string $value) use ($_childCallback) {
+                    return strrev((string) $_childCallback($value));
+                };
+            }
         } else {
             preg_match(RegExp::EXTRACT_FIRST_PARAM_REVERSE, $raw, $node);
             $this->node = $node[1];
@@ -35,13 +43,5 @@ class ReverseCallbackAdapter extends CallbackAdapter
             $this->callMethod = "extract";
             $this->callMethodParameter = ["_text"];
         }
-
-        $this->callback = function (string $value) use ($_childCallback) {
-            if(empty($_childCallback)) {
-                return strrev((string) $value);
-            } else {
-                return strrev((string) $_childCallback($value));
-            }
-        };
     }
 }

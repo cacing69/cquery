@@ -6,6 +6,7 @@ use Cacing69\Cquery\Adapter\AttributeCallbackAdapter;
 use Cacing69\Cquery\Adapter\DefaultCallbackAdapter;
 use Cacing69\Cquery\Adapter\AppendNodeCallbackAdapter;
 use Cacing69\Cquery\Adapter\LengthCallbackAdapter;
+use Cacing69\Cquery\Adapter\LowerCallbackAdapter;
 use Cacing69\Cquery\Adapter\ReverseCallbackAdapter;
 use Cacing69\Cquery\Adapter\UpperCallbackAdapter;
 
@@ -19,6 +20,7 @@ class RegisterAdapter
             ReverseCallbackAdapter::class,
             UpperCallbackAdapter::class,
             AppendNodeCallbackAdapter::class,
+            LowerCallbackAdapter::class,
             DefaultCallbackAdapter::class
         ];
     }

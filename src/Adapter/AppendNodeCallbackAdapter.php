@@ -19,7 +19,7 @@ class AppendNodeCallbackAdapter extends CallbackAdapter
     {
         $this->raw = $raw;
 
-        preg_match('/^\s*?append_node\(\s*(.+?),\s*(.+?)\s*\)\s*$/', $raw, $extract);
+        preg_match(self::$signature, $raw, $extract);
 
         $extractRefNode = new DefinerExtractor($extract[2]);
 

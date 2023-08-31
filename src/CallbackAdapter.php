@@ -131,9 +131,9 @@ abstract class CallbackAdapter
 
             return (int) $value <= (int) $this->filter->getValue();
         } elseif ($this->filter->getOperator() === "like") {
-            if (preg_match(RegExp::IS_FILTER_LIKE_CONTAINS_VALUE, $this->filter->getValue())) {
+            if (preg_match(RegExp::IS_FILTER_LIKE_CONTAINS, $this->filter->getValue())) {
 
-                preg_match(RegExp::IS_FILTER_LIKE_CONTAINS_VALUE, $this->filter->getValue(), $extract);
+                preg_match(RegExp::IS_FILTER_LIKE_CONTAINS, $this->filter->getValue(), $extract);
 
                 return preg_match("/{$extract[1]}/im", $value);
             } elseif (preg_match(RegExp::IS_FILTER_LIKE_END_WITH, $this->filter->getValue())) {

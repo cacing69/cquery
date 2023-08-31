@@ -20,7 +20,7 @@ class AttributeCallbackAdapter extends CallbackAdapter
     {
         $this->raw = $raw;
 
-        preg_match(RegExp::IS_ATTRIBUTE, $raw, $extractParams);
+        preg_match(self::$signature, $raw, $extractParams);
 
         $this->ref = $extractParams[1];
         $this->node = $extractParams[2];

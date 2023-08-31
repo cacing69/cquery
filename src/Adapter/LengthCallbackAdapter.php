@@ -20,7 +20,7 @@ class LengthCallbackAdapter extends CallbackAdapter
     {
         $this->raw = $raw;
 
-         $this->callback = function (string $value) {
+        $this->callback = function (string $value) {
             return strlen($value);
         };
 
@@ -38,7 +38,7 @@ class LengthCallbackAdapter extends CallbackAdapter
             }
 
         } else {
-            preg_match(RegExp::EXTRACT_FIRST_PARAM_LENGTH, $raw, $node);
+            preg_match(RegExp::IS_LENGTH, $raw, $node);
             $this->node = $node[1];
 
             $this->callMethod = "extract";

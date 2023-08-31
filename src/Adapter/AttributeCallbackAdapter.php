@@ -21,11 +21,10 @@ class AttributeCallbackAdapter extends CallbackAdapter
     {
         $this->raw = $raw;
 
-        preg_match(RegExp::EXTRACT_FIRST_PARAM_ATTRIBUTE, $raw, $attr);
-        preg_match(RegExp::EXTRACT_SECOND_PARAM_ATTRIBUTE, $raw, $node);
+        preg_match(RegExp::IS_ATTRIBUTE, $raw, $extractParams);
 
-        $this->ref = $attr[1];
-        $this->node = $node[1];
+        $this->ref = $extractParams[1];
+        $this->node = $extractParams[2];
 
         $this->callMethod = "extract";
         $this->callMethodParameter = [$this->ref];

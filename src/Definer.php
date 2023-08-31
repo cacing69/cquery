@@ -24,13 +24,12 @@ class Definer
             throw new CqueryException("error define, please set alias on second parameter");
         }
 
-        if (preg_match(RegExp::CHECK_AND_EXTRACT_DEFINER_HAVE_WRAP, $node)) {
-            preg_match(RegExp::CHECK_AND_EXTRACT_DEFINER_HAVE_WRAP, $node, $extract);
+        if (preg_match(RegExp::IS_DEFINER_HAVE_WRAP, $node)) {
+            preg_match(RegExp::IS_DEFINER_HAVE_WRAP, $node, $extract);
             $this->node = $extract[1];
         } else {
             $this->node = $node;
         }
-
 
         if($alias) {
             $this->alias = $alias;

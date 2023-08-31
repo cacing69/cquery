@@ -38,7 +38,7 @@ class LowerCallbackAdapter extends CallbackAdapter
                 };
             }
         } else {
-            preg_match(RegExp::EXTRACT_FIRST_PARAM_LOWER, $raw, $node);
+            preg_match(RegExp::IS_LOWER, $raw, $node);
             $this->node = $node[1];
 
             $this->callMethod = "extract";

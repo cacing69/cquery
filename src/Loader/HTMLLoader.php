@@ -230,6 +230,8 @@ class HTMLLoader extends Loader
                         $_hold_child = $_hold_data[$_key][$_extractAlias[1]];
 
                         foreach ($_value as $__key => $__value) {
+                            $__value = strlen((string) $__value) > 0 ? $__value : null;
+
                             $_hold_child[$__key][$_extractAlias[2]] = $__value;
                         }
 

@@ -658,8 +658,6 @@ final class SimpleHtml1Test extends TestCase
             )
             ->get();
 
-        dump($result);
-
         $this->assertCount(9, $result);
         $this->assertSame("title 1", $result[0]['title']);
         $this->assertSame("title 2", $result[1]['title']);

@@ -37,9 +37,9 @@ class UpperCallbackAdapter extends CallbackAdapter
                     return strtoupper((string) $_childCallback($value));
                 };
             }
-
         } else {
-            preg_match(RegExp::EXTRACT_FIRST_PARAM_UPPER, $raw, $node);
+            preg_match(RegExp::IS_UPPER, $raw, $node);
+
             $this->node = $node[1];
 
             $this->callMethod = "extract";

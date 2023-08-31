@@ -21,11 +21,10 @@ class SourceExtractor
         $this->raw = $init;
         $css = new CssSelectorConverter();
         if (preg_match(RegExp::IS_SOURCE_HAVE_ALIAS, $init)) {
-            preg_match(RegExp::EXTRACT_FIRST_PARAM_SOURCE_HAVE_ALIAS, $init, $value);
-            preg_match(RegExp::EXTRACT_SECOND_PARAM_SOURCE_HAVE_ALIAS, $init, $alias);
+            preg_match(RegExp::IS_SOURCE_HAVE_ALIAS, $init, $extractAlias);
 
-            $this->value = $value[1];
-            $this->alias = $alias[1];
+            $this->value = $extractAlias[1];
+            $this->alias = $extractAlias[2];
         } else {
             $this->value = $init;
             $this->alias = "";

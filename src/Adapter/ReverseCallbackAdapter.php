@@ -37,7 +37,7 @@ class ReverseCallbackAdapter extends CallbackAdapter
                 };
             }
         } else {
-            preg_match(RegExp::EXTRACT_FIRST_PARAM_REVERSE, $raw, $node);
+            preg_match(RegExp::IS_REVERSE, $raw, $node);
             $this->node = $node[1];
 
             $this->callMethod = "extract";

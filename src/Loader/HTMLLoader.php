@@ -236,6 +236,10 @@ class HTMLLoader extends Loader
                         }
 
                         $_hold_data[$_key][$_extractAlias[1]] = $_hold_child;
+                    } else if(preg_match('/^\s*([A-Za-z0-9\-\_]+?)\[([A-Za-z0-9\-\_]*?)\]\s*?/', $definer->getAlias())) {
+                        preg_match('/^\s*([A-Za-z0-9\-\_]+?)\[([A-Za-z0-9\-\_]*?)\]\s*?/', $definer->getAlias(), $_extractAlias);
+
+                        $_hold_data[$_key][$_extractAlias[1]][$_extractAlias[2]] = $_value;
                     } else {
                         $_hold_data[$_key][$definer->getAlias()] = $_value;
                     }

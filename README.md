@@ -97,10 +97,21 @@ Below are the functions you are can use, they may change over time. <br>**Note:*
 | --------- | ------------- | ------------------ |
 | `attr(attrName, selector)` | `attr(class, .link)` |  will retrieve all class value present on the element/container according to the selector. (.link) |
 | `length(selector)` | `length(h1)` | will retrieve all length string on the element/container according to the selector. (h1) |
+| `lower(selector)` | `lower(h1)` | will change text to lowercase element/container according to the selector. (h1) |
 | `upper(selector)` | `upper(h1)` | will change text to uppercase element/container according to the selector. (h1) |
 | `reverse(selector)` | `reverse(h1)` | will reverse text according to the selector. (h1) |
 | `append_node(selectorParent, selectorChildAfterParent)` | `append_node(div > .tags, a)  as tags` | will append array element as a child each item, for its usage, you can refer to the sample code below in $result_4. |
 
+### List rules for alias
+
+Below are the functions you are can use, they may change over time. <br>**Note:** nested function has been supported.
+| # | example | alias | description |
+| ------------- | --------- | --------- | ------------- |
+| 1| `h1` |  `h1` | - |
+| 2 | `h1 > 1` |  `h1_a` | - |
+| 3 | `h1 > 1 as title` |  `title` | - |
+| 4 | `append_node(div > .tags, a) as _tags` |  `_tags[key]` | it will be append element as array each element |
+| 5| `append_node(div > .tags, a) as tags[*][text]` | `tags[0]['text']` | `*` the star symbol signifies all elements at the index. it will be append new key (in this case `text`) each array element
 #### How to use filter
 x
 | operator | example | description |
@@ -138,7 +149,7 @@ $result = $query
         ->filter("attr(class, a)", "has", "vip") // add some filter here
         // ->orFilter("attr(class, a)", "has", "super") // add another condition its has OR condition SQL
         // ->filter("attr(class, a)", "has", "blocked") // add another condition its has AND condition SQL
-        ->get();
+        ->get(); // -> return type is \Doctrine\Common\Collections\ArrayCollection
 ```
 
 And here are the results
@@ -164,8 +175,8 @@ $result_1 = $data
           )
           ->filter("attr(class, a)", "has", "vip")
           ->limit(2)
-          ->get();
-
+          ->get() // -> return type is \Doctrine\Common\Collections\ArrayCollection
+          ->toArray();
 ```
 <details>
   <summary>Click to show output : <code>$result_2</code></summary>
@@ -181,7 +192,8 @@ $result_2 = $data
             ->filter("h1", function ($e) {
                 return $e->text() === "Title 3";
             })
-            ->get();
+            ->get() // -> return type is \Doctrine\Common\Collections\ArrayCollection
+            ->toArray();
 
 ```
 
@@ -205,7 +217,8 @@ $result_3 = $data
         "td:nth-child(7) as https",
     )->filter('td:nth-child(7)', "=", "no")
     ->limit(1)
-    ->get();
+    ->get() // -> return type is \Doctrine\Common\Collections\ArrayCollection
+    ->toArray();
 
 ```
 
@@ -231,7 +244,7 @@ $result_4 = $data
                   "span:nth-child(2) > small as author",
                   "append_node(div > .tags, a)  as tags",
               )
-              ->get()
+              ->get() // -> return type is \Doctrine\Common\Collections\ArrayCollection
               ->toArray();
 
 ```
@@ -254,17 +267,40 @@ $result_5 = $data
               ->from(".col-md-8 > .quote")
               ->define(
                   "span.text as text",
-                  "append_node(div > .tags, a) as _tags",
-                  "append_node(div > .tags, a) as tags[*][text]",
-                  "append_node(div > .tags, attr(href, a)) as tags[*][url]", // [*] means each index, for now ots limitd only one level
+                  "append_node(div > .tags, a) as tags[key]", // grab child `a` on element `div > .tags` and place it into tags['key']
               )
-              ->get()
+              ->get() // -> return type is \Doctrine\Common\Collections\ArrayCollection
               ->toArray();
 
 ```
 
 <details>
   <summary>Click to show output : <code>$result_5</code></summary>
+
+  ![Alt text](https://gcdnb.pbrd.co/images/NYUsStjIshsf.png?o=1 "a title")
+</details>
+
+```php
+// another example, to load data from url used browserkit
+
+$url = "http://quotes.toscrape.com/";
+$data = new Cquery($url);
+
+$result_6 = $data
+              ->from(".col-md-8 > .quote")
+              ->define(
+                  "span.text as text",
+                  "append_node(div > .tags, a) as _tags",
+                  "append_node(div > .tags, a) as tags[*][text]",
+                  "append_node(div > .tags, attr(href, a)) as tags[*][url]", // [*] means each index, for now ots limitd only one level
+              )
+              ->get() // -> return type is \Doctrine\Common\Collections\ArrayCollection
+              ->toArray();
+
+```
+
+<details>
+  <summary>Click to show output : <code>$result_6</code></summary>
 
   ![Alt text](https://gcdnb.pbrd.co/images/lXhhw7hA8LYf.png?o=1 "a title")
 </details>

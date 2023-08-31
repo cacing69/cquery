@@ -102,6 +102,15 @@ final class QuotesToScrapeTest extends TestCase
         $this->assertCount(10, $result);
         $this->assertCount(4, $result[0]['tags']);
         $this->assertCount(2, $result[1]['tags']);
+        $this->assertCount(5, $result[2]['tags']);
+        $this->assertCount(4, $result[3]['tags']);
+        $this->assertCount(2, $result[4]['tags']);
+        $this->assertCount(3, $result[5]['tags']);
+        $this->assertCount(2, $result[6]['tags']);
+        $this->assertCount(4, $result[7]['tags']);
+        $this->assertCount(1, $result[8]['tags']);
+        $this->assertCount(3, $result[9]['tags']);
+
         $this->assertCount(4, $result[0]['tags_url']);
         $this->assertCount(2, $result[1]['tags_url']);
     }
@@ -122,7 +131,6 @@ final class QuotesToScrapeTest extends TestCase
             )
             ->get();
 
-        dump($result);
         $this->assertCount(10, $result);
         $this->assertCount(4, $result[0]['tags']);
 
@@ -137,5 +145,33 @@ final class QuotesToScrapeTest extends TestCase
 
         $this->assertSame('world', $result[0]['tags'][3]['text']);
         $this->assertSame('/tag/world/page/1/', $result[0]['tags'][3]['url']);
+    }
+
+    public function testScrapeQuotesToScrapeWithAppendNodeArrayDefiner()
+    {
+        $content = file_get_contents(SAMPLE_QUOTES_TO_SCRAPE);
+
+        $data = new Cquery($content);
+
+        $result = $data
+            ->from(".col-md-8 > .quote")
+            ->define(
+                "span.text as text",
+                "append_node(div > .tags, a) as tags[key]",
+            )
+            ->get();
+
+        $this->assertCount(10, $result);
+
+        $this->assertCount(4, $result[0]['tags']['key']);
+        $this->assertCount(2, $result[1]['tags']['key']);
+        $this->assertCount(5, $result[2]['tags']['key']);
+        $this->assertCount(4, $result[3]['tags']['key']);
+        $this->assertCount(2, $result[4]['tags']['key']);
+        $this->assertCount(3, $result[5]['tags']['key']);
+        $this->assertCount(2, $result[6]['tags']['key']);
+        $this->assertCount(4, $result[7]['tags']['key']);
+        $this->assertCount(1, $result[8]['tags']['key']);
+        $this->assertCount(3, $result[9]['tags']['key']);
     }
 }

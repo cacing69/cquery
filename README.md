@@ -100,6 +100,7 @@ Below are the functions you are can use, they may change over time. <br>**Note:*
 | `lower(selector)` | `lower(h1)` | will change text to lowercase element/container according to the selector. (h1) |
 | `upper(selector)` | `upper(h1)` | will change text to uppercase element/container according to the selector. (h1) |
 | `reverse(selector)` | `reverse(h1)` | will reverse text according to the selector. (h1) |
+| `replace(from, to, selector)` | `replace('lorem', 'ipsum', h1)` | will change text from `lorem` to `ipsum` according to the selector (h1). <br> have 3 option to use that <br> `replace('lorem', 'ipsum', h1)` <br> `replace(['lorem', 'dolor'], ['ipsum', 'sit'], h1)` <br> `replace(['lorem', 'ipsum'], 'ipsum', h1)` <br> it used single tick |
 | `append_node(selectorParent, selectorChildAfterParent)` | `append_node(div > .tags, a)  as tags` | will append array element as a child each item, for its usage, you can refer to the sample code below in $result_4. |
 
 ### List rules for alias

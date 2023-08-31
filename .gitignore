@@ -5,3 +5,4 @@ run-cache.php
 .phpunit.result.cache
 .php-cs.fixer.cache
 phpunit.xml
+.note.md

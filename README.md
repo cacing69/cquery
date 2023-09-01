@@ -25,7 +25,7 @@ For example, you have a simple HTML element as shown below.
 
 
 <details>
-  <summary>Click to show HTML : <code>src/Samples/sample-simple-1.html</code></summary>
+  <summary>Click to show HTML : <code>src/Samples/sample.html</code></summary>
 
   ```html
 <!DOCTYPE HTML>
@@ -135,7 +135,7 @@ So, let's start scraping this website.
 ```php
 require_once 'vendor/autoload.php';
 
-$html = file_get_contents("src/Samples/sample-simple-1.html");
+$html = file_get_contents("src/Samples/sample.html");
 $data = new Cacing69\Cquery\Cquery($html);
 
 $result = $query
@@ -163,7 +163,7 @@ And here are the results
 require_once 'vendor/autoload.php';
 
 use Cacing69\Cquery\Definer;
-$html = file_get_contents("src/Samples/sample-simple-1.html");
+$html = file_get_contents("src/Samples/sample.html");
 $data = new Cacing69\Cquery\Cquery($html);
 
 $result_1 = $data

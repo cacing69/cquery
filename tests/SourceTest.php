@@ -6,12 +6,12 @@ use Cacing69\Cquery\Cquery;
 use Cacing69\Cquery\Source;
 use PHPUnit\Framework\TestCase;
 
-define("SAMPLE_SIMPLE_1", "src/Samples/sample-simple-1.html");
+define("SAMPLE_HTML", "src/Samples/sample.html");
 final class SourceTest extends TestCase
 {
     public function testSetSelector()
     {
-        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $simpleHtml = file_get_contents(SAMPLE_HTML);
         $data = new Cquery($simpleHtml);
 
         $data->from("#lorem .link");
@@ -24,7 +24,7 @@ final class SourceTest extends TestCase
 
     public function testSetSelectorWithAlias()
     {
-        $simpleHtml = file_get_contents(SAMPLE_SIMPLE_1);
+        $simpleHtml = file_get_contents(SAMPLE_HTML);
         $data = new Cquery($simpleHtml);
 
         $data->from("(#lorem .link) as _el");

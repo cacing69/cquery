@@ -168,7 +168,7 @@ class HTMLLoader extends Loader
                 // TODO index kolom yang menjadi acuan utama adalah index pertama di definer
 
                 if(count($_data) !== $bound) {
-                    throw new CqueryException("error query definer, it looks like an error occurred while attempting to pick the column, it's because there are no matching rows in each column.");
+                    throw new CqueryException("error query definer, it looks like an error occurred while attempting to define the column, it's because there are no matching rows in each column.");
                 }
             }
 

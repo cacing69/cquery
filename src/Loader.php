@@ -66,7 +66,21 @@ abstract class Loader
     protected function addDefiner($definer)
     {
         array_push($this->definer, new DefinerExtractor($definer, $this->source));
+
+        $this->checkDefineNotDuplicate();
         return $this;
+    }
+
+    // TODO Add test for checking alias definer not duplicate
+    protected function checkDefineNotDuplicate() :void
+    {
+        $_key = [];
+        foreach ($this->definer as $definer) {
+            if(in_array($definer->getAlias(), $_key)){
+                throw new CqueryException("the alias column must not be duplicated, only one unique name is allowed for the definer");
+            }
+            $_key[] = $definer->getAlias();
+        }
     }
 
     public function define(...$defines)

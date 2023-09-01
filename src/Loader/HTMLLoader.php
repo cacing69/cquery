@@ -39,6 +39,7 @@ class HTMLLoader extends Loader
 
     public function from(string $value)
     {
+        $this->filter = [];
         $this->fetchCrawler();
         $this->source = new Source($value);
         return $this;

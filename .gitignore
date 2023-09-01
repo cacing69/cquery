@@ -1,5 +1,6 @@
 /vendor
 /phpunit.cache
+/.cached
 composer.lock
 run-cache.php
 .phpunit.result.cache

@@ -2,6 +2,18 @@
 
 ## Please Read
 
+### I want to create a query for web scraping a website like this
+
+```sql
+from (.item)
+define
+    span > a.title as title
+    attr(href, div > h1 > span > a) as url
+filter
+    span > a.title has 'narcos'
+limit 1
+```
+
 ### Currently experimenting
 
 to attempt extract data from webpage which, in my opinion, becomes more enjoyable. All methods and usage instructions provided here are designed according to the i needs. If you have any suggestions or feedback to improve them, it would be highly appreciated and

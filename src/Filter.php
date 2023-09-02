@@ -6,7 +6,6 @@ namespace Cacing69\Cquery;
 
 use Closure;
 use Cacing69\Cquery\Trait\HasNodeProperty;
-use Cacing69\Cquery\Trait\HasValueProperty;
 use Cacing69\Cquery\Trait\HasOperatorProperty;
 
 class Filter

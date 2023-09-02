@@ -41,7 +41,7 @@ class Cquery
     public function __construct(string $source = null, $contentType = "html")
     {
         if($source !== null) {
-            if (filter_var($source, FILTER_VALIDATE_URL)) {
+            if (filter_var($source, FILTER_VALIDATE_URL) && $contentType === "html") {
                 $remote = true;
                 $this->loader = new HTMLLoader($source, $remote);
             } else {
@@ -130,14 +130,14 @@ class Cquery
     public function filter($node, $operator = null, $value = null): Cquery
     {
         $filter = $this->makeFilter($node, $operator, $value);
-        $this->loader->filter($filter);
+        $this->loader->addFilter($filter, "and");
         return $this;
     }
 
     public function orFilter($node, $operator = null, $value = null): Cquery
     {
         $filter = $this->makeFilter($node, $operator, $value);
-        $this->loader->orFilter($filter);
+        $this->loader->addFilter($filter, "or");
         return $this;
     }
 
@@ -146,9 +146,11 @@ class Cquery
     *
     * @return ArrayCollection
     */
-    public function get(): ArrayCollection
+    public function get()
     {
-        return $this->loader->get();
+        $this->results = $this->loader->get();
+
+        return $this->results;
     }
 
     protected function validateSource()
@@ -156,23 +158,35 @@ class Cquery
         $this->loader->validateSource();
     }
 
-    public function getActiveSource()
+    public function init($closure)
     {
-        if(get_class($this->loader) === HTMLLoader::class) {
-            return $this->loader->getActiveDom();
-        }
-
-        return null;
+        $this->loader->setCallbackOnReady($closure);
+        return $this;
     }
 
-    public function setContent(string $args)
+    public function each($closure)
     {
-        $this->loader->setContent($args);
+        $this->loader->setCallbackOnFinish($closure);
+        $this->loader->setCallbackOnFinishType("element");
+        return $this;
+    }
+
+    public function manipulator($closure)
+    {
+        $this->loader->setCallbackOnFinish($closure);
+        $this->loader->setCallbackOnFinishType("array");
         return $this;
     }
 
     public function getSource()
     {
         return $this->loader->getSource();
+    }
+
+    public function client($clientType)
+    {
+        // $this->loader->setClientType($clientType);
+
+        return $this;
     }
 }

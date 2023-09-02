@@ -7,12 +7,17 @@ namespace Cacing69\Cquery;
 use Cacing69\Cquery\Adapter\ClosureCallbackAdapter;
 use Cacing69\Cquery\DefinerExtractor;
 use Cacing69\Cquery\Trait\HasSourceProperty;
-use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\BrowserKit\HttpBrowser;
+use Symfony\Component\DomCrawler\Crawler;
+use Closure;
 
 abstract class Loader
 {
     use HasSourceProperty;
     protected $limit = null;
+    protected $clientType = "browser-kit";
+    protected $client;
 
     protected $uri = null;
     protected $isRemote = false;
@@ -20,14 +25,59 @@ abstract class Loader
 
     protected $definer = [];
     protected $filter = [];
+    protected $results = [];
+
+    protected $crawler;
+
+    protected $callbackReady;
+    protected $callbackFinish;
+    protected $callbackFinishType;
 
     public function limit(int $limit)
     {
         $this->limit = $limit;
         return $this;
     }
-    abstract protected function fetchCrawler();
-    abstract public function from(string $value);
+    // abstract protected function fetchCrawler();
+    // abstract public function from(string $value);
+    public function from(string $value)
+    {
+        $this->filter = [];
+        $this->fetchCrawler();
+        $this->source = new Source($value);
+        return $this;
+    }
+
+    protected function fetchCrawler()
+    {
+        if($this->isRemote) {
+            if($this->clientType === "browser-kit") {
+                $this->client = new HttpBrowser(HttpClient::create());
+
+                if($this->callbackReady) {
+                    $_callbackReady = $this->callbackReady;
+
+                    $_browser = $this->client;
+
+                    $this->client = $_callbackReady($_browser);
+                }
+
+                $this->client->request('GET', $this->uri);
+
+                $this->crawler = new Crawler($this->client->getResponse()->getContent());
+            } elseif ($this->clientType === "curl") {
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $this->uri);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                $output = curl_exec($ch);
+
+                $this->crawler = new Crawler($output);
+                curl_close($ch);
+            } else {
+                throw new CqueryException("client {$this->clientType} doesnt support");
+            }
+        }
+    }
 
     public function first()
     {
@@ -37,9 +87,9 @@ abstract class Loader
             ->first();
     }
 
-    abstract public function filter(Filter $filter);
-    abstract public function orFilter(Filter $filter);
-    abstract public function get(): ArrayCollection;
+    // abstract public function filter(Filter $filter);
+    // abstract public function orFilter(Filter $filter);
+    abstract public function get();
 
     public static function getResultFilter(array $filtered): array
     {
@@ -63,7 +113,7 @@ abstract class Loader
         return $filterResult;
     }
 
-    protected function addDefiner($definer)
+    public function addDefiner($definer)
     {
         array_push($this->definer, new DefinerExtractor($definer, $this->source));
 
@@ -116,6 +166,7 @@ abstract class Loader
     // TODO From DOM Manipulator
     public function addFilter($filter, $operator = "and")
     {
+        $this->validateSource();
 
         $adapter = null;
 
@@ -162,5 +213,23 @@ abstract class Loader
         $adapter->setFilter($filter);
 
         $this->filter[] = $adapter;
+    }
+
+    public function setCallbackOnReady(Closure $closure)
+    {
+        $this->callbackReady = $closure;
+        return $this;
+    }
+
+    public function setCallbackOnFinish(Closure $closure)
+    {
+        $this->callbackFinish = $closure;
+        return $this;
+    }
+
+    public function setCallbackOnFinishType($callbackType)
+    {
+        $this->callbackFinishType = $callbackType;
+        return $this;
     }
 }

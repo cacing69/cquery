@@ -180,7 +180,7 @@ $result_1 = $data
           ->toArray();
 ```
 <details>
-  <summary>Click to show output : <code>$result_2</code></summary>
+  <summary>Click to show output : <code>$result_1</code></summary>
 
 ![Alt text](https://gcdnb.pbrd.co/images/qtItVezcEUq7.png?o=1 "a title")
 </details>

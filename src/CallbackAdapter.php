@@ -7,6 +7,7 @@ namespace Cacing69\Cquery;
 use Cacing69\Cquery\CqueryException;
 use Cacing69\Cquery\Support\RegExp;
 use Cacing69\Cquery\Trait\HasOperatorProperty;
+use Cacing69\Cquery\Trait\HasCallbackProperty;
 use Cacing69\Cquery\DefinerExtractor;
 use Closure;
 use Cacing69\Cquery\Trait\HasNodeProperty;
@@ -20,10 +21,11 @@ abstract class CallbackAdapter
     use HasSelectorProperty;
     use HasRawProperty;
     use HasNodeProperty;
+    use HasCallbackProperty;
     protected $ref;
     protected $callMethod;
     protected $callMethodParameter;
-    protected $callback;
+    // protected $callback;
 
     protected $filter;
     public function setFilter($filter)
@@ -65,16 +67,16 @@ abstract class CallbackAdapter
         return $this->ref;
     }
 
-    public function getCallback()
-    {
-        return $this->callback;
-    }
+    // public function getCallback()
+    // {
+    //     return $this->callback;
+    // }
 
-    public function setCallback($callback)
-    {
-        $this->callback = $callback;
-        return $this;
-    }
+    // public function setCallback($callback)
+    // {
+    //     $this->callback = $callback;
+    //     return $this;
+    // }
 
     public function getCallMethodParameter()
     {

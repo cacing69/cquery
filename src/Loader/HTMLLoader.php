@@ -8,18 +8,19 @@ use Cacing69\Cquery\CqueryException;
 use Cacing69\Cquery\Loader;
 use Cacing69\Cquery\Source;
 use Doctrine\Common\Collections\ArrayCollection;
+use React\EventLoop\Loop;
+use React\Http\Browser;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpClient\HttpClient;
 
 class HTMLLoader extends Loader
 {
-    private $crawler;
+    // private $crawler;
 
     public function __construct(string $content = null, $isRemote = false)
     {
         $this->isRemote = $isRemote;
-
         if ($content !== null && !$isRemote) {
             $this->crawler = new Crawler($content);
         } else {
@@ -27,39 +28,48 @@ class HTMLLoader extends Loader
         }
     }
 
-    protected function fetchCrawler()
-    {
-        if($this->isRemote) {
-            $browser = new HttpBrowser(HttpClient::create());
-            $browser->request('GET', $this->uri);
+    // protected function fetchCrawler()
+    // {
 
-            $this->crawler = new Crawler($browser->getResponse()->getContent());
-        }
-    }
+    //     if($this->isRemote) {
+    //         $this->browser = new HttpBrowser(HttpClient::create());
+    //         if($this->callbackReady) {
+    //             $_callbackReady = $this->callbackReady;
 
-    public function from(string $value)
-    {
-        $this->filter = [];
-        $this->fetchCrawler();
-        $this->source = new Source($value);
-        return $this;
-    }
+    //             $_browser = $this->browser;
 
-    public function filter($filter)
-    {
-        $this->validateSource();
-        $this->addFilter($filter, "and");
+    //             $this->browser = $_callbackReady($_browser);
+    //         }
 
-        return $this;
-    }
+    //         $this->browser->request('GET', $this->uri);
 
-    public function orFilter($filter)
-    {
-        $this->validateSource();
-        $this->addFilter($filter, "or");
+    //         $this->crawler = new Crawler($this->browser->getResponse()->getContent());
+    //     }
+    // }
 
-        return $this;
-    }
+    // public function from(string $value)
+    // {
+    //     $this->filter = [];
+    //     $this->fetchCrawler();
+    //     $this->source = new Source($value);
+    //     return $this;
+    // }
+
+    // public function filter($filter)
+    // {
+    //     $this->validateSource();
+    //     $this->addFilter($filter, "and");
+
+    //     return $this;
+    // }
+
+    // public function orFilter($filter)
+    // {
+    //     $this->validateSource();
+    //     $this->addFilter($filter, "or");
+
+    //     return $this;
+    // }
 
     public function get(): ArrayCollection
     {
@@ -208,7 +218,6 @@ class HTMLLoader extends Loader
                             $__value = strlen((string) $__value) > 0 ? $__value : null;
 
                             $_hold_child[$__key][$_extractAlias[2]] = $__value;
-
                         }
 
                         $_hold_data[$_key][$_extractAlias[1]] = $_hold_child;
@@ -227,6 +236,20 @@ class HTMLLoader extends Loader
 
         $this->isFetched = true;
 
-        return new ArrayCollection($_hold_data);
+        $this->results = $_hold_data;
+
+        if($this->callbackFinish) {
+            $_callbackFinish = $this->callbackFinish;
+
+            if($this->callbackFinishType == "array") {
+                $this->results = $_callbackFinish($this->results);
+            } elseif($this->callbackFinishType == "element"){
+                foreach ($this->results as $_key => $_value) {
+                    $this->results[$_key] = $_callbackFinish($_value);
+                }
+            }
+        }
+
+        return new ArrayCollection($this->results);
     }
 }

@@ -59,8 +59,6 @@ final class SampleTest extends TestCase
             ->filter("attr(class, a)", "has", "vip")
             ->first();
 
-        dump($result);
-
         $this->assertSame(4, count($result));
     }
 
@@ -803,10 +801,10 @@ final class SampleTest extends TestCase
             )->filter('td:nth-child(4)', "=", "inactive")
             ->get();
 
-        $this->assertSame(3, $resultAll->count());
-        $this->assertSame(1, $resultActive->count());
-        $this->assertSame(2, $resultInAactive->count());
-        $this->assertSame($resultInAactive->count(), 3 - $resultActive->count());
+        $this->assertSame(3, count($resultAll));
+        $this->assertSame(1, count($resultActive));
+        $this->assertSame(2, count($resultInAactive));
+        $this->assertSame(count($resultInAactive), 3 - count($resultActive));
         // $this->assertSame($resultActive->count(), 300 - $resultInAactive->count());
     }
 

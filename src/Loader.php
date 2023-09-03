@@ -30,8 +30,8 @@ abstract class Loader
     protected $crawler;
 
     protected $callbackReady;
-    protected $callbackFinish;
-    protected $callbackFinishType;
+    protected $callbackItem;
+    protected $callbackArray;
 
     public function limit(int $limit)
     {
@@ -221,15 +221,21 @@ abstract class Loader
         return $this;
     }
 
-    public function setCallbackOnFinish(Closure $closure)
+    public function setCallbackItem(Closure $closure)
     {
-        $this->callbackFinish = $closure;
+        $this->callbackItem = $closure;
         return $this;
     }
 
-    public function setCallbackOnFinishType($callbackType)
+    public function setCallbackArray(Closure $closure)
     {
-        $this->callbackFinishType = $callbackType;
+        $this->callbackArray = $closure;
         return $this;
     }
+
+    // public function setCallbackOnFinishType($callbackType)
+    // {
+    //     $this->callbackFinishType = $callbackType;
+    //     return $this;
+    // }
 }

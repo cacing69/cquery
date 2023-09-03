@@ -238,16 +238,25 @@ class HTMLLoader extends Loader
 
         $this->results = $_hold_data;
 
-        if($this->callbackFinish) {
-            $_callbackFinish = $this->callbackFinish;
+        if($this->callbackItem) {
+            $_callbackItem = $this->callbackItem;
 
-            if($this->callbackFinishType == "array") {
-                $this->results = $_callbackFinish($this->results);
-            } elseif($this->callbackFinishType == "element"){
-                foreach ($this->results as $_key => $_value) {
-                    $this->results[$_key] = $_callbackFinish($_value);
+            foreach ($this->results as $_key => $_value) {
+                    $this->results[$_key] = $_callbackItem($_value);
                 }
-            }
+
+            // if($this->callbackFinishType == "array") {
+            //     $this->results = $_callbackFinish($this->results);
+            // } elseif($this->callbackFinishType == "element"){
+            //     foreach ($this->results as $_key => $_value) {
+            //         $this->results[$_key] = $_callbackFinish($_value);
+            //     }
+            // }
+        }
+
+        if ($this->callbackArray) {
+            $_callbackArray = $this->callbackArray;
+            $this->results = $_callbackArray($this->results);
         }
 
         return new ArrayCollection($this->results);

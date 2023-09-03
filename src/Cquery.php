@@ -166,15 +166,13 @@ class Cquery
 
     public function each($closure)
     {
-        $this->loader->setCallbackOnFinish($closure);
-        $this->loader->setCallbackOnFinishType("element");
+        $this->loader->setCallbackItem($closure);
         return $this;
     }
 
     public function compose($closure)
     {
-        $this->loader->setCallbackOnFinish($closure);
-        $this->loader->setCallbackOnFinishType("array");
+        $this->loader->setCallbackArray($closure);
         return $this;
     }
 

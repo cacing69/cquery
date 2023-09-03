@@ -74,7 +74,7 @@ final class CadillacCarDatabaseTest extends TestCase
                 }
                 return array_merge(...$results);
             })
-            // ->limit(10)
+            ->limit(10)
             ->get();
 
         // dump($result);

@@ -32,21 +32,21 @@ final class CadillacCarDatabaseTest extends TestCase
             ->init(function (HttpBrowser $e) {
 
             })
-            // ->each(function ($el){
-            //     $detail = new Cquery($el["url"]);
+            ->each(function ($el){
+                $detail = new Cquery($el["url"]);
 
-            //     $resultDetail = $detail
-            //     ->from(".spec")
-            //     ->define(
-            //         ".specleft tr:nth-child(1) > td.data as price"
-            //     )
-            //     ->first();
+                $resultDetail = $detail
+                ->from(".spec")
+                ->define(
+                    ".specleft tr:nth-child(1) > td.data as price"
+                )
+                ->first();
 
-            //     $el["price"] = $resultDetail["price"];
+                $el["price"] = $resultDetail["price"];
 
-            //     return $el;
-            // })
-            ->manipulator(function ($results) use ($loop, $client){
+                return $el;
+            })
+            ->compose(function ($results) use ($loop, $client){
                 // TODO batas maksimal yang kutemukan adalah 25, ketika aku input 30, ada beberapa data yang null
                 $results = array_chunk($results, 25);
 
@@ -73,7 +73,7 @@ final class CadillacCarDatabaseTest extends TestCase
             ->limit(10)
             ->get();
 
-        dump($result);
+        // dump($result);
             // $loop->run();
 
         $this->assertSame(true, true);

@@ -171,7 +171,7 @@ class Cquery
         return $this;
     }
 
-    public function manipulator($closure)
+    public function compose($closure)
     {
         $this->loader->setCallbackOnFinish($closure);
         $this->loader->setCallbackOnFinishType("array");

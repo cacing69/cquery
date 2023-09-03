@@ -2,7 +2,9 @@
 
 ## Please Read
 
-### I want to create a query for web scraping a website like this
+### Want to create a query for web scraping a website like this
+
+I suppose it will enable me to generate scrape queries from anywhere.
 
 ```sql
 from (.item)

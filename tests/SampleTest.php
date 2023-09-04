@@ -840,7 +840,7 @@ final class SampleTest extends TestCase
         } catch (Exception $e) {
             $this->assertSame(CqueryException::class, get_class($e));
             $this->assertStringContainsString("error query definer", $e->getMessage());
-            $this->assertSame("error query definer, it looks like an error occurred while attempting to define the column, it's because there are no matching rows in each column.", $e->getMessage());
+            $this->assertSame("error query definer, there are no matching rows each column.", $e->getMessage());
         }
     }
 

@@ -31,7 +31,6 @@ abstract class Loader
 
     protected $callbackReady;
     protected $callbackEach;
-    protected $callbackArray;
     protected $callbackCompose;
 
     public function limit(int $limit)
@@ -39,8 +38,6 @@ abstract class Loader
         $this->limit = $limit;
         return $this;
     }
-    // abstract protected function fetchCrawler();
-    // abstract public function from(string $value);
     public function from(string $value)
     {
         $this->filter = [];
@@ -164,7 +161,7 @@ abstract class Loader
         }
     }
 
-    // TODO From DOM Manipulator
+    // Before From DOM Manipulator
     public function addFilter($filter, $operator = "and")
     {
         $this->validateSource();
@@ -227,21 +224,14 @@ abstract class Loader
         $this->callbackEach = $closure;
         return $this;
     }
-
-    public function setCallbackArray(Closure $closure)
-    {
-        $this->callbackArray = $closure;
-        return $this;
-    }
     public function setCallbackCompose(Closure $closure)
     {
         $this->callbackCompose = $closure;
         return $this;
     }
 
-    // public function setCallbackOnFinishType($callbackType)
-    // {
-    //     $this->callbackFinishType = $callbackType;
-    //     return $this;
-    // }
+    public function getResults()
+    {
+        return $this->results;
+    }
 }

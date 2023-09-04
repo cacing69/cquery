@@ -6,13 +6,8 @@ namespace Cacing69\Cquery\Loader;
 
 use Cacing69\Cquery\CqueryException;
 use Cacing69\Cquery\Loader;
-use Cacing69\Cquery\Source;
 use Doctrine\Common\Collections\ArrayCollection;
-use React\EventLoop\Loop;
-use React\Http\Browser;
-use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\HttpClient\HttpClient;
 
 class HTMLLoader extends Loader
 {
@@ -27,49 +22,6 @@ class HTMLLoader extends Loader
             $this->uri = $content;
         }
     }
-
-    // protected function fetchCrawler()
-    // {
-
-    //     if($this->isRemote) {
-    //         $this->browser = new HttpBrowser(HttpClient::create());
-    //         if($this->callbackReady) {
-    //             $_callbackReady = $this->callbackReady;
-
-    //             $_browser = $this->browser;
-
-    //             $this->browser = $_callbackReady($_browser);
-    //         }
-
-    //         $this->browser->request('GET', $this->uri);
-
-    //         $this->crawler = new Crawler($this->browser->getResponse()->getContent());
-    //     }
-    // }
-
-    // public function from(string $value)
-    // {
-    //     $this->filter = [];
-    //     $this->fetchCrawler();
-    //     $this->source = new Source($value);
-    //     return $this;
-    // }
-
-    // public function filter($filter)
-    // {
-    //     $this->validateSource();
-    //     $this->addFilter($filter, "and");
-
-    //     return $this;
-    // }
-
-    // public function orFilter($filter)
-    // {
-    //     $this->validateSource();
-    //     $this->addFilter($filter, "or");
-
-    //     return $this;
-    // }
 
     public function get(): ArrayCollection
     {
@@ -205,7 +157,7 @@ class HTMLLoader extends Loader
                         $_hold_data[$_key][$definer->getAlias()] = $_value;
                     }
                 } else {
-                    // IF ALIAS tags[*][text]
+                    // if alias == tags[*][text]
                     if(preg_match('/^\s*([A-Za-z0-9\-\_]+?)\[\*\]\[([A-Za-z0-9\-\_]*?)\]\s*?/', $definer->getAlias())) {
                         preg_match('/^\s*([A-Za-z0-9\-\_]+?)\[\*\]\[([A-Za-z0-9\-\_]*?)\]\s*?/', $definer->getAlias(), $_extractAlias);
 
@@ -222,7 +174,7 @@ class HTMLLoader extends Loader
 
                         $_hold_data[$_key][$_extractAlias[1]] = $_hold_child;
 
-                        // IF ALIAS tags[text]
+                    // if alias == tags[text]
                     } elseif(preg_match('/^\s*([A-Za-z0-9\-\_]+?)\[([A-Za-z0-9\-\_]*?)\]\s*?/', $definer->getAlias())) {
                         preg_match('/^\s*([A-Za-z0-9\-\_]+?)\[([A-Za-z0-9\-\_]*?)\]\s*?/', $definer->getAlias(), $_extractAlias);
 
@@ -238,31 +190,17 @@ class HTMLLoader extends Loader
 
         $this->results = $_hold_data;
 
-        if($this->callbackItem) {
-            $_callbackItem = $this->callbackItem;
+        if($this->callbackEach) {
+            $_callbackEach = $this->callbackEach;
 
             foreach ($this->results as $_key => $_value) {
-                    $this->results[$_key] = $_callbackItem($_value);
-                }
-
-            // if($this->callbackFinishType == "array") {
-            //     $this->results = $_callbackFinish($this->results);
-            // } elseif($this->callbackFinishType == "element"){
-            //     foreach ($this->results as $_key => $_value) {
-            //         $this->results[$_key] = $_callbackFinish($_value);
-            //     }
-            // }
-        }
-
-        if ($this->callbackArray) {
-            $_callbackArray = $this->callbackArray;
-            $this->results = $_callbackArray($this->results);
+                $this->results[$_key] = $_callbackEach($_value);
+            }
         }
 
         if ($this->callbackCompose) {
             $_callbackCompose = $this->callbackCompose;
-            // $this->results =
-            $_callbackCompose($this);
+            $this->results = $_callbackCompose($this->results);
         }
 
         return new ArrayCollection($this->results);

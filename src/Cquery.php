@@ -8,6 +8,9 @@ use Cacing69\Cquery\CqueryException;
 use Cacing69\Cquery\Loader\HTMLLoader;
 use Closure;
 use Doctrine\Common\Collections\ArrayCollection;
+use Psr\Http\Message\ResponseInterface;
+use React\EventLoop\Loop;
+use React\Http\Browser;
 
 /**
  * An implementation Cquery of a Loader to wrap all loader available.
@@ -174,12 +177,6 @@ class Cquery
 
     public function compose($closure)
     {
-        $this->loader->setCallbackArray($closure);
-        return $this;
-    }
-
-    public function compose2($closure)
-    {
         $this->loader->setCallbackCompose($closure);
         return $this;
     }
@@ -194,5 +191,35 @@ class Cquery
         // $this->loader->setClientType($clientType);
 
         return $this;
+    }
+
+    public static function getAsync($results, $chunk)
+    {
+        $loop = Loop::get();
+        $client = new Browser($loop);
+        $results = array_chunk($results, 25);
+
+        foreach ($results as $key => $_chunks) {
+            foreach ($_chunks as $_key => $_result) {
+                $client
+                // ->withHeader("Key", "value")
+                // ->withHeader("Key", "value")
+                ->get($_result["url"])
+                ->then(function (ResponseInterface $response) use (&$results, $key, $_key) {
+                    $detail = new Cquery((string) $response->getBody());
+
+                    $resultDetail = $detail
+                        ->from(".spec")
+                        ->define(
+                            ".specleft tr:nth-child(1) > td.data as price"
+                        )
+                        ->first();
+                    $results[$key][$_key]["price"] = $resultDetail["price"];
+                });
+            }
+            $loop->run();
+        }
+
+        return array_merge(...$results);
     }
 }

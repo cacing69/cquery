@@ -405,7 +405,7 @@ $result_6 = $data
 </h4>
 If there's a scenario like this, you need to load the details, and the details are on a different URL, which means you have to load every page.
 
-You should use a client that can perform non-blocking requests, such as [amphp](https://github.com/amphp), [guzzle](https://github.com/guzzle/guzzle), or [phpreact-http](https://github.com/reactphp/http).
+You should use a client that can perform non-blocking requests, such as [amphp/http-client](https://github.com/amphp), [guzzle](https://github.com/guzzle/guzzle), or [phpreact/http](https://github.com/reactphp/http).
 
 I suggest using phpreact by making async requests.
 

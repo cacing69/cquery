@@ -228,6 +228,11 @@ class DOMCrawlerLoader extends Loader
             $this->results = $_callbackCompose($this->results);
         }
 
+
+        $this->filter = [];
+        $this->definer = [];
+        $this->source = null;
+
         return new ArrayCollection($this->results);
     }
 }

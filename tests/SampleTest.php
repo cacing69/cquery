@@ -1015,4 +1015,38 @@ final class SampleTest extends TestCase
         $this->assertSame("A woman is like a tea bag; you never know how strong it is until it's in hot water.", $result[8]["text"]);
         $this->assertSame("A day without sunshine is like, you know, night.", $result[9]["text"]);
     }
+
+    public function testCallDefinerTwiceMustGotAnException()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_HTML);
+        $data = new Cquery($simpleHtml);
+
+        try {
+            $result = $data
+            ->from("footer")
+            ->define("p")
+            ->define("p")
+            ->first();
+        } catch (Exception $e) {
+            $this->assertSame(CqueryException::class, get_class($e));
+            $this->assertSame("cannot call method define twice.", $e->getMessage());
+        }
+    }
+
+    public function testCallFromTwiceMustGotAnException()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_HTML);
+        $data = new Cquery($simpleHtml);
+
+        try {
+            $result = $data
+            ->from("footer")
+            ->from("footer > .lorem")
+            ->define("p")
+            ->first();
+        } catch (Exception $e) {
+            $this->assertSame(CqueryException::class, get_class($e));
+            $this->assertSame("cannot call method from twice.", $e->getMessage());
+        }
+    }
 }

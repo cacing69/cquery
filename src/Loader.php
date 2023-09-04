@@ -40,6 +40,10 @@ abstract class Loader
     }
     public function from(string $value)
     {
+        if($this->source) {
+            throw new CqueryException("cannot call method from twice.");
+        }
+
         $this->filter = [];
         $this->fetchCrawler();
         $this->source = new Source($value);
@@ -133,6 +137,10 @@ abstract class Loader
 
     public function define(...$defines)
     {
+        if(count($this->definer) > 0) {
+            throw new CqueryException("cannot call method define twice.");
+        }
+
         $this->validateSource();
 
         if($this->isFetched) {

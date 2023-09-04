@@ -259,6 +259,12 @@ class HTMLLoader extends Loader
             $this->results = $_callbackArray($this->results);
         }
 
+        if ($this->callbackCompose) {
+            $_callbackCompose = $this->callbackCompose;
+            // $this->results =
+            $_callbackCompose($this);
+        }
+
         return new ArrayCollection($this->results);
     }
 }

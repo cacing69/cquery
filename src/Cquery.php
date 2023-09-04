@@ -30,6 +30,8 @@ class Cquery
      */
     private $loader;
 
+    private $results;
+
     /**
      * Create a new Cquery instance.
      *
@@ -166,13 +168,19 @@ class Cquery
 
     public function each($closure)
     {
-        $this->loader->setCallbackItem($closure);
+        $this->loader->setCallbackEach($closure);
         return $this;
     }
 
     public function compose($closure)
     {
         $this->loader->setCallbackArray($closure);
+        return $this;
+    }
+
+    public function compose2($closure)
+    {
+        $this->loader->setCallbackCompose($closure);
         return $this;
     }
 

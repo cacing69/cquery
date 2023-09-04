@@ -33,6 +33,10 @@ final class CadillacCarDatabaseTest extends TestCase
             ->init(function (HttpBrowser $e) {
 
             })
+
+            /**
+             * EACH : TO ACCESS ALL ITEM INSIDE ARRAY RESULT
+             */
             // ->each(function ($el){
             //     $detail = new Cquery($el["url"]);
 
@@ -47,32 +51,44 @@ final class CadillacCarDatabaseTest extends TestCase
 
             //     return $el;
             // })
-            ->compose(function ($results) use ($loop, $client){
-                // TODO batas maksimal yang kutemukan adalah 25, ketika aku input 30, ada beberapa data yang null
-                $results = array_chunk($results, 25);
 
-                foreach ($results as $key => $_chunks) {
-                    foreach ($_chunks as $_key => $_result) {
-                        $client
-                        // ->withHeader("Key", "value")
-                        // ->withHeader("Key", "value")
-                        ->get($_result["url"])
-                            ->then(function (ResponseInterface $response) use (&$results, $key, $_key) {
-                                $detail = new Cquery((string) $response->getBody());
+            /**
+             * COMPOSE : TO ACCESS ARRAY RESULT
+             */
+            // ->compose(function ($results) use ($loop, $client){
+            //     // TODO batas maksimal yang kutemukan adalah 25, ketika aku input 30, ada beberapa data yang null
+            //     $results = array_chunk($results, 25);
 
-                                $resultDetail = $detail
-                                    ->from(".spec")
-                                    ->define(
-                                        ".specleft tr:nth-child(1) > td.data as price"
-                                    )
-                                    ->first();
+            //     foreach ($results as $key => $_chunks) {
+            //         foreach ($_chunks as $_key => $_result) {
+            //             $client
+            //             // ->withHeader("Key", "value")
+            //             // ->withHeader("Key", "value")
+            //             ->get($_result["url"])
+            //             ->then(function (ResponseInterface $response) use (&$results, $key, $_key) {
+            //                 $detail = new Cquery((string) $response->getBody());
 
-                                $results[$key][$_key]["price"] = $resultDetail["price"];
-                            });
-                    }
-                    $loop->run();
-                }
-                return array_merge(...$results);
+            //                 $resultDetail = $detail
+            //                     ->from(".spec")
+            //                     ->define(
+            //                         ".specleft tr:nth-child(1) > td.data as price"
+            //                     )
+            //                     ->first();
+
+            //                 $results[$key][$_key]["price"] = $resultDetail["price"];
+            //             });
+            //         }
+            //         $loop->run();
+            //     }
+
+            //     return array_merge(...$results);
+            // })
+
+            /**
+             * COMPOSE2 : TO ACCESS ALL PROPERTY AND OBJECT INSIDE CQUERY
+             */
+            ->compose2(function ($loader) {
+                // dd($loader);
             })
             ->limit(10)
             ->get();

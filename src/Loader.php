@@ -30,8 +30,9 @@ abstract class Loader
     protected $crawler;
 
     protected $callbackReady;
-    protected $callbackItem;
+    protected $callbackEach;
     protected $callbackArray;
+    protected $callbackCompose;
 
     public function limit(int $limit)
     {
@@ -221,15 +222,20 @@ abstract class Loader
         return $this;
     }
 
-    public function setCallbackItem(Closure $closure)
+    public function setCallbackEach(Closure $closure)
     {
-        $this->callbackItem = $closure;
+        $this->callbackEach = $closure;
         return $this;
     }
 
     public function setCallbackArray(Closure $closure)
     {
         $this->callbackArray = $closure;
+        return $this;
+    }
+    public function setCallbackCompose(Closure $closure)
+    {
+        $this->callbackCompose = $closure;
         return $this;
     }
 

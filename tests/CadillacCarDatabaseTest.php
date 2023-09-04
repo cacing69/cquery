@@ -13,7 +13,6 @@ use Symfony\Component\BrowserKit\HttpBrowser;
 define("SAMPLE_CADILLAC_CAR", "http://www.classiccardatabase.com/postwar-models/Cadillac.php");
 final class CadillacCarDatabaseTest extends TestCase
 {
-
     // without async = 467s
     public function testCollectCadillacCar()
     {

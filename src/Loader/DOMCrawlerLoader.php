@@ -199,7 +199,7 @@ class DOMCrawlerLoader extends Loader
 
                         $_hold_data[$_key][$_extractAlias[1]] = $_hold_child;
 
-                    // if alias == tags[text]
+                        // if alias == tags[text]
                     } elseif(preg_match('/^\s*([A-Za-z0-9\-\_]+?)\[([A-Za-z0-9\-\_]*?)\]\s*?/', $definer->getAlias())) {
                         preg_match('/^\s*([A-Za-z0-9\-\_]+?)\[([A-Za-z0-9\-\_]*?)\]\s*?/', $definer->getAlias(), $_extractAlias);
 

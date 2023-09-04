@@ -28,10 +28,10 @@ final class SampleTest extends TestCase
             )
             ->first();
 
-        $this->assertSame('Title 1', $result['title']);
+        $this->assertSame('Title 1'                 , $result['title']);
         $this->assertSame('Href Attribute Example 1', $result['description']);
-        $this->assertSame('http://ini-url-1.com', $result['url']);
-        $this->assertSame('ini vip class-1', $result['class']);
+        $this->assertSame('http://ini-url-1.com'    , $result['url']);
+        $this->assertSame('ini vip class-1'         , $result['class']);
     }
 
     public function testWhereHasWithAnyCondition()
@@ -208,10 +208,10 @@ final class SampleTest extends TestCase
             ->filter("attr(ref-id, h1)", "=", "23")
             ->first();
 
-        $this->assertSame("Title 2", $result["title"]);
-        $this->assertSame("Href Attribute Example 2 Lorem pilsum", $result["description"]);
-        $this->assertSame("http://ini-url-2.com", $result["url"]);
-        $this->assertSame("vip class-2 nih tenied", $result["class"]);
+        $this->assertSame("Title 2"                                 , $result["title"]);
+        $this->assertSame("Href Attribute Example 2 Lorem pilsum"   , $result["description"]);
+        $this->assertSame("http://ini-url-2.com"                    , $result["url"]);
+        $this->assertSame("vip class-2 nih tenied"                  , $result["class"]);
     }
 
     public function testWithLikeContains()
@@ -347,8 +347,8 @@ final class SampleTest extends TestCase
 
         $result = $data
             ->from("#lorem .link")
-            ->define("attr(href, a) as url", "attr(class, a) as class")
-            ->filter("attr(regex-test, a)", "regex", "/[a-z]+\-[0-9]+\-[a-z]+/im")
+            ->define("attr(href, a) as url" , "attr(class, a) as class")
+            ->filter("attr(regex-test, a)"  , "regex", "/[a-z]+\-[0-9]+\-[a-z]+/im")
             ->get();
 
         $this->assertCount(3, $result);
@@ -400,7 +400,7 @@ final class SampleTest extends TestCase
             ->first();
 
         $this->assertSame("HREF ATTRIBUTE EXAMPLE 1", $result["upper_a"]);
-        $this->assertSame("TITLE-1-FROM-CLOSURE", $result["alias"]);
+        $this->assertSame("TITLE-1-FROM-CLOSURE"    , $result["alias"]);
     }
 
     public function testPickWithDefinerUsedClosure()
@@ -518,15 +518,15 @@ final class SampleTest extends TestCase
             ->define("upper(h1)")
             ->get();
 
-        $this->assertSame("TITLE 1", $result[0]['upper_h1']);
-        $this->assertSame("TITLE 2", $result[1]['upper_h1']);
-        $this->assertSame("TITLE 3", $result[2]['upper_h1']);
-        $this->assertSame("TITLE 11", $result[3]['upper_h1']);
-        $this->assertSame("TITLE 22", $result[4]['upper_h1']);
-        $this->assertSame("TITLE 323", $result[5]['upper_h1']);
-        $this->assertSame("TITLE 331", $result[6]['upper_h1']);
-        $this->assertSame("TITLE 331", $result[7]['upper_h1']);
-        $this->assertSame("12345", $result[8]['upper_h1']);
+        $this->assertSame("TITLE 1"     , $result[0]['upper_h1']);
+        $this->assertSame("TITLE 2"     , $result[1]['upper_h1']);
+        $this->assertSame("TITLE 3"     , $result[2]['upper_h1']);
+        $this->assertSame("TITLE 11"    , $result[3]['upper_h1']);
+        $this->assertSame("TITLE 22"    , $result[4]['upper_h1']);
+        $this->assertSame("TITLE 323"   , $result[5]['upper_h1']);
+        $this->assertSame("TITLE 331"   , $result[6]['upper_h1']);
+        $this->assertSame("TITLE 331"   , $result[7]['upper_h1']);
+        $this->assertSame("12345"       , $result[8]['upper_h1']);
     }
 
     public function testCqueryWithReplaceFromMultiToSingleFunction()
@@ -539,15 +539,15 @@ final class SampleTest extends TestCase
             ->define("replace(['Title', '331'], 'LOREM', h1)  as title")
             ->get();
 
-        $this->assertSame("LOREM 1", $result[0]['title']);
-        $this->assertSame("LOREM 2", $result[1]['title']);
-        $this->assertSame("LOREM 3", $result[2]['title']);
-        $this->assertSame("LOREM 11", $result[3]['title']);
-        $this->assertSame("LOREM 22", $result[4]['title']);
-        $this->assertSame("LOREM 323", $result[5]['title']);
-        $this->assertSame("LOREM LOREM", $result[6]['title']);
-        $this->assertSame("LOREM LOREM", $result[7]['title']);
-        $this->assertSame("12345", $result[8]['title']);
+        $this->assertSame("LOREM 1"         , $result[0]['title']);
+        $this->assertSame("LOREM 2"         , $result[1]['title']);
+        $this->assertSame("LOREM 3"         , $result[2]['title']);
+        $this->assertSame("LOREM 11"        , $result[3]['title']);
+        $this->assertSame("LOREM 22"        , $result[4]['title']);
+        $this->assertSame("LOREM 323"       , $result[5]['title']);
+        $this->assertSame("LOREM LOREM"     , $result[6]['title']);
+        $this->assertSame("LOREM LOREM"     , $result[7]['title']);
+        $this->assertSame("12345"           , $result[8]['title']);
     }
 
     public function testCqueryWithReplaceFromMultiToSingleButWithNestedAttrFunction()
@@ -560,15 +560,15 @@ final class SampleTest extends TestCase
             ->define("replace('http', 'https', attr(href, a))  as title")
             ->get();
 
-        $this->assertSame("https://ini-url-1.com", $result[0]['title']);
-        $this->assertSame("https://ini-url-2.com", $result[1]['title']);
-        $this->assertSame("https://ini-url-3.com", $result[2]['title']);
-        $this->assertSame("https://ini-url-11.com", $result[3]['title']);
-        $this->assertSame("https://ini-url-22.com", $result[4]['title']);
-        $this->assertSame("https://ini-url-33-1.com", $result[5]['title']);
-        $this->assertSame("https://ini-url-33-2.com", $result[6]['title']);
-        $this->assertSame("https://ini-url-33-2.com", $result[7]['title']);
-        $this->assertSame("https://ini-url-33-0.com", $result[8]['title']);
+        $this->assertSame("https://ini-url-1.com"       , $result[0]['title']);
+        $this->assertSame("https://ini-url-2.com"       , $result[1]['title']);
+        $this->assertSame("https://ini-url-3.com"       , $result[2]['title']);
+        $this->assertSame("https://ini-url-11.com"      , $result[3]['title']);
+        $this->assertSame("https://ini-url-22.com"      , $result[4]['title']);
+        $this->assertSame("https://ini-url-33-1.com"    , $result[5]['title']);
+        $this->assertSame("https://ini-url-33-2.com"    , $result[6]['title']);
+        $this->assertSame("https://ini-url-33-2.com"    , $result[7]['title']);
+        $this->assertSame("https://ini-url-33-0.com"    , $result[8]['title']);
     }
 
     public function testCqueryWithNestedThreeDefiner()
@@ -599,10 +599,22 @@ final class SampleTest extends TestCase
 
         $result = $data
             ->from("#list-test-child > div")
-            ->define(".pluck as title")
+            ->define(
+                "span as title",
+                "span > .pluck as title_info"
+            )
             ->get();
 
-        $this->assertCount(2, $result);
+        $this->assertCount(3, $result);
+
+        $this->assertSame("parent 1 text-pluck-1"   , $result[0]['title']);
+        $this->assertSame("text-pluck-1"            , $result[0]['title_info']);
+
+        $this->assertSame("parent 2"                , $result[1]['title']);
+        $this->assertSame(null                      , $result[1]['title_info']);
+
+        $this->assertSame("parent 3 text-pluck-3"   , $result[2]['title']);
+        $this->assertSame("text-pluck-3"            , $result[2]['title_info']);
     }
 
     public function testCqueryResultSelectorSingleIdWithFilter()
@@ -715,15 +727,15 @@ final class SampleTest extends TestCase
             ->get();
 
         $this->assertCount(9, $result);
-        $this->assertSame("Href Replaced Replaced 1", $result[0]['text']);
-        $this->assertSame("Href Replaced Replaced 2 Lorem pilsum", $result[1]['text']);
-        $this->assertSame("Href Replaced Replaced 4", $result[2]['text']);
-        $this->assertSame("Href Replaced Replaced 78", $result[3]['text']);
-        $this->assertSame("Href Replaced Replaced 90", $result[4]['text']);
-        $this->assertSame("Href Replaced Replaced 5", $result[5]['text']);
-        $this->assertSame("Href Replaced Replaced 51", $result[6]['text']);
-        $this->assertSame("Href Replaced Replaced 51", $result[7]['text']);
-        $this->assertSame("Href Replaced Replaced 52", $result[8]['text']);
+        $this->assertSame("Href Replaced Replaced 1"                , $result[0]['text']);
+        $this->assertSame("Href Replaced Replaced 2 Lorem pilsum"   , $result[1]['text']);
+        $this->assertSame("Href Replaced Replaced 4"                , $result[2]['text']);
+        $this->assertSame("Href Replaced Replaced 78"               , $result[3]['text']);
+        $this->assertSame("Href Replaced Replaced 90"               , $result[4]['text']);
+        $this->assertSame("Href Replaced Replaced 5"                , $result[5]['text']);
+        $this->assertSame("Href Replaced Replaced 51"               , $result[6]['text']);
+        $this->assertSame("Href Replaced Replaced 51"               , $result[7]['text']);
+        $this->assertSame("Href Replaced Replaced 52"               , $result[8]['text']);
     }
 
     public function testWithLowerFunc()
@@ -740,20 +752,20 @@ final class SampleTest extends TestCase
             ->get();
 
         $this->assertCount(9, $result);
-        $this->assertSame("title 1", $result[0]['title']);
-        $this->assertSame("title 2", $result[1]['title']);
-        $this->assertSame("title 3", $result[2]['title']);
-        $this->assertSame("title 11", $result[3]['title']);
-        $this->assertSame("title 22", $result[4]['title']);
-        $this->assertSame("title 323", $result[5]['title']);
-        $this->assertSame("title 331", $result[6]['title']);
-        $this->assertSame("title 331", $result[7]['title']);
-        $this->assertSame("12345", $result[8]['title']);
+        $this->assertSame("title 1"     , $result[0]['title']);
+        $this->assertSame("title 2"     , $result[1]['title']);
+        $this->assertSame("title 3"     , $result[2]['title']);
+        $this->assertSame("title 11"    , $result[3]['title']);
+        $this->assertSame("title 22"    , $result[4]['title']);
+        $this->assertSame("title 323"   , $result[5]['title']);
+        $this->assertSame("title 331"   , $result[6]['title']);
+        $this->assertSame("title 331"   , $result[7]['title']);
+        $this->assertSame("12345"       , $result[8]['title']);
 
         // CHECK ATTR
-        $this->assertSame("ini test lagi", $result[0]['data_check']);
-        $this->assertSame("ini juga test 2x", $result[1]['data_check']);
-        $this->assertSame("ini juga test 2x3x", $result[2]['data_check']);
+        $this->assertSame("ini test lagi"       , $result[0]['data_check']);
+        $this->assertSame("ini juga test 2x"    , $result[1]['data_check']);
+        $this->assertSame("ini juga test 2x3x"  , $result[2]['data_check']);
         $this->assertSame(null, $result[3]['data_check']);
         $this->assertSame(null, $result[4]['data_check']);
         $this->assertSame(null, $result[5]['data_check']);
@@ -966,16 +978,16 @@ final class SampleTest extends TestCase
             ->get();
 
         $this->assertCount(10, $result);
-        $this->assertSame("Lorem world as we have created it is a process of our thinking. It cannot be changed without changing our thinking.", $result[0]["text"]);
-        $this->assertSame("It is our choices, Harry, that show what we truly are, far more than our abilities.", $result[1]["text"]);
+        $this->assertSame("Lorem world as we have created it is a process of our thinking. It cannot be changed without changing our thinking." , $result[0]["text"]);
+        $this->assertSame("It is our choices, Harry, that show what we truly are, far more than our abilities."                                 , $result[1]["text"]);
         $this->assertSame("There are only two ways to live your life. One is as though nothing is a miracle. Lorem other is as though everything is a miracle.", $result[2]["text"]);
-        $this->assertSame("Lorem person, be it gentleman or lady, who has not pleasure in a good novel, must be intolerably stupid.", $result[3]["text"]);
-        $this->assertSame("Imperfection is beauty, madness is genius and it's better to be absolutely ridiculous than absolutely boring.", $result[4]["text"]);
-        $this->assertSame("Try not to become a man of success. Rather become a man of value.", $result[5]["text"]);
-        $this->assertSame("It is better to be hated for what you are than to be loved for what you are not.", $result[6]["text"]);
-        $this->assertSame("I have not failed. I've just found 10,000 ways that won't work.", $result[7]["text"]);
-        $this->assertSame("A woman is like a tea bag; you never know how strong it is until it's in hot water.", $result[8]["text"]);
-        $this->assertSame("A day without sunshine is like, you know, night.", $result[9]["text"]);
+        $this->assertSame("Lorem person, be it gentleman or lady, who has not pleasure in a good novel, must be intolerably stupid."            , $result[3]["text"]);
+        $this->assertSame("Imperfection is beauty, madness is genius and it's better to be absolutely ridiculous than absolutely boring."       , $result[4]["text"]);
+        $this->assertSame("Try not to become a man of success. Rather become a man of value."                                                   , $result[5]["text"]);
+        $this->assertSame("It is better to be hated for what you are than to be loved for what you are not."                                    , $result[6]["text"]);
+        $this->assertSame("I have not failed. I've just found 10,000 ways that won't work."                                                     , $result[7]["text"]);
+        $this->assertSame("A woman is like a tea bag; you never know how strong it is until it's in hot water."                                 , $result[8]["text"]);
+        $this->assertSame("A day without sunshine is like, you know, night."                                                                    , $result[9]["text"]);
     }
 
     public function testScrapeQuotesToScrapeWithReplaceArrayDefiner()
@@ -992,15 +1004,15 @@ final class SampleTest extends TestCase
             ->get();
 
         $this->assertCount(10, $result);
-        $this->assertSame("Please world as we have created it is a process of our thinking. It cannot be changed without changing our thinking.", $result[0]["text"]);
-        $this->assertSame("It is our choices, Harry, that show what we truly son, far more than our abilities.", $result[1]["text"]);
+        $this->assertSame("Please world as we have created it is a process of our thinking. It cannot be changed without changing our thinking."    , $result[0]["text"]);
+        $this->assertSame("It is our choices, Harry, that show what we truly son, far more than our abilities."                                     , $result[1]["text"]);
         $this->assertSame("There son only two ways to live your life. One is as though nothing is a miracle. Please other is as though everything is a miracle.", $result[2]["text"]);
-        $this->assertSame("Please person, be it gentleman or lady, who has not pleasure in a good novel, must be intolerably stupid.", $result[3]["text"]);
-        $this->assertSame("Imperfection is beauty, madness is genius and it's better to be absolutely ridiculous than absolutely boring.", $result[4]["text"]);
-        $this->assertSame("Try not to become a man of success. Rather become a man of value.", $result[5]["text"]);
-        $this->assertSame("It is better to be hated for what you son than to be loved for what you son not.", $result[6]["text"]);
-        $this->assertSame("I have not failed. I've just found 10,000 ways that won't work.", $result[7]["text"]);
-        $this->assertSame("A woman is like a tea bag; you never know how strong it is until it's in hot water.", $result[8]["text"]);
-        $this->assertSame("A day without sunshine is like, you know, night.", $result[9]["text"]);
+        $this->assertSame("Please person, be it gentleman or lady, who has not pleasure in a good novel, must be intolerably stupid."               , $result[3]["text"]);
+        $this->assertSame("Imperfection is beauty, madness is genius and it's better to be absolutely ridiculous than absolutely boring."           , $result[4]["text"]);
+        $this->assertSame("Try not to become a man of success. Rather become a man of value."                                                       , $result[5]["text"]);
+        $this->assertSame("It is better to be hated for what you son than to be loved for what you son not."                                        , $result[6]["text"]);
+        $this->assertSame("I have not failed. I've just found 10,000 ways that won't work."                                                         , $result[7]["text"]);
+        $this->assertSame("A woman is like a tea bag; you never know how strong it is until it's in hot water."                                     , $result[8]["text"]);
+        $this->assertSame("A day without sunshine is like, you know, night."                                                                        , $result[9]["text"]);
     }
 }

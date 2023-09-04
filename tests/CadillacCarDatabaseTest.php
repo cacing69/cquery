@@ -55,35 +55,35 @@ final class CadillacCarDatabaseTest extends TestCase
             /**
              * COMPOSE : TO ACCESS ARRAY RESULT
              */
-            ->compose(function ($results) use ($loop, $client){
-                // TODO batas maksimal yang kutemukan adalah 25, ketika aku input 30, ada beberapa data yang null
-                $results = array_chunk($results, 25);
+            // ->compose(function ($results) use ($loop, $client){
+            //     // TODO batas maksimal yang kutemukan adalah 25, ketika aku input 30, ada beberapa data yang null
+            //     $results = array_chunk($results, 25);
 
-                foreach ($results as $key => $_chunks) {
-                    foreach ($_chunks as $_key => $_result) {
-                        $client
-                        ->get($_result["url"])
-                        ->then(function (ResponseInterface $response) use (&$results, $key, $_key) {
-                            $detail = new Cquery((string) $response->getBody());
+            //     foreach ($results as $key => $_chunks) {
+            //         foreach ($_chunks as $_key => $_result) {
+            //             $client
+            //             ->get($_result["url"])
+            //             ->then(function (ResponseInterface $response) use (&$results, $key, $_key) {
+            //                 $detail = new Cquery((string) $response->getBody());
 
-                            $resultDetail = $detail
-                                ->from(".spec")
-                                ->define(
-                                    ".specleft tr:nth-child(1) > td.data as price"
-                                )
-                                ->first();
+            //                 $resultDetail = $detail
+            //                     ->from(".spec")
+            //                     ->define(
+            //                         ".specleft tr:nth-child(1) > td.data as price"
+            //                     )
+            //                     ->first();
 
-                            $results[$key][$_key]["price"] = $resultDetail["price"];
-                        });
-                    }
-                    $loop->run();
-                }
+            //                 $results[$key][$_key]["price"] = $resultDetail["price"];
+            //             });
+            //         }
+            //         $loop->run();
+            //     }
 
-                return $results;
-            })
-            ->limit(10)
+            //     return $results;
+            // })
+            // ->limit(10)
             ->get();
 
-        $this->assertSame(true, true);
+        $this->assertCount(320, $result);
     }
 }

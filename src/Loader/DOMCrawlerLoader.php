@@ -9,7 +9,7 @@ use Cacing69\Cquery\Loader;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\DomCrawler\Crawler;
 
-class HTMLLoader extends Loader
+class DOMCrawlerLoader extends Loader
 {
     // private $crawler;
 
@@ -28,7 +28,6 @@ class HTMLLoader extends Loader
         $this->validateDefiners();
 
         // WHERE CHECKING
-        // $dom = $this->dom;
         $_filtered = null;
 
         $bound = null;
@@ -41,7 +40,6 @@ class HTMLLoader extends Loader
 
             foreach ($this->filter as $key => $filterAdapter) {
                 $_data = $this->crawler
-                    // ->filterXPath($this->getSource()->getXpath())
                     ->filterXPath($this->getSource()->getXpath())
                     ->filterXPath($filterAdapter->getNodeXpath());
 
@@ -78,9 +76,8 @@ class HTMLLoader extends Loader
             }
         }
 
-        // PROCESS DOM HERE
-        $limit = $this->limit;
 
+        // PROCESS DOM HERE
         $_hold_data = [];
 
         foreach ($this->definer as $key => $definer) {
@@ -88,7 +85,6 @@ class HTMLLoader extends Loader
             if($definer->getAdapter()->getCallMethod() === "extract") {
                 $_data = $this
                         ->crawler
-                        // ->filterXPath($this->getSource()->getXpath())
                         ->filterXPath($this->getSource()->getXpath())
                         ->filterXPath($definer->getAdapter()->getNodeXpath());
 
@@ -104,7 +100,6 @@ class HTMLLoader extends Loader
                 $_data = [];
                 $this
                     ->crawler
-                    // ->filterXPath($this->getSource()->getXpath())
                     ->filterXPath($this->getSource()->getXpath())
                     ->filterXPath($definer->getAdapter()->getNodeXpath())
                     ->each(function (Crawler $node, $i) use (&$_data, $definer) {
@@ -129,8 +124,38 @@ class HTMLLoader extends Loader
                 // TODO tambahkan metode ambil data dengan filter->each, walaupun itu akan sedikit lambat, buts its ok, karena hanya untuk kasus tertentu
                 // TODO index kolom yang menjadi acuan utama adalah index pertama di definer
 
-                if(count($_data) !== $bound) {
-                    throw new CqueryException("error query definer, it looks like an error occurred while attempting to define the column, it's because there are no matching rows in each column.");
+                if(count($_data) < $bound) {
+                    $_data = [];
+                    $this
+                        ->crawler
+                        ->filterXPath($this->getSource()->getXpath())
+                        ->each(function (Crawler $node, $i) use (&$_data, $definer) {
+                            $_filterNode = $node->filter($definer->getAdapter()->getNode());
+
+                            if($_filterNode->count() === 0) {
+                                $_data[$i] = null;
+                            } else {
+                                $_filterNode->each(function (Crawler $_node, $_i) use ($i, &$_data, $definer) {
+                                    // dump($_node->text());
+                                    $_data[$i] = $_node->text();
+
+                                    // if(is_array($definer->getAdapter()->getCallMethodParameter()) && count($definer->getAdapter()->getCallMethodParameter()) === 1) {
+                                    //     $__callParameter = $definer->getAdapter()->getCallMethodParameter()[0];
+                                    //     if($__callParameter === "_text") {
+                                    //         $_data[$i][] = $_node->text();
+                                    //     } else {
+                                    //         $_data[$i][] = $_node->attr($__callParameter);
+                                    //     }
+                                    // } else {
+                                    //     dd('not_supported_yet');
+                                    // }
+                                });
+                            }
+                        });
+                    //     dump(count($_data), $bound);
+                    // throw new CqueryException("error query definer, there are no matching rows each column.");
+                } elseif (count($_data) > $bound) {
+                    throw new CqueryException("error query definer, there are no matching rows each column.");
                 }
             }
 
@@ -150,8 +175,8 @@ class HTMLLoader extends Loader
                     $_value = strlen((string) $_value) > 0 ? $_value : null;
                 }
 
-                if ($limit !== null) {
-                    if ($_key === $limit) {
+                if ($this->limit !== null) {
+                    if ($_key === $this->limit) {
                         break;
                     } else {
                         $_hold_data[$_key][$definer->getAlias()] = $_value;

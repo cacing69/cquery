@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Cacing69\Cquery;
 
 use Cacing69\Cquery\CqueryException;
-use Cacing69\Cquery\Loader\HTMLLoader;
+use Cacing69\Cquery\Loader\DOMCrawlerLoader;
 use Closure;
 use Doctrine\Common\Collections\ArrayCollection;
 use Psr\Http\Message\ResponseInterface;
@@ -25,7 +25,7 @@ class Cquery
     /**
      * The base Loader instance.
      * loader should be an instance of Cacing69\Loader\Loader
-     * Available loader HTMLLoader, JSONLoader(), CSVLoader
+     * Available loader DOMCrawlerLoader
      *
      * @var \Cacing69\Cquery\Loader
      *
@@ -48,10 +48,10 @@ class Cquery
         if($source !== null) {
             if (filter_var($source, FILTER_VALIDATE_URL) && $contentType === "html") {
                 $remote = true;
-                $this->loader = new HTMLLoader($source, $remote);
+                $this->loader = new DOMCrawlerLoader($source, $remote);
             } else {
                 if($contentType === "html") {
-                    $this->loader = new HTMLLoader($source);
+                    $this->loader = new DOMCrawlerLoader($source);
                 }
             }
         }

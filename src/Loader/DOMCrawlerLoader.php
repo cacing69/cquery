@@ -219,7 +219,7 @@ class DOMCrawlerLoader extends Loader
             $_callbackEach = $this->callbackEach;
 
             foreach ($this->results as $_key => $_value) {
-                $this->results[$_key] = $_callbackEach($_value);
+                $this->results[$_key] = $_callbackEach($_value, $_key);
             }
         }
 

@@ -29,6 +29,7 @@ Let's play for a moment and figure out how to make website scraping easier, much
 Please keep in mind that I haven't yet reached a beta/stable release for this library, so the available features are still very limited.
 
 I would greatly accept any support/contribution from everyone. See [CONTRIBUTING.md](CONTRIBUTING.md) for help getting started.
+
 ## Quick Installation
 
 ```bash
@@ -127,8 +128,9 @@ Below are the functions you are can use, they may change over time. <br>**Note:*
 | 3 | `h1 > 1 as title` |  `title` | - |
 | 4 | `append_node(div > .tags, a) as _tags` |  `_tags[key]` | it will be append element as array each element |
 | 5| `append_node(div > .tags, a) as tags[*][text]` | `tags[0]['text']` | `*` the star symbol signifies all elements at the index. it will be append new key (in this case `text`) each array element
-#### How to use filter
-x
+
+### How to use filter
+
 | operator | example | description |
 | --------- | ------------- | ------------------ |
 | `(= or ==)` | `filter("h1", "=", "99")` | retrieve data according to elements that only have the same value = 99 |
@@ -171,7 +173,47 @@ And here are the results
 
 ![Alt text](https://gcdnb.pbrd.co/images/Q6XHKRydSigl.png?o=1 "a title")
 
-### Another example with anonymous function
+### Method to manipulate query results
+
+There are 2 methods in CQuery for manipulating query results.
+
+1. Each Closure
+  `...->each(function ($el, $i){})`
+  or
+   `...->each(function ($el){})`
+  Example :
+
+  ```php
+    ...->each(function ($item, $i){
+      $item["price"] = $i == 2 ? 1000 : $resultDetail["price"];
+
+      return $el;
+    })
+  ```
+
+Basically, you have the ability to execute any action on each item. In the given example, it will insert a new key, "price" into each item, and if the index equals 2 (third item), it will assign a price of 1000.
+
+2. Composer Closure
+  `...->compose(function ($results){})`
+  Example :
+
+  ```php
+    ...->compose(function ($results){
+      // u can do any operation here
+
+      return  array_map(function ($_item) use ($results) {
+          $_item["sub"] = [
+              "foo" => "bar"
+          ];
+
+          return $_item;
+      }, $results);
+    })
+  ```
+
+Basically, this is the array produced by the query's result, and you have the flexibility to perform any manipulations on them. For another example i've included an example, particularly for cases where you need to load different details from another page for each entry, u can check it here [Check async multiple request](#handle-multi-async)
+
+#### Another example with anonymous function
 
 ```php
 require_once 'vendor/autoload.php';
@@ -217,6 +259,8 @@ $result_2 = $data
 
   ![Alt text](https://gcdnb.pbrd.co/images/qtItVezcEUq7.png?o=1 "a title")
 </details>
+
+#### How to load source page from url
 
 ```php
 // another example, to load data from url used browserkit
@@ -319,6 +363,113 @@ $result_6 = $data
 
   ![Alt text](https://gcdnb.pbrd.co/images/lXhhw7hA8LYf.png?o=1 "a title")
 </details>
+
+#### How to use replace
+
+```php
+  // how to use replace with single string
+  $content = file_get_contents(SAMPLE_HTML);
+
+  $data = new Cquery($content);
+
+  $result = $data
+      ->from(".col-md-8 > .quote")
+      ->define(
+          "replace('The', 'Lorem', span.text) as text",
+      )
+      ->get();
+
+  // how to use replace with array arguments
+  $data_2 = new Cquery($content);
+
+  $result = $data_2
+      ->from(".col-md-8 > .quote")
+      ->define(
+          "replace(['The', 'are'], ['Please ', 'son'], span.text) as text",
+          // "replace(['The', 'are'], ['Please'], span.text) as text", // or you can do this if just want to use single replacement
+      )
+      ->get();
+
+  // how to use replace with array arguments and single replacement
+  $data_3 = new Cquery($simpleHtml);
+
+  $result = $data_3
+      ->from("#lorem .link")
+      ->define("replace(['Title', '331'], 'LOREM', h1)  as title")
+      ->get();
+
+```
+
+<h4 id="handle-multi-async">
+  How to handle multiple request each element
+</h4>
+If there's a scenario like this, you need to load the details, and the details are on a different URL, which means you have to load every page.
+
+You should use a client that can perform non-blocking requests, such as [amphp](https://github.com/amphp), [guzzle](https://github.com/guzzle/guzzle), or [phpreact-http](https://github.com/reactphp/http).
+
+I suggest using phpreact by making async requests.
+
+```php
+  use Cacing69\Cquery\Cquery;
+  use React\EventLoop\Loop;
+  use React\Http\Browser;
+  use Psr\Http\Message\ResponseInterface;
+
+  $url = "http://www.classiccardatabase.com/postwar-models/Cadillac.php";
+
+  $data = new Cquery($url);
+
+  $loop = Loop::get();
+  $client = new Browser($loop);
+
+  // detail is on another page
+  $result = $data
+            ->from(".content")
+            ->define(
+                ".car-model-link > a as name",
+                "replace('../', 'http://www.classiccardatabase.com/', attr(href, .car-model-link > a)) as url",
+            )
+            ->filter("attr(href, .car-model-link > a)", "!=", "#")
+            ->compose(function ($results) use ($loop, $client){
+                // I've come across a maximum threshold of 25 chunk, when I input 30, there is some null data.
+                $results = array_chunk($results, 25);
+
+                foreach ($results as $key => $_chunks) {
+                    foreach ($_chunks as $_key => $_result) {
+                        $client
+                        ->get($_result["url"])
+                        ->then(function (ResponseInterface $response) use (&$results, $key, $_key) {
+                            $detail = new Cquery((string) $response->getBody());
+
+                            $resultDetail = $detail
+                                ->from(".spec")
+                                ->define(
+                                    ".specleft tr:nth-child(1) > td.data as price"
+                                )
+                                ->first();
+
+                            $results[$key][$_key]["price"] = $resultDetail["price"];
+                        });
+                    }
+                    $loop->run();
+                }
+
+                return $results;
+            })
+            ->get();
+```
+
+Here's a comparison when utilizing phpreact.
+
+##### without phpreact
+
+![Alt text](https://gcdnb.pbrd.co/images/l1GGDzUyxasY.png?o=1 "a title")
+
+##### with phpreact
+
+![Alt text](https://gcdnb.pbrd.co/images/nadMlF6d5Au3.png?o=1 "a title")
+
+In this scenario, there are 320 rows of data, and each detail will be loaded, which means there will be 320 HTTP requests made to fetch the individual details.
 
 ### Note
 

@@ -16,8 +16,8 @@ abstract class Loader
 {
     use HasSourceProperty;
     protected $limit = null;
-    protected $clientType = "browser-kit";
     protected $client;
+    protected $clientType = "browser-kit";
 
     protected $uri = null;
     protected $isRemote = false;
@@ -235,6 +235,12 @@ abstract class Loader
     public function setCallbackCompose(Closure $closure)
     {
         $this->callbackCompose = $closure;
+        return $this;
+    }
+
+    public function setClientType(string $clientType)
+    {
+        $this->clientType = $clientType;
         return $this;
     }
 

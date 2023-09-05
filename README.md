@@ -105,7 +105,7 @@ For example, you have a simple HTML element as shown below.
 
 </details>
 
-### List function available
+### List definer available
 
 Below are the functions you are can use, they may change over time. <br>**Note:** nested function has been supported.
 | function | example | description |

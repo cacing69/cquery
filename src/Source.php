@@ -9,6 +9,14 @@ use Cacing69\Cquery\Trait\HasAliasProperty;
 use Cacing69\Cquery\Trait\HasRawProperty;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 
+/**
+ * Source class used to define the source element to be scraped
+ *
+ * @author Ibnul Mutaki <ibnuu@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 class Source
 {
     use HasAliasProperty;

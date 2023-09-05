@@ -33,13 +33,20 @@ class Cquery
      */
     private $loader;
 
+    /**
+    * A variable used to store the results of a query
+    *
+    * @var \Doctrine\Common\Collections\ArrayCollection
+    *
+    * The default results is null
+    */
     private $results;
 
     /**
      * Create a new Cquery instance.
      *
-     * @param \DOMNodeList|\DOMNode|string|null $source A source to use as the the source data, u can put html
-     * content/url page to scrape default is null
+     * @param \DOMNodeList|\DOMNode|string|null $source A source to use as the the source data
+     * u can put html content/url page to scrape default is null
      *
      * @param string $contentType Type of Data Content to be Used as Data Source default is 'html'
      */
@@ -55,6 +62,20 @@ class Cquery
                 }
             }
         }
+    }
+
+    /**
+     * Adds a source based on data given.
+     * This method is used to determine the HTML element selector
+     * that will serve as a property in each array element.
+     *
+     * @param string $value set a source element selector to activate query
+     * @return \Cacing69\Cquery\Cquery
+     */
+    public function from(string $value)
+    {
+        $this->loader->from($value);
+        return $this;
     }
 
     /**
@@ -74,20 +95,6 @@ class Cquery
     }
 
     /**
-     * Adds a source based on data given.
-     * This method is used to determine the HTML element selector
-     * that will serve as a property in each array element.
-     *
-     * @param string $value set a source element selector to activate query
-     * @return \Cacing69\Cquery\Cquery
-     */
-    public function from(string $value)
-    {
-        $this->loader->from($value);
-        return $this;
-    }
-
-    /**
      * Add limit amount when scraping.
      * This method is used to limit the total length of the data.
      *
@@ -102,7 +109,7 @@ class Cquery
     }
 
     /**
-     * Take a first reesult from result collection
+     * Take a first result from result collection
      *
      * @return array
      */
@@ -147,7 +154,7 @@ class Cquery
     }
 
     /**
-    * Take a result from query
+    * Take a result query from loader
     *
     * @return ArrayCollection
     */
@@ -188,38 +195,7 @@ class Cquery
 
     public function client($clientType)
     {
-        // $this->loader->setClientType($clientType);
-
+        $this->loader->setClientType($clientType);
         return $this;
-    }
-
-    public static function getAsync($results, $chunk)
-    {
-        $loop = Loop::get();
-        $client = new Browser($loop);
-        $results = array_chunk($results, 25);
-
-        foreach ($results as $key => $_chunks) {
-            foreach ($_chunks as $_key => $_result) {
-                $client
-                // ->withHeader("Key", "value")
-                // ->withHeader("Key", "value")
-                ->get($_result["url"])
-                ->then(function (ResponseInterface $response) use (&$results, $key, $_key) {
-                    $detail = new Cquery((string) $response->getBody());
-
-                    $resultDetail = $detail
-                        ->from(".spec")
-                        ->define(
-                            ".specleft tr:nth-child(1) > td.data as price"
-                        )
-                        ->first();
-                    $results[$key][$_key]["price"] = $resultDetail["price"];
-                });
-            }
-            $loop->run();
-        }
-
-        return array_merge(...$results);
     }
 }

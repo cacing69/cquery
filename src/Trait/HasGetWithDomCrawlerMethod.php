@@ -1,6 +1,7 @@
 <?php
 
 namespace Cacing69\Cquery\Trait;
+
 use Cacing69\Cquery\CqueryException;
 use Symfony\Component\DomCrawler\Crawler;
 use Cacing69\Cquery\Support\Collection;

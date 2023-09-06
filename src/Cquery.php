@@ -19,7 +19,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Cquery
 {
-    private $loaderName = DOMCrawlerLoader::class;
+    private $loaderName;
 
     /**
      * The base Loader instance.

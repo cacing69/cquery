@@ -22,7 +22,11 @@ Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recen
 
 ### Currently experimenting
 
-Attempt to extract data from webpage which, in my opinion, becomes more enjoyable. All methods and usage instructions provided here are designed according to that i needs. If you have any suggestions or feedback to improve them, it would be highly appreciated and
+Attempt to extract data from webpage which, in my opinion, becomes more enjoyable, my intention in creating this was to enable web scraping of websites that utilize js/ajax for content loading.
+
+To perform web scraping on pages loaded with js/ajax, you need an adapter outside of this package, this was developed using `symfony/panther`. I don't want to add it as a default package in the core of cquery because, this feature is optional for some people. Please check and understand its usage here. I refer to it as [cacing69/cquery-panther-loader](https://github.com/cacing69/cquery-panther-loader). Read more information about [symfony/panther](https://github.com/symfony/panther), you'll discover installation and additional information there
+
+All methods and usage instructions provided here are designed according to that i needs. If you have any suggestions or feedback to improve them, it would be highly appreciated and
 
 ### What kind of thing is this
 
@@ -39,6 +43,7 @@ I would greatly accept any support/contribution from everyone. See [CONTRIBUTING
 - [Manipulate Query Result](#handle-manipualte-result)
 - [Multiple Requests (to get detail from another url)](#handle-multi-async)
 - [Doing action after page load (click link/submit form)](#handle-doing-action)
+- [Scrape website load by js/ajax)](#handle-doing-action)
 
 ## Quick Installation
 

@@ -68,14 +68,14 @@ abstract class Loader
                     $this->crawler = new Crawler($this->client->getResponse()->getContent());
                 }
 
-            // } elseif ($this->clientName === "curl") {
-            //     $ch = curl_init();
-            //     curl_setopt($ch, CURLOPT_URL, $this->uri);
-            //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            //     $output = curl_exec($ch);
+                // } elseif ($this->clientName === "curl") {
+                //     $ch = curl_init();
+                //     curl_setopt($ch, CURLOPT_URL, $this->uri);
+                //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                //     $output = curl_exec($ch);
 
-            //     $this->crawler = new Crawler($output);
-            //     curl_close($ch);
+                //     $this->crawler = new Crawler($output);
+                //     curl_close($ch);
 
             } else {
                 throw new CqueryException("client {$this->clientName} doesnt support");

@@ -43,7 +43,7 @@ I would greatly accept any support/contribution from everyone. See [CONTRIBUTING
 - [Manipulate Query Result](#handle-manipualte-result)
 - [Multiple Requests (to get detail from another url)](#handle-multi-async)
 - [Doing action after page load (click link/submit form)](#handle-doing-action)
-- [Scrape website load by js/ajax)](#handle-doing-action)
+- [Scrape website load by js/ajax with PHP](#handle-doing-action)
 
 ## Quick Installation
 

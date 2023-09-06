@@ -109,7 +109,7 @@ class Cquery
     }
 
     /**
-     * Take a first result from result collection
+     * Take a first result from query result collection
      *
      * @return array
      */
@@ -139,6 +139,11 @@ class Cquery
         return $filter;
     }
 
+    /**
+     * The filter method is used to add filter criteria with 'AND' logic
+     *
+     * @return \Cacing69\Cquery\Cquery;
+     */
     public function filter($node, $operator = null, $value = null): Cquery
     {
         $filter = $this->makeFilter($node, $operator, $value);
@@ -146,6 +151,11 @@ class Cquery
         return $this;
     }
 
+    /**
+     * The filter method is used to add filter criteria with 'OR' logic
+     *
+     * @return \Cacing69\Cquery\Cquery;
+     */
     public function orFilter($node, $operator = null, $value = null): Cquery
     {
         $filter = $this->makeFilter($node, $operator, $value);
@@ -176,23 +186,44 @@ class Cquery
         return $this;
     }
 
-    public function each($closure)
+    /**
+     * Used to access or manipulate each item/element present at array results.
+     * @param Closure(array): $closure
+     * @return \Cacing69\Cquery\Cquery;
+     */
+    public function each(Closure $closure)
     {
         $this->loader->setCallbackEach($closure);
         return $this;
     }
 
+    /**
+     * Used to access or manipulate array results.
+     * @param Closure(array): $closure
+     * @return \Cacing69\Cquery\Cquery;
+     */
     public function compose($closure)
     {
         $this->loader->setCallbackCompose($closure);
         return $this;
     }
 
-    public function getSource()
+    /**
+     * Used to get source cquery.
+     *
+     * @return \Cacing69\Cquery\Source;
+     */
+    public function getSource(): Source
     {
         return $this->loader->getSource();
     }
 
+    /**
+     * Used to set http client type.
+     *
+     * @param string $clientType
+     * @return \Cacing69\Cquery\Cquery;
+     */
     public function client($clientType)
     {
         $this->loader->setClientType($clientType);

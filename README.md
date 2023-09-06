@@ -469,7 +469,7 @@ Here's a comparison when utilizing phpreact.
 
 ![Alt text](https://gcdnb.pbrd.co/images/nadMlF6d5Au3.png?o=1 "a title")
 
-In this scenario, there are 320 rows of data, and each detail will be loaded, which means there will be 320 HTTP requests made to fetch the individual details.
+In this scenario, there are 320 rows of data, and each detail will be loaded, which means there will a lot of HTTP requests made to fetch the individual details.
 
 ### Note
 

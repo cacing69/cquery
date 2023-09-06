@@ -30,6 +30,12 @@ Please keep in mind that I haven't yet reached a beta/stable release for this li
 
 I would greatly accept any support/contribution from everyone. See [CONTRIBUTING.md](CONTRIBUTING.md) for help getting started.
 
+### I list a few examples of utilizing the advanced features
+
+- [Manipulate Query Result](#handle-manipualte-result)
+- [Multiple Requests (to get detail from another url)](#handle-multi-async)
+- [Doing action after page load (click link/submit form)](#handle-doing-action)
+
 ## Quick Installation
 
 ```bash
@@ -104,6 +110,16 @@ For example, you have a simple HTML element as shown below.
 
 </details>
 
+### List method Cquery
+
+Lists of method you are can used for query in html
+| method | example | description |
+| --------- | ------------- | ------------------ |
+| `from($selector)` | `from('.content')` |  Used to set the source of the main element that will be used for querying |
+| `first()` | `first()` | To retrieve first item query results. |
+| `get()` | `get()` | To retrieve collection from query results. |
+
+
 ### List definer available
 
 Below are the functions you are can use, they may change over time. <br>**Note:** nested function has been supported.
@@ -171,12 +187,6 @@ $result = $query
 And here are the results
 
 ![Alt text](https://gcdnb.pbrd.co/images/Q6XHKRydSigl.png?o=1 "a title")
-
-### I list a few examples of utilizing the advanced features
-
-- [Manipulate Query Result](#handle-manipualte-result)
-- [Multiple Requests (to get detail from another url)](#handle-multi-async)
-- [Doing action after page load (click link/submit form)](#handle-doing-action)
 
 #### Another example with anonymous function
 

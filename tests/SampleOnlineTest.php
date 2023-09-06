@@ -3,7 +3,6 @@
 namespace Cacing69\Cquery\Test;
 
 use Cacing69\Cquery\Cquery;
-use Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\DomCrawler\Crawler;

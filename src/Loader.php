@@ -23,8 +23,8 @@ abstract class Loader
     protected $isRemote = false;
     protected $isFetched = false;
 
-    protected $definer = [];
-    protected $filter = [];
+    protected $definers = [];
+    protected $filters = [];
     protected $results = [];
 
     protected $crawler;
@@ -44,7 +44,7 @@ abstract class Loader
             throw new CqueryException("cannot call method from twice.");
         }
 
-        $this->filter = [];
+        $this->filters = [];
         $this->fetchCrawler();
 
         $this->source = new Source($value);
@@ -117,7 +117,7 @@ abstract class Loader
 
     public function addDefiner($definer)
     {
-        array_push($this->definer, new DefinerExtractor($definer, $this->source));
+        array_push($this->definers, new DefinerExtractor($definer, $this->source));
 
         $this->checkDefineNotDuplicate();
         return $this;
@@ -127,7 +127,7 @@ abstract class Loader
     protected function checkDefineNotDuplicate(): void
     {
         $_key = [];
-        foreach ($this->definer as $definer) {
+        foreach ($this->definers as $definer) {
             if(in_array($definer->getAlias(), $_key)) {
                 throw new CqueryException("the alias column must not be duplicated, only one unique name is allowed for the definer");
             }
@@ -137,14 +137,14 @@ abstract class Loader
 
     public function define(...$defines)
     {
-        if(count($this->definer) > 0) {
+        if(count($this->definers) > 0) {
             throw new CqueryException("cannot call method define twice.");
         }
 
         $this->validateSource();
 
         if($this->isFetched) {
-            $this->definer = [];
+            $this->definers = [];
             $this->isFetched = false;
         }
 
@@ -164,7 +164,7 @@ abstract class Loader
 
     protected function validateDefiners()
     {
-        if (count($this->definer) === 0) {
+        if (count($this->definers) === 0) {
             throw new CqueryException("no definer found");
         }
     }
@@ -218,7 +218,7 @@ abstract class Loader
         $adapter->setOperator($operator);
         $adapter->setFilter($filter);
 
-        $this->filter[] = $adapter;
+        $this->filters[] = $adapter;
     }
 
     public function setCallbackOnContentLoaded(Closure $closure)

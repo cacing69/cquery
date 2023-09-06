@@ -19,6 +19,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Cquery
 {
+    private $loaderName = DOMCrawlerLoader::class;
+
     /**
      * The base Loader instance.
      * loader should be an instance of Cacing69\Loader\Loader
@@ -45,18 +47,17 @@ class Cquery
      * @param \DOMNodeList|\DOMNode|string|null $source A source to use as the the source data
      * u can put html content/url page to scrape default is null
      *
-     * @param string $contentType Type of Data Content to be Used as Data Source default is 'html'
+     * @param string $loaderName
      */
-    public function __construct(string $source = null, $contentType = "html")
+    public function __construct(string $source = null, $loaderName = DOMCrawlerLoader::class)
     {
+        $this->loaderName = $loaderName;
         if($source !== null) {
-            if (filter_var($source, FILTER_VALIDATE_URL) && $contentType === "html") {
+            if (filter_var($source, FILTER_VALIDATE_URL)) {
                 $remote = true;
-                $this->loader = new DOMCrawlerLoader($source, $remote);
+                $this->loader = new $loaderName($source, $remote);
             } else {
-                if($contentType === "html") {
-                    $this->loader = new DOMCrawlerLoader($source);
-                }
+                $this->loader = new $loaderName($source);
             }
         }
     }
@@ -218,7 +219,6 @@ class Cquery
      */
     public function client($clientType)
     {
-        $this->loader->setClientType($clientType);
         return $this;
     }
 }

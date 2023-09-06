@@ -39,7 +39,9 @@ class UpperCallbackAdapter extends CallbackAdapter
         } else {
             preg_match(self::$signature, $raw, $node);
 
-            $this->node = $node[1];
+            if(array_key_exists(1, $node)) {
+                $this->node = $node[1];
+            }
 
             $this->callMethod = "extract";
             $this->callMethodParameter = ["_text"];

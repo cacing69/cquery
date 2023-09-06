@@ -479,7 +479,7 @@ Here's a comparison when utilizing phpreact.
 In this scenario, there are 320 rows of data, and each detail will be loaded, which means there will a lot of HTTP requests made to fetch the individual details.
 
 <h4 id="handle-doing-action">
-  Ho to doing action after page load (click link/submit form)
+  How to doing action after page load (click link/submit form)
 </h4>
 1. Submit Form
 

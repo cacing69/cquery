@@ -16,10 +16,10 @@ final class SourceTest extends TestCase
 
         $data->from("#lorem .link");
 
-        $selector = $data->getSource();
+        $source = $data->getSource();
 
-        $this->assertSame('#lorem .link', $selector->getValue());
-        $this->assertSame("", $selector->getAlias());
+        $this->assertSame('#lorem .link', $source->getValue());
+        $this->assertSame("", $source->getAlias());
     }
 
     public function testSetSelectorWithAlias()

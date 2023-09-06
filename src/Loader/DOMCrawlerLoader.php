@@ -6,7 +6,7 @@ namespace Cacing69\Cquery\Loader;
 
 use Cacing69\Cquery\CqueryException;
 use Cacing69\Cquery\Loader;
-use Doctrine\Common\Collections\ArrayCollection;
+use Cacing69\Cquery\Support\Collection;
 use Symfony\Component\DomCrawler\Crawler;
 
 class DOMCrawlerLoader extends Loader
@@ -23,7 +23,7 @@ class DOMCrawlerLoader extends Loader
         }
     }
 
-    public function get(): ArrayCollection
+    public function get(): Collection
     {
         $this->validateDefiners();
 
@@ -47,6 +47,8 @@ class DOMCrawlerLoader extends Loader
                     $_data = $_data->extract($filterAdapter->getCallMethodParameter());
                 } elseif ($filterAdapter->getCallMethod() === "filter") {
                     dd($filterAdapter);
+                } elseif ($filterAdapter->getCallMethod() === "static") {
+                    dd(1);
                 }
 
                 if ($filterAdapter->getCallback() !== null) {
@@ -72,7 +74,7 @@ class DOMCrawlerLoader extends Loader
             $_filtered = $this->getResultFilter($_affect);
 
             if (count($_filtered) === 0) {
-                return new ArrayCollection([]);
+                return new Collection([]);
             }
         }
 
@@ -82,6 +84,7 @@ class DOMCrawlerLoader extends Loader
 
         foreach ($this->definer as $key => $definer) {
             $_data = null;
+
             if($definer->getAdapter()->getCallMethod() === "extract") {
                 $_data = $this
                         ->crawler
@@ -116,15 +119,23 @@ class DOMCrawlerLoader extends Loader
                             }
                         });
                     });
+            } elseif ($definer->getAdapter()->getCallMethod() === "static") {
+                if($key === 0) {
+                    throw new CqueryException("you cannot define static on the first definer");
+                }
+
+                foreach (range(0, ($bound - 1)) as $key => $value) {
+                    $_data[] = "static";
+                }
             }
 
             if($key === 0) {
-                $bound = count($_data);
+                $bound = count($_data ?? []);
             } else {
                 // TODO tambahkan metode ambil data dengan filter->each, walaupun itu akan sedikit lambat, buts its ok, karena hanya untuk kasus tertentu
                 // TODO index kolom yang menjadi acuan utama adalah index pertama di definer
 
-                if(count($_data) < $bound) {
+                if(count($_data ?? []) < $bound) {
                     $_data = [];
                     $this
                         ->crawler
@@ -154,7 +165,7 @@ class DOMCrawlerLoader extends Loader
                         });
                     //     dump(count($_data), $bound);
                     // throw new CqueryException("error query definer, there are no matching rows each column.");
-                } elseif (count($_data) > $bound) {
+                } elseif (count($_data ?? []) > $bound) {
                     throw new CqueryException("error query definer, there are no matching rows each column.");
                 }
             }
@@ -163,7 +174,7 @@ class DOMCrawlerLoader extends Loader
                 $_callback = $definer->getAdapter()->getCallback();
                 $_data = array_map(function ($_mapValue) use ($_callback) {
                     return $_callback((string) $_mapValue);
-                }, $_data);
+                }, $_data ?? []);
             }
 
             foreach ($_data as $_key => $_value) {
@@ -215,17 +226,17 @@ class DOMCrawlerLoader extends Loader
 
         $this->results = $_hold_data;
 
-        if($this->callbackEach) {
-            $_callbackEach = $this->callbackEach;
+        if($this->callbackEachItem) {
+            $_callbackEachItem = $this->callbackEachItem;
 
             foreach ($this->results as $_key => $_value) {
-                $this->results[$_key] = $_callbackEach($_value, $_key);
+                $this->results[$_key] = $_callbackEachItem($_value, $_key);
             }
         }
 
-        if ($this->callbackCompose) {
-            $_callbackCompose = $this->callbackCompose;
-            $this->results = $_callbackCompose($this->results);
+        if ($this->callbackOnObtainedResults) {
+            $_callbackOnObtainedResults = $this->callbackOnObtainedResults;
+            $this->results = $_callbackOnObtainedResults($this->results);
         }
 
 
@@ -233,6 +244,6 @@ class DOMCrawlerLoader extends Loader
         $this->definer = [];
         $this->source = null;
 
-        return new ArrayCollection($this->results);
+        return new Collection($this->results);
     }
 }

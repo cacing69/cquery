@@ -8,9 +8,6 @@ use Cacing69\Cquery\CqueryException;
 use Cacing69\Cquery\Loader\DOMCrawlerLoader;
 use Closure;
 use Doctrine\Common\Collections\ArrayCollection;
-use Psr\Http\Message\ResponseInterface;
-use React\EventLoop\Loop;
-use React\Http\Browser;
 
 /**
  * An implementation Cquery of a Loader to wrap all loader available.
@@ -175,14 +172,9 @@ class Cquery
         return $this->results;
     }
 
-    protected function validateSource()
+    public function onContentLoaded($closure)
     {
-        $this->loader->validateSource();
-    }
-
-    public function onReady($closure)
-    {
-        $this->loader->setCallbackOnReady($closure);
+        $this->loader->setCallbackOnContentLoaded($closure);
         return $this;
     }
 
@@ -191,9 +183,9 @@ class Cquery
      * @param Closure(array): $closure
      * @return \Cacing69\Cquery\Cquery;
      */
-    public function each(Closure $closure)
+    public function eachItem(Closure $closure)
     {
-        $this->loader->setCallbackEach($closure);
+        $this->loader->setCallbackEachItem($closure);
         return $this;
     }
 
@@ -202,9 +194,9 @@ class Cquery
      * @param Closure(array): $closure
      * @return \Cacing69\Cquery\Cquery;
      */
-    public function compose($closure)
+    public function onObtainedResults($closure)
     {
-        $this->loader->setCallbackCompose($closure);
+        $this->loader->setOnObtainedResults($closure);
         return $this;
     }
 

@@ -29,9 +29,9 @@ abstract class Loader
 
     protected $crawler;
 
-    protected $callbackOnReady;
-    protected $callbackEach;
-    protected $callbackCompose;
+    protected $callbackOnContentLoaded;
+    protected $callbackEachItem;
+    protected $callbackOnObtainedResults;
 
     public function limit(int $limit)
     {
@@ -61,10 +61,10 @@ abstract class Loader
 
                 $this->crawler = new Crawler($this->client->getResponse()->getContent());
 
-                if($this->callbackOnReady) {
-                    $_callbackOnReady = $this->callbackOnReady;
+                if($this->callbackOnContentLoaded) {
+                    $_callbackOnContentLoaded = $this->callbackOnContentLoaded;
 
-                    $this->client = $_callbackOnReady($this->client, $this->crawler);
+                    $this->client = $_callbackOnContentLoaded($this->client, $this->crawler);
                     $this->crawler = new Crawler($this->client->getResponse()->getContent());
                 }
 
@@ -220,20 +220,20 @@ abstract class Loader
         $this->filter[] = $adapter;
     }
 
-    public function setCallbackOnReady(Closure $closure)
+    public function setCallbackOnContentLoaded(Closure $closure)
     {
-        $this->callbackOnReady = $closure;
+        $this->callbackOnContentLoaded = $closure;
         return $this;
     }
 
-    public function setCallbackEach(Closure $closure)
+    public function setCallbackEachItem(Closure $closure)
     {
-        $this->callbackEach = $closure;
+        $this->callbackEachItem = $closure;
         return $this;
     }
-    public function setCallbackCompose(Closure $closure)
+    public function setOnObtainedResults(Closure $closure)
     {
-        $this->callbackCompose = $closure;
+        $this->callbackOnObtainedResults = $closure;
         return $this;
     }
 

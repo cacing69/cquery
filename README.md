@@ -116,8 +116,15 @@ Lists of method you are can used for query in html
 | method | example | description |
 | --------- | ------------- | ------------------ |
 | `from($selector)` | `from('.content')` |  Used to set the source of the main element that will be used for querying |
+| `define(...$string)` | `define()` | - |
 | `first()` | `first()` | To retrieve first item query results. |
 | `get()` | `get()` | To retrieve collection from query results. |
+| `filter()` | `filter()` | - |
+| `getSource()` | `getSource()` | - |
+| `orFilter()` | `orFilter()` | - |
+| `onContentLoaded(function($browser))` | `onContentLoaded()` | - |
+| `eachItem(function($item, $index))` | `eachItem()` | - |
+| `onObtainedResult(function($results))` | `onObtainedResult()` | - |
 
 
 ### List definer available
@@ -129,6 +136,9 @@ Below are the functions you are can use, they may change over time. <br>**Note:*
 | `length(selector)` | `length(h1)` | will retrieve all length string on the element/container according to the selector. (h1) |
 | `lower(selector)` | `lower(h1)` | will change text to lowercase element/container according to the selector. (h1) |
 | `upper(selector)` | `upper(h1)` | will change text to uppercase element/container according to the selector. (h1) |
+| `str(selector)` | `str(h1)` | will parse element content to string (h1) |
+| `int(selector)` | `int(h1)` | will parse element content to integer (h1) |
+| `float(selector)` | `float(h1)` | will parse element content to float (h1) |
 | `reverse(selector)` | `reverse(h1)` | will reverse text according to the selector. (h1) |
 | `replace(from, to, selector)` | `replace('lorem', 'ipsum', h1)` | will change text from `lorem` to `ipsum` according to the selector (h1). <br> have 3 option to use that <br><br> `replace('lorem', 'ipsum', h1)` <br><br> `replace(['lorem', 'dolor'], ['ipsum', 'sit'], h1)` <br><br> `replace(['lorem', 'ipsum'], 'ipsum', h1)` <br><br> it used single tick on argument/param |
 | `append_node(selectorParent, selectorChildAfterParent)` | `append_node(div > .tags, a)  as tags` | will append array element as a child each item, for its usage, you can refer to the sample code below in $result_4. |
@@ -380,14 +390,14 @@ $result_6 = $data
 </h4>
 There are 2 methods in CQuery for manipulating query results.
 
-1. Each Closure
-  `...->each(function ($el, $i){})`
+1. Each Item Closure
+  `...->eachItem(function ($el, $i){})`
   or
-   `...->each(function ($el){})`
+   `...->eachItem(function ($el){})`
   Example :
 
   ```php
-    ...->each(function ($item, $i){
+    ...->eachItem(function ($item, $i){
       $item["price"] = $i == 2 ? 1000 : $resultDetail["price"];
 
       return $el;
@@ -396,12 +406,12 @@ There are 2 methods in CQuery for manipulating query results.
 
 Basically, you have the ability to execute any action on each item. In the given example, it will insert a new key, "price" into each item, and if the index equals 2 (third item), it will assign a price of 1000.
 
-2. Composer Closure
-  `...->compose(function ($results){})`
+2. On Obtained Results Closure
+  `...->onObtainedResults(function ($results){})`
   Example :
 
   ```php
-    ...->compose(function ($results){
+    ...->onObtainedResults(function ($results){
       // u can do any operation here
 
       return  array_map(function ($_item) use ($results) {
@@ -447,7 +457,7 @@ I suggest using phpreact by making async requests.
                 "replace('../', 'http://www.classiccardatabase.com/', attr(href, .car-model-link > a)) as url",
             )
             ->filter("attr(href, .car-model-link > a)", "!=", "#")
-            ->compose(function ($results) use ($loop, $client){
+            ->onObtainedResults(function ($results) use ($loop, $client){
                 // I've come across a maximum threshold of 25 chunk, when I input 30, there is some null data.
                 $results = array_chunk($results, 25);
 
@@ -502,7 +512,7 @@ In this scenario, there are 320 rows of data, and each detail will be loaded, wh
   $data = new Cquery($url);
 
   $result = $data
-    ->onReady(function (HttpBrowser $browser) {
+    ->onContentLoaded(function (HttpBrowser $browser) {
         $browser->submitForm("Generate random list", [
             "limit" => 5,
         ]);
@@ -528,7 +538,7 @@ In this scenario, there are 320 rows of data, and each detail will be loaded, wh
   $data = new Cquery($url);
 
   $result = $data
-      ->onReady(function (HttpBrowser $browser, Crawler $crawler) {
+      ->onContentLoaded(function (HttpBrowser $browser, Crawler $crawler) {
           // This is a native function available in the dom-crawler.
           $form = new Form($crawler->filter("#searchform")->getNode(0), $url);
 
@@ -568,7 +578,7 @@ $url = "https://semver.org/";
 $data = new Cquery($url);
 
 $result = $data
-    ->onReady(function (HttpBrowser $browser, Crawler $crawler) {
+    ->onContentLoaded(function (HttpBrowser $browser, Crawler $crawler) {
         $browser->clickLink("Bahasa Indonesia (id)");
         return $browser;
     })

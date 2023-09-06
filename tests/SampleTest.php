@@ -354,7 +354,7 @@ final class SampleTest extends TestCase
         $this->assertCount(3, $result);
     }
 
-    public function testNewAdapter()
+    public function testNewLengthAdapter()
     {
         $simpleHtml = file_get_contents(SAMPLE_HTML);
         $data = new Cquery($simpleHtml);
@@ -362,13 +362,20 @@ final class SampleTest extends TestCase
         $result = $data
             ->from("#lorem .link")
             ->define(
-                // "attr(class, a > p) as class_a_p",
-                // "attr(class, a) as url",
                 "length(h1) as length"
             )
             ->get();
 
         $this->assertCount(9, $result);
+        $this->assertSame(7, $result[0]["length"]);
+        $this->assertSame(7, $result[1]["length"]);
+        $this->assertSame(7, $result[2]["length"]);
+        $this->assertSame(8, $result[3]["length"]);
+        $this->assertSame(8, $result[4]["length"]);
+        $this->assertSame(9, $result[5]["length"]);
+        $this->assertSame(9, $result[6]["length"]);
+        $this->assertSame(9, $result[7]["length"]);
+        $this->assertSame(5, $result[8]["length"]);
     }
 
     public function testNewAdapterWithWhereEquals()
@@ -773,12 +780,8 @@ final class SampleTest extends TestCase
         $this->assertSame(null, $result[7]['data_check']);
         $this->assertSame(null, $result[8]['data_check']);
     }
-
-    // TODO test table
-    public function testCqueryFreeProxyListWithUrl()
+    public function testCqueryWithTableWithUrl()
     {
-        // change with this when u want to fetch data from remote
-        // $content = "https://free-proxy-list.net/";
         $content = file_get_contents(SAMPLE_HTML);
 
         $data = new Cquery($content);
@@ -813,17 +816,14 @@ final class SampleTest extends TestCase
             )->filter('td:nth-child(4)', "=", "inactive")
             ->get();
 
-        $this->assertSame(3, count($resultAll));
-        $this->assertSame(1, count($resultActive));
-        $this->assertSame(2, count($resultInAactive));
+        $this->assertcount(3, $resultAll);
+        $this->assertcount(1, $resultActive);
+        $this->assertcount(2, $resultInAactive);
         $this->assertSame(count($resultInAactive), 3 - count($resultActive));
-        // $this->assertSame($resultActive->count(), 300 - $resultInAactive->count());
     }
 
     public function testScrapeQuotesToScrapeWithWrongDefiner()
     {
-        // change with this when u want to fetch data from remote
-        // $content = "http://quotes.toscrape.com/";
         $content = file_get_contents(SAMPLE_HTML);
 
         $data = new Cquery($content);
@@ -1048,5 +1048,140 @@ final class SampleTest extends TestCase
             $this->assertSame(CqueryException::class, get_class($e));
             $this->assertSame("cannot call method from twice.", $e->getMessage());
         }
+    }
+
+    public function testWithStaticValueInDefiner()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_HTML);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from("#lorem > .link")
+            ->define(
+                "a as title",
+                new Definer("h1", "_test"),
+                "'this_is_static' as static"
+            )
+            ->filter(
+                new Filter("h1", "=", "Title 331")
+            )
+            ->get();
+
+        $this->assertCount(2, $result);
+        $this->assertSame('this_is_static', $result[0]['static']);
+        $this->assertSame('this_is_static', $result[1]['static']);
+    }
+
+    public function testCqueryWithEachMethod()
+    {
+        $content = file_get_contents(SAMPLE_HTML);
+
+        $data = new Cquery($content);
+
+        $result = $data
+            ->from("#table-test")
+            ->define(
+                "td:nth-child(1) as first_name",
+                "td:nth-child(2) as last_name",
+                "td:nth-child(3) as email",
+                "td:nth-child(4) as status",
+            )
+            ->eachItem(function ($item, $i) {
+                $item['new_key'] = "key-{$i}";
+
+                return $item;
+            })
+            ->get();
+
+        $this->assertCount(3, $result);
+        $this->assertSame("key-0", $result[0]['new_key']);
+        $this->assertSame("key-1", $result[1]['new_key']);
+        $this->assertSame("key-2", $result[2]['new_key']);
+    }
+
+    public function testCqueryOnObtainedResults()
+    {
+        $content = file_get_contents(SAMPLE_HTML);
+
+        $data = new Cquery($content);
+
+        $result = $data
+            ->from("#table-test")
+            ->define(
+                "td:nth-child(1) as first_name",
+                "td:nth-child(2) as last_name",
+                "td:nth-child(3) as email",
+                "td:nth-child(4) as status",
+            )
+            ->onObtainedResults(function ($results) {
+                foreach ($results as $key => $value) {
+                    $results[$key]['new_key'] = "key-{$key}";
+                }
+
+                return $results;
+            })
+            ->get();
+
+        $this->assertCount(3, $result);
+        $this->assertSame("key-0", $result[0]['new_key']);
+        $this->assertSame("key-1", $result[1]['new_key']);
+        $this->assertSame("key-2", $result[2]['new_key']);
+    }
+
+    public function testCqueryWithIntegerAdapter()
+    {
+        $content = file_get_contents(SAMPLE_HTML);
+
+        $data = new Cquery($content);
+
+        $result = $data
+            ->from("#table-test")
+            ->define(
+                "int(td:nth-child(5)) as value",
+            )
+            ->get();
+
+        $this->assertCount(3, $result);
+        $this->assertSame(3, $result[0]['value']);
+        $this->assertSame(7, $result[1]['value']);
+        $this->assertSame(2, $result[2]['value']);
+    }
+
+    public function testCqueryWithStringAdapter()
+    {
+        $content = file_get_contents(SAMPLE_HTML);
+
+        $data = new Cquery($content);
+
+        $result = $data
+            ->from("#table-test")
+            ->define(
+                "str(td:nth-child(5)) as value",
+            )
+            ->get();
+
+        $this->assertCount(3, $result);
+        $this->assertSame("3", $result[0]['value']);
+        $this->assertSame("7", $result[1]['value']);
+        $this->assertSame("2", $result[2]['value']);
+    }
+
+    public function testCqueryWithFloatAdapter()
+    {
+        $content = file_get_contents(SAMPLE_HTML);
+
+        $data = new Cquery($content);
+
+        $result = $data
+            ->from("#table-test")
+            ->define(
+                "float(td:nth-child(6)) as floatval",
+            )
+            ->get();
+
+        $this->assertCount(3, $result);
+        $this->assertSame(3.0, $result[0]['floatval']);
+        $this->assertSame(7.9, $result[1]['floatval']);
+        $this->assertSame(2.7, $result[2]['floatval']);
     }
 }

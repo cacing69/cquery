@@ -37,7 +37,7 @@ final class SampleOnlineTest extends TestCase
         $data = new Cquery(HTTP_BIN_TEST_K6_FORM_POST);
 
         $result = $data
-            ->onReady(function (HttpBrowser $browser) {
+            ->onContentLoaded(function (HttpBrowser $browser) {
                 $browser->submitForm('Submit order', ["comments" => "Lorem", "custemail" => "iniemail@cust.com"]);
                 return $browser;
             })
@@ -55,7 +55,7 @@ final class SampleOnlineTest extends TestCase
         $data = new Cquery(USER_AGENTS_RANDOM);
 
         $result = $data
-            ->onReady(function (HttpBrowser $browser) {
+            ->onContentLoaded(function (HttpBrowser $browser) {
                 $browser->submitForm("Generate random list", [
                     "limit" => 5,
                 ]);
@@ -76,7 +76,7 @@ final class SampleOnlineTest extends TestCase
         $data = new Cquery(SEMVER_ORG);
 
         $result = $data
-            ->onReady(function (HttpBrowser $browser, Crawler $crawler) {
+            ->onContentLoaded(function (HttpBrowser $browser, Crawler $crawler) {
                 $browser->clickLink("Bahasa Indonesia (id)");
                 return $browser;
             })
@@ -101,7 +101,7 @@ final class SampleOnlineTest extends TestCase
         $data = new Cquery(WIKIPEDIA);
 
         $result = $data
-            ->onReady(function (HttpBrowser $browser, Crawler $crawler) {
+            ->onContentLoaded(function (HttpBrowser $browser, Crawler $crawler) {
                 $form = new Form($crawler->filter("#searchform")->getNode(0), WIKIPEDIA);
 
                 $browser->submit($form, [

@@ -25,8 +25,6 @@ abstract class CallbackAdapter
     protected $ref;
     protected $callMethod;
     protected $callMethodParameter;
-    // protected $callback;
-
     protected $filter;
     public function setFilter($filter)
     {
@@ -67,17 +65,6 @@ abstract class CallbackAdapter
         return $this->ref;
     }
 
-    // public function getCallback()
-    // {
-    //     return $this->callback;
-    // }
-
-    // public function setCallback($callback)
-    // {
-    //     $this->callback = $callback;
-    //     return $this;
-    // }
-
     public function getCallMethodParameter()
     {
         return $this->callMethodParameter;
@@ -104,7 +91,6 @@ abstract class CallbackAdapter
     {
         return $this->filterExecutor($value);
     }
-
 
     final public function filterExecutor($value)
     {

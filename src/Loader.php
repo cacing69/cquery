@@ -17,7 +17,7 @@ abstract class Loader
     use HasSourceProperty;
     protected $limit = null;
     protected $client;
-    protected $clientType = "browser-kit";
+    protected $clientName = "browser-kit";
 
     protected $uri = null;
     protected $isRemote = false;
@@ -54,7 +54,7 @@ abstract class Loader
     protected function fetchCrawler()
     {
         if($this->isRemote) {
-            if($this->clientType === "browser-kit") {
+            if($this->clientName === "browser-kit") {
                 $this->client = new HttpBrowser(HttpClient::create());
 
                 $this->client->request('GET', $this->uri);
@@ -68,16 +68,17 @@ abstract class Loader
                     $this->crawler = new Crawler($this->client->getResponse()->getContent());
                 }
 
-            } elseif ($this->clientType === "curl") {
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, $this->uri);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                $output = curl_exec($ch);
+            // } elseif ($this->clientName === "curl") {
+            //     $ch = curl_init();
+            //     curl_setopt($ch, CURLOPT_URL, $this->uri);
+            //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            //     $output = curl_exec($ch);
 
-                $this->crawler = new Crawler($output);
-                curl_close($ch);
+            //     $this->crawler = new Crawler($output);
+            //     curl_close($ch);
+
             } else {
-                throw new CqueryException("client {$this->clientType} doesnt support");
+                throw new CqueryException("client {$this->clientName} doesnt support");
             }
         }
     }
@@ -237,9 +238,9 @@ abstract class Loader
         return $this;
     }
 
-    public function setClientType(string $clientType)
+    public function setClientName(string $clientName)
     {
-        $this->clientType = $clientType;
+        $this->clientName = $clientName;
         return $this;
     }
 

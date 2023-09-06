@@ -409,7 +409,7 @@ There are 2 methods in CQuery for manipulating query results.
     ...->eachItem(function ($item, $i){
       $item["price"] = $i == 2 ? 1000 : $resultDetail["price"];
 
-      return $el;
+      return $item;
     })
   ```
 

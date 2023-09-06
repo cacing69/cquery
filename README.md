@@ -16,6 +16,10 @@ filter
 limit 1
 ```
 
+### Changelog
+
+Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
+
 ### Currently experimenting
 
 Attempt to extract data from webpage which, in my opinion, becomes more enjoyable. All methods and usage instructions provided here are designed according to that i needs. If you have any suggestions or feedback to improve them, it would be highly appreciated and
@@ -602,3 +606,7 @@ A full list of methods with example code can be found in the [tests](https://git
 I've recently started building this, and if anyone is interested,I would certainly appreciate a lot of feedback from everyone who has read/seen my little project, in any way (issue, pull request or whatever).However, right now I'm considering making it better to be more flexible and user-friendly for website scraping.
 
 This is just the beginning, and I will continue to develop it as long as I can
+
+## License
+
+The MIT License (MIT). Please see [License File](LICENSE.md) for more information.

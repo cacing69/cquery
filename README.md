@@ -18,9 +18,9 @@ limit 1
 
 ### Currently experimenting
 
-to attempt extract data from webpage which, in my opinion, becomes more enjoyable. All methods and usage instructions provided here are designed according to the i needs. If you have any suggestions or feedback to improve them, it would be highly appreciated and
+Attempt to extract data from webpage which, in my opinion, becomes more enjoyable. All methods and usage instructions provided here are designed according to that i needs. If you have any suggestions or feedback to improve them, it would be highly appreciated and
 
-## What kind of thing is this
+### What kind of thing is this
 
 Cquery is an acronym for crawl query, used to extract text from an HTML element using PHP, simply its tool for crawling/scraping web page. It called a query, as it adopts the structure present in an SQL query, so you can analogize that your DOM/HTML Document is a table you will query.
 
@@ -468,11 +468,11 @@ I suggest using phpreact by making async requests.
 
 Here's a comparison when utilizing phpreact.
 
-##### without phpreact
+**without phpreact**
 
 ![Alt text](https://gcdnb.pbrd.co/images/l1GGDzUyxasY.png?o=1 "a title")
 
-##### with phpreact
+**with phpreact**
 
 ![Alt text](https://gcdnb.pbrd.co/images/nadMlF6d5Au3.png?o=1 "a title")
 
@@ -534,11 +534,11 @@ In this scenario, there are 320 rows of data, and each detail will be loaded, wh
       ->get();
   ```
 
-  ##### result
+  **result**
 
   ![Alt text](https://gcdnb.pbrd.co/images/tHhK39CfCusp.png?o=1 "a title")
 
-  ##### web page
+  **web page**
 
   ![Alt text](https://gcdnb.pbrd.co/images/E0AKeRCQC6f0.png?o=1 "a title")
 
@@ -551,7 +551,7 @@ If you want to click a link on a loaded page, please observe the code below.
 
 ![Alt text](https://gcdnb.pbrd.co/images/bnfzamtp8Vpr.png?o=1 "a title")
 
-click that link before scrape
+**click that link before start scraping**
 
 ```php
 $url = "https://semver.org/";
@@ -568,8 +568,14 @@ $result = $data
     )
     ->get();
 ```
-#### result
+
+**result click link**
+
 ![Alt text](https://gcdnb.pbrd.co/images/qfItg3AHpTsR.png?o=1 "a title")
+
+#### Another Example
+
+A full list of methods with example code can be found in the [tests](https://github.com/cacing69/cquery/tree/main/tests).
 
 ### Note
 

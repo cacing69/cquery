@@ -38,7 +38,6 @@ composer require cacing69/cquery
 
 For example, you have a simple HTML element as shown below.
 
-
 <details>
   <summary>Click to show HTML : <code>src/Samples/sample.html</code></summary>
 
@@ -173,45 +172,11 @@ And here are the results
 
 ![Alt text](https://gcdnb.pbrd.co/images/Q6XHKRydSigl.png?o=1 "a title")
 
-### Method to manipulate query results
+### I list a few examples of utilizing the advanced features
 
-There are 2 methods in CQuery for manipulating query results.
-
-1. Each Closure
-  `...->each(function ($el, $i){})`
-  or
-   `...->each(function ($el){})`
-  Example :
-
-  ```php
-    ...->each(function ($item, $i){
-      $item["price"] = $i == 2 ? 1000 : $resultDetail["price"];
-
-      return $el;
-    })
-  ```
-
-Basically, you have the ability to execute any action on each item. In the given example, it will insert a new key, "price" into each item, and if the index equals 2 (third item), it will assign a price of 1000.
-
-2. Composer Closure
-  `...->compose(function ($results){})`
-  Example :
-
-  ```php
-    ...->compose(function ($results){
-      // u can do any operation here
-
-      return  array_map(function ($_item) use ($results) {
-          $_item["sub"] = [
-              "foo" => "bar"
-          ];
-
-          return $_item;
-      }, $results);
-    })
-  ```
-
-Basically, this is the array produced by the query's result, and you have the flexibility to perform any manipulations on them. For another example i've included an example, particularly for cases where you need to load different details from another page for each entry, u can check it here [Check async multiple request](#handle-multi-async)
+- [Manipulate Query Result](#handle-manipualte-result)
+- [Multiple Requests (to get detail from another url)](#handle-multi-async)
+- [Doing action after page load (click link/submit form)](#handle-doing-action)
 
 #### Another example with anonymous function
 
@@ -400,12 +365,54 @@ $result_6 = $data
 
 ```
 
+<h4 id="handle-manipualte-result">
+  Method to manipulate query results
+</h4>
+There are 2 methods in CQuery for manipulating query results.
+
+1. Each Closure
+  `...->each(function ($el, $i){})`
+  or
+   `...->each(function ($el){})`
+  Example :
+
+  ```php
+    ...->each(function ($item, $i){
+      $item["price"] = $i == 2 ? 1000 : $resultDetail["price"];
+
+      return $el;
+    })
+  ```
+
+Basically, you have the ability to execute any action on each item. In the given example, it will insert a new key, "price" into each item, and if the index equals 2 (third item), it will assign a price of 1000.
+
+2. Composer Closure
+  `...->compose(function ($results){})`
+  Example :
+
+  ```php
+    ...->compose(function ($results){
+      // u can do any operation here
+
+      return  array_map(function ($_item) use ($results) {
+          $_item["sub"] = [
+              "foo" => "bar"
+          ];
+
+          return $_item;
+      }, $results);
+    })
+  ```
+
+Basically, this is the array produced by the query's result, and you have the flexibility to perform any manipulations on them. For another example i've included an example, particularly for cases where you need to load different details from another page for each entry, u can check it here [Check async multiple request](#handle-multi-async)
+
+
 <h4 id="handle-multi-async">
   How to handle multiple request each element
 </h4>
 If there's a scenario like this, you need to load the details, and the details are on a different URL, which means you have to load every page.
 
-You should use a client that can perform non-blocking requests, such as [amphp/http-client](https://github.com/amphp), [guzzle](https://github.com/guzzle/guzzle), or [phpreact/http](https://github.com/reactphp/http).
+You should use a client that can perform non-blocking requests, such as [amphp/http-client](https://github.com/amphp), [guzzle](https://github.com/guzzle/guzzle), [phpreact/http](https://github.com/reactphp/http) or used [curl_multi_init](https://www.php.net/curl_multi_init) in oop ways for curl u should check [php-curl-class](https://github.com/php-curl-class/php-curl-class)
 
 I suggest using phpreact by making async requests.
 
@@ -470,6 +477,99 @@ Here's a comparison when utilizing phpreact.
 ![Alt text](https://gcdnb.pbrd.co/images/nadMlF6d5Au3.png?o=1 "a title")
 
 In this scenario, there are 320 rows of data, and each detail will be loaded, which means there will a lot of HTTP requests made to fetch the individual details.
+
+<h4 id="handle-doing-action">
+  Ho to doing action after page load (click link/submit form)
+</h4>
+1. Submit Form
+
+  If you need to submit data to retrieve another data for scraping, you'll need to deal with this case.
+
+  - _case 1 : without crawler object_
+
+  ```php
+  $url = "https://user-agents.net/random";
+  $data = new Cquery($url);
+
+  $result = $data
+    ->onReady(function (HttpBrowser $browser) {
+        $browser->submitForm("Generate random list", [
+            "limit" => 5,
+        ]);
+
+        return $browser;
+    })
+    ->from("section > article")
+    ->define(
+        "ol > li > a as user_agent",
+    )
+    ->get();
+
+  ```
+
+  Using this code above, you'll perform a form submission while setting the limit (according to input name) to 5 in the data.
+
+  - _case 2 : with crawler object_
+
+  Let's simulate on Wikipedia and then perform a search with the phrase 'sambas,' to see if the results match with a manual search.
+
+  ```php
+  $url = "https://id.wikipedia.org/wiki/Halaman_Utama";
+  $data = new Cquery($url);
+
+  $result = $data
+      ->onReady(function (HttpBrowser $browser, Crawler $crawler) {
+          // This is a native function available in the dom-crawler.
+          $form = new Form($crawler->filter("#searchform")->getNode(0), $url);
+
+          $browser->submit($form, [
+              "search" => "sambas",
+          ]);
+          return $browser;
+      })
+      ->from("html")
+      ->define(
+          "title as title",
+      )
+      ->get();
+  ```
+
+  ##### result
+
+  ![Alt text](https://gcdnb.pbrd.co/images/tHhK39CfCusp.png?o=1 "a title")
+
+  ##### web page
+
+  ![Alt text](https://gcdnb.pbrd.co/images/E0AKeRCQC6f0.png?o=1 "a title")
+
+  `page source`
+
+  ![Alt text](https://gcdnb.pbrd.co/images/M9mYGJL0Hj2p.png?o=1 "a title")
+
+2. Click Link
+If you want to click a link on a loaded page, please observe the code below.
+
+![Alt text](https://gcdnb.pbrd.co/images/bnfzamtp8Vpr.png?o=1 "a title")
+
+click that link before scrape
+
+```php
+$url = "https://semver.org/";
+$data = new Cquery($url);
+
+$result = $data
+    ->onReady(function (HttpBrowser $browser, Crawler $crawler) {
+        $browser->clickLink("Bahasa Indonesia (id)");
+        return $browser;
+    })
+    ->from("#spec")
+    ->define(
+        "h2 as text",
+    )
+    ->get();
+```
+#### result
+![Alt text](https://gcdnb.pbrd.co/images/qfItg3AHpTsR.png?o=1 "a title")
 
 ### Note
 

@@ -37,7 +37,9 @@
     "symfony/deprecation-contracts": "^2.5|^3.4",
     "symfony/dom-crawler": "5.4|^6.3",
     "doctrine/collections": "^1.8|^2.1|^3.0",
-    "cocur/slugify": "dev-main"
+    "cocur/slugify": "dev-main",
+    "symfony/mime": "5.4|^6.3",
+    "php-curl-class/php-curl-class": "dev-master"
   },
   "require-dev": {
     "phpunit/phpunit": "^8.0|^9.0|^10.0",

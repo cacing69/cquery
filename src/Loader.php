@@ -29,7 +29,7 @@ abstract class Loader
 
     protected $crawler;
 
-    protected $callbackReady;
+    protected $callbackOnReady;
     protected $callbackEach;
     protected $callbackCompose;
 
@@ -46,6 +46,7 @@ abstract class Loader
 
         $this->filter = [];
         $this->fetchCrawler();
+
         $this->source = new Source($value);
         return $this;
     }
@@ -56,17 +57,17 @@ abstract class Loader
             if($this->clientType === "browser-kit") {
                 $this->client = new HttpBrowser(HttpClient::create());
 
-                if($this->callbackReady) {
-                    $_callbackReady = $this->callbackReady;
-
-                    $_browser = $this->client;
-
-                    $this->client = $_callbackReady($_browser);
-                }
-
                 $this->client->request('GET', $this->uri);
 
                 $this->crawler = new Crawler($this->client->getResponse()->getContent());
+
+                if($this->callbackOnReady) {
+                    $_callbackOnReady = $this->callbackOnReady;
+
+                    $this->client = $_callbackOnReady($this->client, $this->crawler);
+                    $this->crawler = new Crawler($this->client->getResponse()->getContent());
+                }
+
             } elseif ($this->clientType === "curl") {
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $this->uri);
@@ -89,8 +90,6 @@ abstract class Loader
             ->first();
     }
 
-    // abstract public function filter(Filter $filter);
-    // abstract public function orFilter(Filter $filter);
     abstract public function get();
 
     public static function getResultFilter(array $filtered): array
@@ -223,7 +222,7 @@ abstract class Loader
 
     public function setCallbackOnReady(Closure $closure)
     {
-        $this->callbackReady = $closure;
+        $this->callbackOnReady = $closure;
         return $this;
     }
 

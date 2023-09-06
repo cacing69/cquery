@@ -180,7 +180,7 @@ class Cquery
         $this->loader->validateSource();
     }
 
-    public function init($closure)
+    public function onReady($closure)
     {
         $this->loader->setCallbackOnReady($closure);
         return $this;

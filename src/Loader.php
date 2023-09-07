@@ -32,6 +32,7 @@ abstract class Loader
     protected $callbackOnContentLoaded;
     protected $callbackEachItem;
     protected $callbackOnObtainedResults;
+    protected $callbackOnEnd;
 
     public function limit(int $limit)
     {

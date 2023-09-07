@@ -228,6 +228,11 @@ trait HasGetWithDomCrawlerMethod
         $this->definers = [];
         $this->source = null;
 
+        if($this->callbackOnEnd) {
+            $_callbackOnEnd = $this->callbackOnEnd;
+            $_callbackOnEnd();
+        }
+
         return new Collection($this->results);
     }
 }

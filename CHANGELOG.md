@@ -2,7 +2,7 @@
 
 ## [v1.3.0](https://github.com/cacing69/cquery/compare/v1.2.0...v1.3.0) (2023-09-0?)
 
-- Add property callbackOnEnd on Loader class
+- Add property callbackClientOnEnd on Loader class
 
 ## [v1.2.0](https://github.com/cacing69/cquery/compare/v1.1.0...v1.2.0) (2023-09-06)
 

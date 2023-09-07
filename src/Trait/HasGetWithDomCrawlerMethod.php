@@ -228,9 +228,9 @@ trait HasGetWithDomCrawlerMethod
         $this->definers = [];
         $this->source = null;
 
-        if($this->callbackOnEnd) {
-            $_callbackOnEnd = $this->callbackOnEnd;
-            $_callbackOnEnd();
+        if($this->callbackClientOnEnd) {
+            $_callbackClientOnEnd = $this->callbackClientOnEnd;
+            $this->client = $_callbackClientOnEnd($this->client);
         }
 
         return new Collection($this->results);

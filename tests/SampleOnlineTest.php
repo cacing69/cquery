@@ -116,4 +116,37 @@ final class SampleOnlineTest extends TestCase
 
         $this->assertSame("Kabupaten Sambas - Wikipedia bahasa Indonesia, ensiklopedia bebas", $result[0]["title"]);
     }
+
+    public function testFormSearchOnWikipediaButWithClickFirst()
+    {
+        $data = new Cquery(WIKIPEDIA);
+
+        $result = $data
+            ->onContentLoaded(function (HttpBrowser $browser, Crawler $crawler) {
+                $form = new Form($crawler->filter("#searchform")->getNode(0), WIKIPEDIA);
+
+                $browser->submit($form, [
+                    "search" => "parit setia",
+                ]);
+
+                $_crawler = new Crawler($browser->getResponse()->getContent());
+
+                // CHECK IF ON INDEX SEARCH RESULT
+                $_result = $_crawler->filter("ul.mw-search-results")->filter("li.mw-search-result");
+
+                if($_result->count() > 0) {
+                    // DOING SOME STUFF
+                    dump($_result->extract(["_text"]));
+                }
+
+                return $browser;
+            })
+            ->from("html")
+            ->define(
+                "title as title",
+            )
+            ->get();
+
+        $this->assertSame("Kabupaten Sambas - Wikipedia bahasa Indonesia, ensiklopedia bebas", $result[0]["title"]);
+    }
 }

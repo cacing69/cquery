@@ -26,9 +26,9 @@ class Definer
     use HasRawProperty;
 
     /**
-     * @param string $node Its to define expression for scrape, 
+     * @param string $node Its to define expression for scrape,
      * you can used query selector/function adapter available
-     * 
+     *
      * @param string $alias  Its to set alias for key result
      * @param Closure $callback  To create callback action to manipulate value
      */
@@ -41,7 +41,7 @@ class Definer
             throw new CqueryException("error define, please set alias on second parameter");
         }
 
-        // Check if definer $node have parentheses, it should be exctract with these regex pattern 
+        // Check if definer $node have parentheses, it should be exctract with these regex pattern
         if (preg_match(RegExp::IS_DEFINER_HAVE_PARENTHESES, $node)) {
             preg_match(RegExp::IS_DEFINER_HAVE_PARENTHESES, $node, $extract);
             $this->node = $extract[1];
@@ -56,7 +56,7 @@ class Definer
             $this->alias = Str::slug($node);
         }
 
-        // If there is no callback, raw will be an string expression with alias like 
+        // If there is no callback, raw will be an string expression with alias like
         // 'h1 > a as text' or if alias no provided it will be 'h1 > a as h1_a'
         if(!empty($callback)) {
             $this->raw = $callback;

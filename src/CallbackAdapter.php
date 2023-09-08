@@ -18,7 +18,6 @@ use Symfony\Component\CssSelector\CssSelectorConverter;
 abstract class CallbackAdapter
 {
     use HasOperatorProperty;
-    use HasSelectorProperty;
     use HasRawProperty;
     use HasNodeProperty;
     use HasCallbackProperty;

@@ -18,4 +18,19 @@ class Str
     {
         return is_string($val) && $val !== '';
     }
+
+    // https://stackoverflow.com/a/7168986
+    public static function startsWith( $haystack, $needle ) {
+        return preg_match('~' . preg_quote($needle, '~') . '~A', $haystack) > 0;
+    }
+
+    // https://stackoverflow.com/a/834355
+    public static function endWith($haystack, $needle)
+    {
+        $length = strlen($needle);
+        if(!$length) {
+            return true;
+        }
+        return substr($haystack, -$length) === $needle;
+    }
 }

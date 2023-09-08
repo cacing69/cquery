@@ -1184,4 +1184,23 @@ final class SampleTest extends TestCase
         $this->assertSame(7.9, $result[1]['floatval']);
         $this->assertSame(2.7, $result[2]['floatval']);
     }
+
+    public function testUsedRawMethod()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_HTML);
+        $data = new Cquery($simpleHtml);
+
+        $query = "from (#lorem .link)
+                    define
+                        h1 as title,
+                        a as description,
+                        attr(href, a) as url,
+                        attr(class, a) as class
+                    ";
+
+        $result = $data
+            ->raw($query);
+
+        $this->assertCount(9, $result);
+    }
 }

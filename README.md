@@ -28,6 +28,8 @@ To perform web scraping on pages loaded with js/ajax, you need an adapter outsid
 
 All methods and usage instructions provided here are designed according to that i needs. If you have any suggestions or feedback to improve them, it would be highly appreciated and
 
+>I hope there's someone who is kind-hearted and compassionate to build a Web App/UI application like a dedicated tool for cquery, with a textarea (for query input) and a table container to show the results, much like the cquery playground for running raw cquery, if someone is ready, i will create an API for it, and start to develop more logic on **Parser** class
+
 ### What kind of thing is this
 
 Cquery is an acronym for crawl query, used to extract text from an HTML element using PHP, simply its tool for crawling/scraping web page. It called a query, as it adopts the structure present in an SQL query, so you can analogize that your DOM/HTML Document is a table you will query.
@@ -128,6 +130,7 @@ Lists of method you are can used for query in html
 | `define(...$string)` | `define()` | - |
 | `first()` | `first()` | To retrieve first item query results. |
 | `get()` | `get()` | To retrieve collection from query results. |
+| `raw(string)` | `raw(query)` | To get data based on raw cquery. |
 | `filter()` | `filter()` | - |
 | `getSource()` | `getSource()` | - |
 | `orFilter()` | `orFilter()` | - |

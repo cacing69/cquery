@@ -2,13 +2,55 @@
 
 namespace Cacing69\Cquery\Test;
 
+use Cacing69\Cquery\CqueryException;
+use Cacing69\Cquery\Parser;
+use Exception;
 use PHPUnit\Framework\TestCase;
+
 final class ParserTest extends TestCase
 {
-    public function testParseQuery1Selector()
+    public function testParseWithEmptyQuery()
     {
         $query = "";
 
-        $this->assertSame(true, true);
+        try {
+            $parser = new Parser($query);
+        } catch (Exception $e) {
+            $this->assertSame(CqueryException::class, get_class($e));
+            $this->assertSame("empty query provided", $e->getMessage());
+        }
+    }
+    public function testParseQuery1Selector()
+    {
+        $query = "
+        from ( .item )
+        define
+            span > a.title as title,
+            attr(href, div > h1 > span > a) as url
+        ";
+
+        $parser = new Parser($query);
+
+        $this->assertSame(".item", $parser->source->getRaw());
+        $this->assertCount(2, $parser->getDefiners());
+        $this->assertSame("span > a.title as title", $parser->getDefiners()[0]);
+        $this->assertSame("attr(href, div > h1 > span > a) as url", $parser->getDefiners()[1]);
+    }
+
+    public function testParseQuery1ButWithReverseDefinerSelector()
+    {
+        $query = "
+        from ( .item )
+        define
+            attr(href, div > h1 > span > a) as url,
+            span > a.title as title
+        ";
+
+        $parser = new Parser($query);
+
+        $this->assertSame(".item", $parser->source->getRaw());
+        $this->assertCount(2, $parser->getDefiners());
+        $this->assertSame("attr(href, div > h1 > span > a) as url", $parser->getDefiners()[0]);
+        $this->assertSame("span > a.title as title", $parser->getDefiners()[1]);
     }
 }

@@ -7,6 +7,8 @@ namespace Cacing69\Cquery;
 use Cacing69\Cquery\Adapter\ClosureCallbackAdapter;
 use Cacing69\Cquery\DefinerExtractor;
 use Cacing69\Cquery\Trait\HasSourceProperty;
+use Cacing69\Cquery\Trait\HasDefinersProperty;
+use Cacing69\Cquery\Trait\HasFiltersProperty;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\DomCrawler\Crawler;
@@ -15,6 +17,8 @@ use Closure;
 abstract class Loader
 {
     use HasSourceProperty;
+    use HasFiltersProperty;
+    use HasDefinersProperty;
     protected $limit = null;
     protected $client;
     protected $clientName = "browser-kit";
@@ -22,9 +26,6 @@ abstract class Loader
     protected $uri = null;
     protected $isRemote = false;
     protected $isFetched = false;
-
-    protected $definers = [];
-    protected $filters = [];
     protected $results = [];
 
     protected $crawler;

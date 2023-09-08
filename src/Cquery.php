@@ -221,4 +221,20 @@ class Cquery
     {
         return $this;
     }
+
+    /**
+     * Used to query with raw expression.
+     *
+     * @param string $query
+     * @return \Cacing69\Cquery\Support\Collection;
+     */
+    public function raw($query = "")
+    {
+        $parser = new Parser($query);
+
+        $this->loader->setSource($parser->getSource());
+
+        $this->loader->define(...$parser->getDefiners());
+        return $this->get();
+    }
 }

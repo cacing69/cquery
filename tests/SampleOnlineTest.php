@@ -75,9 +75,9 @@ final class SampleOnlineTest extends TestCase
         $data = new Cquery(SEMVER_ORG);
 
         $result = $data
-            ->onContentLoaded(function (HttpBrowser $browser, Crawler $crawler) {
-                $browser->clickLink("Bahasa Indonesia (id)");
-                return $browser;
+            ->onContentLoaded(function (HttpBrowser $client, Crawler $crawler) {
+                $client->clickLink("Bahasa Indonesia (id)");
+                return $client;
             })
             ->from("#spec")
             ->define(
@@ -100,13 +100,13 @@ final class SampleOnlineTest extends TestCase
         $data = new Cquery(WIKIPEDIA);
 
         $result = $data
-            ->onContentLoaded(function (HttpBrowser $browser, Crawler $crawler) {
+            ->onContentLoaded(function (HttpBrowser $client, Crawler $crawler) {
                 $form = new Form($crawler->filter("#searchform")->getNode(0), WIKIPEDIA);
 
-                $browser->submit($form, [
+                $client->submit($form, [
                     "search" => "sambas",
                 ]);
-                return $browser;
+                return $client;
             })
             ->from("html")
             ->define(
@@ -122,24 +122,27 @@ final class SampleOnlineTest extends TestCase
         $data = new Cquery(WIKIPEDIA);
 
         $result = $data
-            ->onContentLoaded(function (HttpBrowser $browser, Crawler $crawler) {
+            ->onContentLoaded(function (HttpBrowser $client, Crawler $crawler) {
                 $form = new Form($crawler->filter("#searchform")->getNode(0), WIKIPEDIA);
 
-                $browser->submit($form, [
+                $client->submit($form, [
                     "search" => "parit setia",
                 ]);
 
-                $_crawler = new Crawler($browser->getResponse()->getContent());
+                $_crawler = new Crawler($client->getResponse()->getContent());
 
                 // CHECK IF ON INDEX SEARCH RESULT
                 $_result = $_crawler->filter("ul.mw-search-results")->filter("li.mw-search-result");
 
                 if($_result->count() > 0) {
-                    // DOING SOME STUFF
-                    dump($_result->extract(["_text"]));
+                    // LETS SIMULATE TO CLICK FIRST RESULT
+                    $_check = $_result->filter("table.searchResultImage td.searchResultImage-text > div > a")->first();
+                    $_link = $_check->attr("href");
+
+                    $client->request('GET', "https://id.wikipedia.org{$_link}");
                 }
 
-                return $browser;
+                return $client;
             })
             ->from("html")
             ->define(
@@ -147,6 +150,6 @@ final class SampleOnlineTest extends TestCase
             )
             ->get();
 
-        $this->assertSame("Kabupaten Sambas - Wikipedia bahasa Indonesia, ensiklopedia bebas", $result[0]["title"]);
+        $this->assertSame("Parit Setia, Jawai, Sambas - Wikipedia bahasa Indonesia, ensiklopedia bebas", $result[0]["title"]);
     }
 }

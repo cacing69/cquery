@@ -1,15 +1,10 @@
 {
   "name": "cacing69/cquery",
-  "description": "HTML document parser for PHP but with jquery taste",
+  "description": "PHP Scraper with language expression, could be used to scrape data from a website that uses AJAX and JavaScript",
   "keywords": [
     "php",
-    "jquery",
-    "dom",
-    "parser",
-    "html",
-    "xml",
-    "scrape",
-    "crawl"
+    "crawler",
+    "scraper"
   ],
   "type": "library",
   "license": "MIT",

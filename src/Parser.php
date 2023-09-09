@@ -119,20 +119,40 @@ class Parser
                             if(preg_match($_parserRegexCheck, $_strDefinerMatch[0])) {
                                 if(is_array($adapter::getSignature())) {
                                     foreach ($adapter::getSignature() as $_key => $signature) {
-                                        // dump($_strDefiner);
-                                        if (preg_match($signature, $_strDefiner, $_strDefinerMatch)) {
+                                        $_regexCheckSignature = $signature;
+
+                                        // if(Str::endWith("$", $_regexCheckSignature)) {
+
+                                        $_regexCheckSignature = str_replace("$", "", $_regexCheckSignature);
+
+                                        if (preg_match($_regexCheckSignature, $_strDefiner, $_strDefinerMatch)) {
                                             $_cleanDefiner = Str::endWith(trim($_strDefinerMatch[0]), ",") ? substr(trim($_strDefinerMatch[0]), 0, -1) : trim($_strDefinerMatch[0]);
 
+
                                             $this->definers[] = $_cleanDefiner;
+
+
                                             $_strDefiner = str_replace($_strDefinerMatch[0], "", $_strDefiner);
-                                            break;
                                         } else {
                                             $this->definers[] = trim($_strDefiner);
                                             $_strDefiner = substr($_strDefiner, strlen($_strDefiner));
                                         }
+
+                                        if(empty($_strDefiner)) {
+                                            break;
+                                        }
                                     }
                                 } else {
-                                    if (preg_match($adapter::getSignature(), $_strDefiner, $_strDefinerMatch)) {
+                                    // remove $ on the last
+                                    $_regexCheckSignature = $adapter::getSignature();
+
+                                    // if(Str::endWith("$", $_regexCheckSignature)) {
+
+                                    $_regexCheckSignature = str_replace("$", "", $_regexCheckSignature);
+                                    // }
+
+
+                                    if (preg_match($_regexCheckSignature, $_strDefiner, $_strDefinerMatch)) {
                                         $_cleanDefiner = Str::endWith(trim($_strDefinerMatch[0]), ",") ? substr(trim($_strDefinerMatch[0]), 0, -1) : trim($_strDefinerMatch[0]);
 
                                         $this->definers[] = $_cleanDefiner;

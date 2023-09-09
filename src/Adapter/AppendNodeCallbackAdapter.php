@@ -6,13 +6,25 @@ namespace Cacing69\Cquery\Adapter;
 
 use Cacing69\Cquery\CallbackAdapter;
 use Cacing69\Cquery\DefinerExtractor;
+use Cacing69\Cquery\ParserAdapterInterface;
 
-class AppendNodeCallbackAdapter extends CallbackAdapter
+class AppendNodeCallbackAdapter extends CallbackAdapter implements ParserAdapterInterface
 {
-    protected static $signature = '/^\s*?append_node\(\s*(.+?),\s*(.+?)\s*\)\s*$/';
+    protected static $parserIdentifier = "append_node";
+    protected static $parserArguments = ["querySelector", "children"];
+    protected static $signature = '/^\s*?append_node\(\s*(.+?),\s*(.+?)\s*\)\s*(as)?\s*\w*\s*,?$/i';
     public static function getSignature()
     {
         return self::$signature;
+    }
+
+    public static function getParserIdentifier()
+    {
+        return self::$parserIdentifier;
+    }
+    public static function getCountParserArguments()
+    {
+        return count(self::$parserArguments);
     }
 
     public function __construct(string $raw)

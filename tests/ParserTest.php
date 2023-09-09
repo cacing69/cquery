@@ -133,7 +133,7 @@ final class ParserTest extends TestCase
         from ( .item )
         define
             attr(href, div > h1 > span > a) as url,
-            replace('i am', 'you are', href, div > h1 > span > a) as _text
+            replace('i am', 'you are', div > h1 > span > a) as _text
         filter
             span > a.title has 'lorem'  and
             attr(id, span > a) > 9
@@ -145,7 +145,7 @@ final class ParserTest extends TestCase
         $this->assertCount(2, $parser->getDefiners(), "should have 2 definers");
         $this->assertCount(2, $parser->getFilters()["and"], "should have 2 filters");
         $this->assertSame("attr(href, div > h1 > span > a) as url", $parser->getDefiners()[0]);
-        $this->assertSame("replace('i am', 'you are', href, div > h1 > span > a) as _text", $parser->getDefiners()[1]);
+        $this->assertSame("replace('i am', 'you are', div > h1 > span > a) as _text", $parser->getDefiners()[1]);
     }
 
     public function testParseQueryWithReplaceAndAttrDefinerButWithoutAlias()
@@ -154,7 +154,7 @@ final class ParserTest extends TestCase
         from ( .item )
         define
             attr(href, div > h1 > span > a),
-            replace('i am', 'you are', href, div > h1 > span > a)
+            replace('i am', 'you are', div > h1 > span > a)
         filter
             span > a.title has 'lorem'  and
             attr(id, span > a) > 9
@@ -166,6 +166,75 @@ final class ParserTest extends TestCase
         $this->assertCount(2, $parser->getDefiners(), "should have 2 definers");
         $this->assertCount(2, $parser->getFilters()["and"], "should have 2 filters");
         $this->assertSame("attr(href, div > h1 > span > a)", $parser->getDefiners()[0]);
-        $this->assertSame("replace('i am', 'you are', href, div > h1 > span > a)", $parser->getDefiners()[1]);
+        $this->assertSame("replace('i am', 'you are', div > h1 > span > a)", $parser->getDefiners()[1]);
+    }
+
+    public function testParseQueryWithReplaceAndAttrAndAppendNodeDefinerButWithoutAlias()
+    {
+        $query = "
+        from ( .item )
+        define
+            attr(href, div > h1 > span > a),
+            replace('i am', 'you are', div > h1 > span > a),
+            append_node(.list > .item, li) as list
+        filter
+            span > a.title has 'lorem'  and
+            attr(id, span > a) > 9
+        ";
+
+        $parser = new Parser($query);
+
+        $this->assertSame(".item", $parser->getSource()->getRaw());
+        $this->assertCount(3, $parser->getDefiners(), "should have 2 definers");
+        $this->assertCount(2, $parser->getFilters()["and"], "should have 2 filters");
+        $this->assertSame("attr(href, div > h1 > span > a)", $parser->getDefiners()[0]);
+        $this->assertSame("replace('i am', 'you are', div > h1 > span > a)", $parser->getDefiners()[1]);
+        $this->assertSame("append_node(.list > .item, li) as list", $parser->getDefiners()[2]);
+    }
+
+    public function testParseQueryWithReplaceAndAttrAndAppendNodeDefinerReverse1ButWithoutAlias()
+    {
+        $query = "
+        from ( .item )
+        define
+            attr(href, div > h1 > span > a),
+            append_node(.list > .item, li) as list,
+            replace('i am', 'you are', div > h1 > span > a)
+        filter
+            span > a.title has 'lorem'  and
+            attr(id, span > a) > 9
+        ";
+
+        $parser = new Parser($query);
+
+        $this->assertSame(".item", $parser->getSource()->getRaw());
+        $this->assertCount(3, $parser->getDefiners(), "should have 2 definers");
+        $this->assertCount(2, $parser->getFilters()["and"], "should have 2 filters");
+        $this->assertSame("attr(href, div > h1 > span > a)", $parser->getDefiners()[0]);
+        $this->assertSame("append_node(.list > .item, li) as list", $parser->getDefiners()[1]);
+        $this->assertSame("replace('i am', 'you are', div > h1 > span > a)", $parser->getDefiners()[2]);
+    }
+
+    public function testParseQueryWithReplaceAndAttrAndAppendNodeDefinerReverse2ButWithoutAlias()
+    {
+        $query = "
+        from ( .item )
+        define
+            append_node(.list > .item, li) as list,
+            attr(href, div > h1 > span > a),
+            replace('i am', 'you are', div > h1 > span > a)
+        filter
+            span > a.title has 'lorem'  and
+            attr(id, span > a) > 9
+        ";
+
+        $parser = new Parser($query);
+
+        $this->assertSame(".item", $parser->getSource()->getRaw());
+        $this->assertCount(3, $parser->getDefiners(), "should have 2 definers");
+        $this->assertCount(2, $parser->getFilters()["and"], "should have 2 filters");
+        $this->assertSame("append_node(.list > .item, li) as list", $parser->getDefiners()[0]);
+        $this->assertSame("attr(href, div > h1 > span > a)", $parser->getDefiners()[1]);
+        $this->assertSame("replace('i am', 'you are', div > h1 > span > a)", $parser->getDefiners()[2]);
     }
 }

@@ -1,8 +1,8 @@
 # Release Notes
 
-## [v1.3.0](https://github.com/cacing69/cquery/compare/v1.2.0...v1.3.0) (2023-09-0?)
+## [v1.3.0](https://github.com/cacing69/cquery/compare/v1.2.0...v1.3.0) (2023-09-09)
 
-- Add property callbackClientOnEnd on Loader class
+- Add property callbackClientOnEnd on Loader class for handling when scraping finish on loader base class
 - Add raw method based on this pull request [#3](https://github.com/cacing69/cquery/pull/3), it's still very limited, but at least it's working,
 
 ## [v1.2.0](https://github.com/cacing69/cquery/compare/v1.1.0...v1.2.0) (2023-09-06)

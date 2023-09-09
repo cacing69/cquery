@@ -208,6 +208,27 @@ $result = $query
         ->get(); // -> return type is \Doctrine\Common\Collections\ArrayCollection
 ```
 
+or u can use raw method
+
+```php
+require_once 'vendor/autoload.php';
+
+$html = file_get_contents("src/Samples/sample.html");
+$data = new Cacing69\Cquery\Cquery($html);
+
+$result = $query
+        ->raw("
+            from (#lorem .link)
+            define
+              h1 as title,
+              a as description,
+              attr(href, a) as url,
+              attr(class, a) as class
+            filter
+              attr(class, a) has 'vip'
+        ");
+```
+
 And here are the results
 
 ![Alt text](https://gcdnb.pbrd.co/images/Q6XHKRydSigl.png?o=1 "a title")

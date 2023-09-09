@@ -112,6 +112,7 @@ final class ParserTest extends TestCase
         from ( .item )
         define
             span > a.title as title,
+            int(span > a.qty),
             attr(href, div > h1 > span > a) as url
         filter
             span > a.title has 'lorem'  and
@@ -121,10 +122,11 @@ final class ParserTest extends TestCase
         $parser = new Parser($query);
 
         $this->assertSame(".item", $parser->getSource()->getRaw());
-        $this->assertCount(2, $parser->getDefiners(), "should have 2 definers");
+        $this->assertCount(3, $parser->getDefiners(), "should have 2 definers");
         $this->assertCount(2, $parser->getFilters()["and"], "should have 2 filters");
         $this->assertSame("span > a.title as title", $parser->getDefiners()[0]);
-        $this->assertSame("attr(href, div > h1 > span > a) as url", $parser->getDefiners()[1]);
+        $this->assertSame("int(span > a.qty)", $parser->getDefiners()[1]);
+        $this->assertSame("attr(href, div > h1 > span > a) as url", $parser->getDefiners()[2]);
     }
 
     public function testParseQueryWithReplaceAndAttrDefiner()

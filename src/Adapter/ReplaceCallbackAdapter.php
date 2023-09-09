@@ -5,18 +5,32 @@ declare(strict_types=1);
 namespace Cacing69\Cquery\Adapter;
 
 use Cacing69\Cquery\CallbackAdapter;
+use Cacing69\Cquery\ParserAdapterInterface;
 
-class ReplaceCallbackAdapter extends CallbackAdapter
+class ReplaceCallbackAdapter extends CallbackAdapter implements ParserAdapterInterface
 {
+
+    protected static $parserIdentifier = "replace";
+    protected static $parserArguments = ["search", "replace", "querySelector"];
+
     protected static $signature = [
-        "replace_from_single_to_single" => '/^\s*replace\(\s*\'(.*?)\'\s*,\s*\'(.*?)\'\s*,\s*(.*?)\s*\)\s*$/', // replace('_', '-', .txt > a)
-        "replace_from_array_to_array" => '/^\s*replace\(\s*\[\s*(.*?)\s*\]\s*,\s*\[\s*(.*?)\s*\]\s*,\s*(.*?)\s*\)\s*$/', // replace([' _ ', '1'], [' - ', '1'], .txt > a)
-        "replace_from_array_to_single" => '/^\s*replace\(\s*\[\s*(.*?)\s*\]\s*,\s*\'(.*?)\'\s*,\s*(.*?)\s*\)\s*$/' // replace(['_', '-'], '*', .txt > a)
+        "replace_from_single_to_single" => '/^\s*replace\(\s*\'(.*?)\'\s*,\s*\'(.*?)\'\s*,\s*(.+)\s*\)\s*(as)?\s*\w*\s*,?$/', // replace('_', '-', .txt > a)
+        "replace_from_array_to_array" => '/^\s*replace\(\s*\[\s*(.*?)\s*\]\s*,\s*\[\s*(.*?)\s*\]\s*,\s*(.+)\s*\)\s*(as)?\s*\w*\s*,?$/', // replace([' _ ', '1'], [' - ', '1'], .txt > a)
+        "replace_from_array_to_single" => '/^\s*replace\(\s*\[\s*(.*?)\s*\]\s*,\s*\'(.*?)\'\s*,\s*(.+)\s*\)\s*(as)?\s*\w*\s*,?$/' // replace(['_', '-'], '*', .txt > a)
     ];
 
     public static function getSignature()
     {
         return self::$signature;
+    }
+
+    public static function getParserIdentifier()
+    {
+        return self::$parserIdentifier;
+    }
+    public static function getCountParserArguments()
+    {
+        return count(self::$parserArguments ?? []);
     }
 
     public function __construct(string $raw)

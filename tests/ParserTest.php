@@ -126,4 +126,46 @@ final class ParserTest extends TestCase
         $this->assertSame("span > a.title as title", $parser->getDefiners()[0]);
         $this->assertSame("attr(href, div > h1 > span > a) as url", $parser->getDefiners()[1]);
     }
+
+    public function testParseQueryWithReplaceAndAttrDefiner()
+    {
+        $query = "
+        from ( .item )
+        define
+            attr(href, div > h1 > span > a) as url,
+            replace('i am', 'you are', href, div > h1 > span > a) as _text
+        filter
+            span > a.title has 'lorem'  and
+            attr(id, span > a) > 9
+        ";
+
+        $parser = new Parser($query);
+
+        $this->assertSame(".item", $parser->getSource()->getRaw());
+        $this->assertCount(2, $parser->getDefiners(), "should have 2 definers");
+        $this->assertCount(2, $parser->getFilters()["and"], "should have 2 filters");
+        $this->assertSame("attr(href, div > h1 > span > a) as url", $parser->getDefiners()[0]);
+        $this->assertSame("replace('i am', 'you are', href, div > h1 > span > a) as _text", $parser->getDefiners()[1]);
+    }
+
+    public function testParseQueryWithReplaceAndAttrDefinerButWithoutAlias()
+    {
+        $query = "
+        from ( .item )
+        define
+            attr(href, div > h1 > span > a),
+            replace('i am', 'you are', href, div > h1 > span > a)
+        filter
+            span > a.title has 'lorem'  and
+            attr(id, span > a) > 9
+        ";
+
+        $parser = new Parser($query);
+
+        $this->assertSame(".item", $parser->getSource()->getRaw());
+        $this->assertCount(2, $parser->getDefiners(), "should have 2 definers");
+        $this->assertCount(2, $parser->getFilters()["and"], "should have 2 filters");
+        $this->assertSame("attr(href, div > h1 > span > a)", $parser->getDefiners()[0]);
+        $this->assertSame("replace('i am', 'you are', href, div > h1 > span > a)", $parser->getDefiners()[1]);
+    }
 }

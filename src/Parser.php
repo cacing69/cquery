@@ -113,23 +113,38 @@ class Parser
                 foreach (RegisterAdapter::load() as $adapter) {
                     if(method_exists($adapter, "getParserIdentifier") && method_exists($adapter, "getCountParserArguments")) {
                         if($adapter::getCountParserArguments() > 1) {
-                            // $founded = true;
+
                             $_parserRegexCheck = "/^\s*" . $adapter::getParserIdentifier() . "\(\s*(.*)\s*,/i";
 
                             if(preg_match($_parserRegexCheck, $_strDefinerMatch[0])) {
-                                if (preg_match($adapter::getSignature(), $_strDefiner, $_strDefinerMatch)) {
-                                    $_cleanDefiner = Str::endWith(trim($_strDefinerMatch[0]), ",") ? substr(trim($_strDefinerMatch[0]), 0, -1) : trim($_strDefinerMatch[0]);
+                                if(is_array($adapter::getSignature())) {
+                                    foreach ($adapter::getSignature() as $_key => $signature) {
+                                        // dump($_strDefiner);
+                                        if (preg_match($signature, $_strDefiner, $_strDefinerMatch)) {
+                                            $_cleanDefiner = Str::endWith(trim($_strDefinerMatch[0]), ",") ? substr(trim($_strDefinerMatch[0]), 0, -1) : trim($_strDefinerMatch[0]);
 
-                                    $this->definers[] = $_cleanDefiner;
-                                    $_strDefiner = str_replace($_strDefinerMatch[0], "", $_strDefiner);
+                                            $this->definers[] = $_cleanDefiner;
+                                            $_strDefiner = str_replace($_strDefinerMatch[0], "", $_strDefiner);
+                                            break;
+                                        } else {
+                                            $this->definers[] = trim($_strDefiner);
+                                            $_strDefiner = substr($_strDefiner, strlen($_strDefiner));
+                                        }
+                                    }
                                 } else {
-                                    $this->definers[] = trim($_strDefiner);
-                                    $_strDefiner = substr($_strDefiner, strlen($_strDefiner));
+                                    if (preg_match($adapter::getSignature(), $_strDefiner, $_strDefinerMatch)) {
+                                        $_cleanDefiner = Str::endWith(trim($_strDefinerMatch[0]), ",") ? substr(trim($_strDefinerMatch[0]), 0, -1) : trim($_strDefinerMatch[0]);
+
+                                        $this->definers[] = $_cleanDefiner;
+                                        $_strDefiner = str_replace($_strDefinerMatch[0], "", $_strDefiner);
+                                    } else {
+                                        $this->definers[] = trim($_strDefiner);
+                                        $_strDefiner = substr($_strDefiner, strlen($_strDefiner));
+                                    }
                                 }
 
                                 $_adapter = $adapter;
                                 break;
-
                             }
                         }
                     }

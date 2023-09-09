@@ -11,7 +11,6 @@ use Cacing69\Cquery\Trait\HasCallbackProperty;
 use Cacing69\Cquery\DefinerExtractor;
 use Closure;
 use Cacing69\Cquery\Trait\HasNodeProperty;
-use Cacing69\Cquery\Trait\HasSelectorProperty;
 use Cacing69\Cquery\Trait\HasRawProperty;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 
@@ -112,8 +111,7 @@ abstract class CallbackAdapter
         } elseif ($this->filter->getOperator() === ">=") {
             return (int) $value >= (int) $this->filter->getValue();
         } elseif ($this->filter->getOperator() === "<") {
-            $criteria = $this->filter->getValue();
-            return  (int) $value < (int) $criteria;
+            return  (int) $value < (int) $this->filter->getValue();
         } elseif ($this->filter->getOperator() === "<=") {
 
             return (int) $value <= (int) $this->filter->getValue();

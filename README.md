@@ -130,7 +130,7 @@ Lists of method you are can used for query in html
 | `define(...$string)` | `define()` | - |
 | `first()` | `first()` | To retrieve first item query results. |
 | `get()` | `get()` | To retrieve collection from query results. |
-| `raw(string)` | `raw(query)` | To get data based on raw cquery. |
+| `raw(string)` | `raw('from... define... filter...')` | To get data based on raw cquery. |
 | `filter()` | `filter()` | - |
 | `getSource()` | `getSource()` | - |
 | `orFilter()` | `orFilter()` | - |
@@ -141,7 +141,7 @@ Lists of method you are can used for query in html
 
 ### List definer available
 
-Below are the functions you are can use, they may change over time. <br>**Note:** nested function has been supported.
+Below are the functions you are can use, they may change over time.
 | function | example | description |
 | --------- | ------------- | ------------------ |
 | `attr(attrName, selector)` | `attr(class, .link)` |  will retrieve all class value present on the element/container according to the selector. (.link) |
@@ -167,6 +167,8 @@ Below are the functions you are can use, they may change over time. <br>**Note:*
 | 5| `append_node(div > .tags, a) as tags[*][text]` | `tags[0]['text']` | `*` the star symbol signifies all elements at the index. it will be append new key (in this case `text`) each array element
 
 ### How to use filter
+
+**Note:** nested filter not supported yet.
 
 | operator | example | description |
 | --------- | ------------- | ------------------ |

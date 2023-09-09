@@ -6,7 +6,7 @@ use Cacing69\Cquery\CqueryException;
 use Symfony\Component\DomCrawler\Crawler;
 use Cacing69\Cquery\Support\Collection;
 
-trait HasGetWithDomCrawlerMethod
+trait HasDomCrawlerGetter
 {
     public function get(): Collection
     {
@@ -130,7 +130,7 @@ trait HasGetWithDomCrawlerMethod
                             if($_filterNode->count() === 0) {
                                 $_data[$i] = null;
                             } else {
-                                $_filterNode->each(function (Crawler $_node, $_i) use ($i, &$_data, $definer) {
+                                $_filterNode->each(function (Crawler $_node, $_i) use ($i, &$_data) {
                                     // dump($_node->text());
                                     $_data[$i] = $_node->text();
 

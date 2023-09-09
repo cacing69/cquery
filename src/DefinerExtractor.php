@@ -64,7 +64,7 @@ class DefinerExtractor
             $_alias = $decodeSelect[1];
         } else {
             $this->definer = $definerRaw;
-            $_alias = Str::slug($definerRaw, "_");
+            $_alias = Str::slug($definerRaw);
         }
 
         $this->setAlias($_alias);

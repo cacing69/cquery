@@ -116,7 +116,7 @@ class Cquery
         return $this->loader->first();
     }
 
-    private function makeFilter($node, $operator = null, $value = null): Filter
+    public static function makeFilter($node, $operator = null, $value = null): Filter
     {
 
         if($node instanceof Filter) {
@@ -144,7 +144,7 @@ class Cquery
      */
     public function filter($node, $operator = null, $value = null): Cquery
     {
-        $filter = $this->makeFilter($node, $operator, $value);
+        $filter = Cquery::makeFilter($node, $operator, $value);
         $this->loader->addFilter($filter, "and");
         return $this;
     }
@@ -156,7 +156,7 @@ class Cquery
      */
     public function orFilter($node, $operator = null, $value = null): Cquery
     {
-        $filter = $this->makeFilter($node, $operator, $value);
+        $filter = Cquery::makeFilter($node, $operator, $value);
         $this->loader->addFilter($filter, "or");
         return $this;
     }

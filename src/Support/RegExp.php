@@ -4,7 +4,7 @@ namespace Cacing69\Cquery\Support;
 
 class RegExp
 {
-    public const IS_ATTRIBUTE = '/^\s*attr\(\s*(.*?)\s*,\s*(.*?)\s*\)\s*$/is';
+    public const IS_ATTRIBUTE = '/^\s*attr\(\s*([\w-]*?)\s*,\s*(.*?)\s*\)\s*(as)?\s*\w*\s*,?/i';
     public const IS_LENGTH = '/^\s*length\(\s*(.*?)\s*\)\s*$/is';
     public const IS_UPPER = '/^\s*upper\(\s*(.*?)\s*\)\s*$/is';
     public const IS_LOWER = '/^\s*lower\(\s*(.*?)\s*\)\s*$/is';

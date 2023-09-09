@@ -52,42 +52,99 @@ class Parser
 
         $this->source = new Source($_from[1]);
 
-        if(preg_match("/define\s*(.*)/is", $raw, $_define)) {
-
-            if(preg_match("/filter\s*(.*)\s*limit/is", $_define[1], $_filter)) {
+        if(preg_match("/define\s*(.*)/is", $raw, $_definer)) {
+            if(preg_match("/filter\s*(.*)\s*limit/i", $_definer[1], $_filter)) {
+                // get limit
                 if(preg_match("/limit\s(\d)/is", $_filter[1], $_limit)) {
                     $this->limit = intval($_limit[1]);
                 }
-            } elseif(preg_match("/filter\s*(.*)/is", $_define[1], $_filter)) {
+            } elseif(preg_match("/filter\s*(.*)/is", $_definer[1], $_filter)) {
+                preg_match("/(.*?)\s*filter/is", $_definer[1], $_extractDefinerFromFilter);
+                // extract definer
+                $this->makeDefiners($_extractDefinerFromFilter[1]);
 
+                // extract filter
+                $this->makeFilters($_filter[1]);
             } else {
-                $_strDefine = $_define[1];
-
-                $loop = 0;
-                while(!empty($_strDefine)) {
-                    if(preg_match("/(.*?)\s*,\s*/", $_strDefine, $_strMatch)) {
-                        if(preg_match("/attr\(\s*(.*)\s*,/", $_strMatch[0])) {
-                            if(preg_match("/attr\(\s*(.*)\s*,\s*(.*)\s*\).*(as)?.*,/", $_strDefine, $_strMatch)) {
-                                $_cleanDefiner = Str::endWith(trim($_strMatch[0]), ",") ? substr(trim($_strMatch[0]), 0, -1) : trim($_strMatch[0]);
-
-                                $this->definers[] = $_cleanDefiner;
-                                $_strDefine = str_replace($_strMatch[0], "", $_strDefine);
-                            } else {
-                                $this->definers[] = trim($_strDefine);
-                                $_strDefine = substr($_strDefine, strlen($_strDefine));
-                            }
-                        } else {
-                            $this->definers[] = trim($_strMatch[1]);
-                            $_strDefine = substr($_strDefine, strlen($_strMatch[0]));
-                        }
-                    } else {
-                        $this->definers[] = trim($_strDefine);
-                        $_strDefine = substr($_strDefine, strlen($_strDefine));
-                    }
-
-                    $loop++;
-                }
+                // extract definer
+                $this->makeDefiners($_definer[1]);
             }
+        }
+    }
+
+    private function makeFilters($filters)
+    {
+        $_strFilter = $filters;
+        $_strFilterBefore = "";
+        $_loopFilter = 0;
+
+        while (!empty($_strFilter)) {
+            if (preg_match("/.+(and|or)/i", $_strFilter, $_strFilterMatch)) {
+                $_strFilterBefore = $_strFilterMatch[1];
+                $_cleanFilterMatch = trim(preg_replace('/\s+/', ' ', str_replace($_strFilterBefore, "", $_strFilterMatch[0])));
+
+                preg_match('/(.*?)\s*(=|==|===|!=|<>|>|>=|<|<=|has|regex|like)\s*(\'.*\'|\d)/i', $_cleanFilterMatch, $_extractCleanFilterMatch);
+
+                $this->filters[$_strFilterBefore][] = Cquery::makeFilter($_extractCleanFilterMatch[1], $_extractCleanFilterMatch[2], str_replace("'", "", $_extractCleanFilterMatch[3]));
+                $_strFilter = str_replace($_strFilterMatch[0], "", $_strFilter);
+            } else {
+                $_cleanFilterMatch = trim(preg_replace('/\s+/', ' ', str_replace($_strFilterBefore, "", $_strFilter)));
+
+                preg_match('/(.*?)\s*(=|==|===|!=|<>|>|>=|<|<=|has|regex|like)\s*(\'.*\'|\d)/i', $_cleanFilterMatch, $_extractCleanFilterMatch);
+                $this->filters[!empty($_strFilterBefore) ? $_strFilterBefore : "and"][] = Cquery::makeFilter($_extractCleanFilterMatch[1], $_extractCleanFilterMatch[2], str_replace("'", "", $_extractCleanFilterMatch[3] ?? ""));
+
+                $_strFilter = trim(preg_replace('/\s+/', ' ', str_replace($_cleanFilterMatch, "", $_strFilter)));
+            }
+
+            $_loopFilter++;
+        }
+
+    }
+
+    private function makeDefiners($definer)
+    {
+        $_strDefiner = $definer;
+        $_loopDefiner = 0;
+        while(!empty($_strDefiner)) {
+            if(preg_match("/(.*?)\s*,\s*/i", $_strDefiner, $_strDefinerMatch)) {
+
+                $_adapter = null;
+
+                foreach (RegisterAdapter::load() as $adapter) {
+                    if(method_exists($adapter, "getParserIdentifier") && method_exists($adapter, "getCountParserArguments")) {
+                        if($adapter::getCountParserArguments() > 1) {
+                            // $founded = true;
+                            $_parserRegexCheck = "/^\s*" . $adapter::getParserIdentifier() . "\(\s*(.*)\s*,/i";
+
+                            if(preg_match($_parserRegexCheck, $_strDefinerMatch[0])) {
+                                if (preg_match($adapter::getSignature(), $_strDefiner, $_strDefinerMatch)) {
+                                    $_cleanDefiner = Str::endWith(trim($_strDefinerMatch[0]), ",") ? substr(trim($_strDefinerMatch[0]), 0, -1) : trim($_strDefinerMatch[0]);
+
+                                    $this->definers[] = $_cleanDefiner;
+                                    $_strDefiner = str_replace($_strDefinerMatch[0], "", $_strDefiner);
+                                } else {
+                                    $this->definers[] = trim($_strDefiner);
+                                    $_strDefiner = substr($_strDefiner, strlen($_strDefiner));
+                                }
+
+                                $_adapter = $adapter;
+                                break;
+
+                            }
+                        }
+                    }
+                }
+
+                if(empty($_adapter)) {
+                    $this->definers[] = trim($_strDefinerMatch[1]);
+                    $_strDefiner = substr($_strDefiner, strlen($_strDefinerMatch[0]));
+                }
+            } else {
+                $this->definers[] = trim($_strDefiner);
+                $_strDefiner = substr($_strDefiner, strlen($_strDefiner));
+            }
+
+            $_loopDefiner++;
         }
     }
 

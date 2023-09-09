@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Cacing69\Cquery\Loader;
 
 use Cacing69\Cquery\Loader;
-use Cacing69\Cquery\Trait\HasGetWithDomCrawlerMethod;
+use Cacing69\Cquery\Trait\HasDomCrawlerGetter;
 use Symfony\Component\DomCrawler\Crawler;
 
 class DOMCrawlerLoader extends Loader
 {
-    use HasGetWithDomCrawlerMethod;
+    use HasDomCrawlerGetter;
     public function __construct(string $content = null, $isRemote = false)
     {
         $this->isRemote = $isRemote;

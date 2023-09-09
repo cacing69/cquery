@@ -20,7 +20,8 @@ class Str
     }
 
     // https://stackoverflow.com/a/7168986
-    public static function startsWith( $haystack, $needle ) {
+    public static function startsWith($haystack, $needle)
+    {
         return preg_match('~' . preg_quote($needle, '~') . '~A', $haystack) > 0;
     }
 

@@ -42,4 +42,9 @@ class Filter
     {
         return $this->value;
     }
+
+    public static function raw($raw)
+    {
+        return new Filter("", "");
+    }
 }

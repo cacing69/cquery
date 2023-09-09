@@ -1203,4 +1203,25 @@ final class SampleTest extends TestCase
 
         $this->assertCount(9, $result);
     }
+
+    public function testUsedRawMethodUsed1Filter()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_HTML);
+        $data = new Cquery($simpleHtml);
+
+        $query = "from (#lorem .link)
+                    define
+                        h1 as title,
+                        a as description,
+                        attr(href, a) as url,
+                        attr(class, a) as class
+                    filter
+                        attr(class, a) has 'vip'
+                    ";
+
+        $result = $data
+            ->raw($query);
+
+        $this->assertCount(9, $result);
+    }
 }

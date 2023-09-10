@@ -15,6 +15,7 @@ class ReverseCallbackAdapter extends CallbackAdapter
     {
         return self::$signature;
     }
+
     public function __construct(string $raw)
     {
         $this->raw = $raw;
@@ -30,7 +31,7 @@ class ReverseCallbackAdapter extends CallbackAdapter
             $extractChild = $this->extractChild($extract[1]);
             $_childCallback = $extractChild->getAdapter()->getCallback();
 
-            if($_childCallback) {
+            if ($_childCallback) {
                 $this->callback = function (string $value) use ($_childCallback) {
                     return strrev((string) $_childCallback($value));
                 };
@@ -39,8 +40,8 @@ class ReverseCallbackAdapter extends CallbackAdapter
             preg_match(self::$signature, $raw, $node);
             $this->node = $node[1];
 
-            $this->callMethod = "extract";
-            $this->callMethodParameter = ["_text"];
+            $this->callMethod = 'extract';
+            $this->callMethodParameter = ['_text'];
         }
     }
 }

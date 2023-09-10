@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Cacing69\Cquery;
 
-use Cacing69\Cquery\CqueryException;
 use Cacing69\Cquery\Loader\DOMCrawlerLoader;
 use Closure;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -24,7 +23,7 @@ class Cquery
     /**
      * The base Loader instance.
      * loader should be an instance of Cacing69\Loader\Loader
-     * Available loader DOMCrawlerLoader
+     * Available loader DOMCrawlerLoader.
      *
      * @var \Cacing69\Cquery\Loader
      *
@@ -33,26 +32,25 @@ class Cquery
     private $loader;
 
     /**
-    * A variable used to store the results of a query
-    *
-    * @var \Doctrine\Common\Collections\ArrayCollection
-    *
-    * The default results is null
-    */
+     * A variable used to store the results of a query.
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * The default results is null
+     */
     private $results;
 
     /**
      * Create a new Cquery instance.
      *
-     * @param \DOMNodeList|\DOMNode|string|null $source A source to use as the the source data
-     * u can put html content/url page to scrape default is null
-     *
-     * @param string $loaderName
+     * @param \DOMNodeList|\DOMNode|string|null $source     A source to use as the the source data
+     *                                                      u can put html content/url page to scrape default is null
+     * @param string                            $loaderName
      */
     public function __construct(string $source = null, $loaderName = DOMCrawlerLoader::class)
     {
         $this->loaderName = $loaderName;
-        if($source !== null) {
+        if ($source !== null) {
             if (filter_var($source, FILTER_VALIDATE_URL)) {
                 $remote = true;
                 $this->loader = new $loaderName($source, $remote);
@@ -68,11 +66,13 @@ class Cquery
      * that will serve as a property in each array element.
      *
      * @param string $value set a source element selector to activate query
+     *
      * @return \Cacing69\Cquery\Cquery
      */
     public function from(string $value)
     {
         $this->loader->from($value);
+
         return $this;
     }
 
@@ -83,12 +83,15 @@ class Cquery
      * that will serve as a property in each array element.
      *
      * @param \Cacing69\Cquery\Definer|string $picks a selector to grab on element
-     * @return \Cacing69\Cquery\Cquery
+     *
      * @throws \Cacing69\Cquery\CqueryException when the provided parameter is incorrect."
+     *
+     * @return \Cacing69\Cquery\Cquery
      */
     public function define(...$defines): Cquery
     {
         $this->loader->define(...$defines);
+
         return $this;
     }
 
@@ -97,17 +100,18 @@ class Cquery
      * This method is used to limit the total length of the data.
      *
      * @param int $limit set a limit
-     * @return \Cacing69\Cquery\Cquery
      *
+     * @return \Cacing69\Cquery\Cquery
      */
     public function limit(int $limit)
     {
         $this->loader->limit($limit);
+
         return $this;
     }
 
     /**
-     * Take a first result from query result collection
+     * Take a first result from query result collection.
      *
      * @return array
      */
@@ -118,17 +122,16 @@ class Cquery
 
     public static function makeFilter($node, $operator = null, $value = null): Filter
     {
-
-        if($node instanceof Filter) {
+        if ($node instanceof Filter) {
             $filter = $node;
         } else {
             $filter = new Filter($node, $operator);
-            if($node instanceof Closure) {
-                throw new CqueryException("when used closure, u need to place it on second parameter");
+            if ($node instanceof Closure) {
+                throw new CqueryException('when used closure, u need to place it on second parameter');
             }
 
-            if(!($operator instanceof Closure) && empty($value)) {
-                throw new CqueryException("non closure operator need a value for comparison");
+            if (!($operator instanceof Closure) && empty($value)) {
+                throw new CqueryException('non closure operator need a value for comparison');
             } else {
                 $filter->setValue($value);
             }
@@ -138,34 +141,36 @@ class Cquery
     }
 
     /**
-     * The filter method is used to add filter criteria with 'AND' logic
+     * The filter method is used to add filter criteria with 'AND' logic.
      *
      * @return \Cacing69\Cquery\Cquery;
      */
     public function filter($node, $operator = null, $value = null): Cquery
     {
         $filter = Cquery::makeFilter($node, $operator, $value);
-        $this->loader->addFilter($filter, "and");
+        $this->loader->addFilter($filter, 'and');
+
         return $this;
     }
 
     /**
-     * The filter method is used to add filter criteria with 'OR' logic
+     * The filter method is used to add filter criteria with 'OR' logic.
      *
      * @return \Cacing69\Cquery\Cquery;
      */
     public function orFilter($node, $operator = null, $value = null): Cquery
     {
         $filter = Cquery::makeFilter($node, $operator, $value);
-        $this->loader->addFilter($filter, "or");
+        $this->loader->addFilter($filter, 'or');
+
         return $this;
     }
 
     /**
-    * Take a result query from loader
-    *
-    * @return ArrayCollection
-    */
+     * Take a result query from loader.
+     *
+     * @return ArrayCollection
+     */
     public function get()
     {
         $this->results = $this->loader->get();
@@ -176,28 +181,35 @@ class Cquery
     public function onContentLoaded($closure)
     {
         $this->loader->setCallbackOnContentLoaded($closure);
+
         return $this;
     }
 
     /**
      * Used to access or manipulate each item/element present at array results.
+     *
      * @param Closure(array): $closure
+     *
      * @return \Cacing69\Cquery\Cquery;
      */
     public function eachItem(Closure $closure)
     {
         $this->loader->setCallbackEachItem($closure);
+
         return $this;
     }
 
     /**
      * Used to access or manipulate array results.
+     *
      * @param Closure(array): $closure
+     *
      * @return \Cacing69\Cquery\Cquery;
      */
     public function onObtainedResults($closure)
     {
         $this->loader->setOnObtainedResults($closure);
+
         return $this;
     }
 
@@ -215,6 +227,7 @@ class Cquery
      * Used to set http client type.
      *
      * @param string $clientType
+     *
      * @return \Cacing69\Cquery\Cquery;
      */
     public function client($clientType)
@@ -226,15 +239,17 @@ class Cquery
      * Used to query with raw expression.
      *
      * @param string $query
+     *
      * @return \Cacing69\Cquery\Support\Collection;
      */
-    public function raw($query = "")
+    public function raw($query = '')
     {
         $parser = new Parser($query);
 
         $this->loader->setSource($parser->getSource());
 
         $this->loader->define(...$parser->getDefiners());
+
         return $this->get();
     }
 }

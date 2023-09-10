@@ -11,6 +11,7 @@ use Symfony\Component\DomCrawler\Crawler;
 class DOMCrawlerLoader extends Loader
 {
     use HasDomCrawlerGetter;
+
     public function __construct(string $content = null, $isRemote = false)
     {
         $this->isRemote = $isRemote;

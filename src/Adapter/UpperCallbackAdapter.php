@@ -31,7 +31,7 @@ class UpperCallbackAdapter extends CallbackAdapter
             $extractChild = $this->extractChild($extract[1]);
             $_childCallback = $extractChild->getAdapter()->getCallback();
 
-            if($_childCallback) {
+            if ($_childCallback) {
                 $this->callback = function (string $value) use ($_childCallback) {
                     return strtoupper((string) $_childCallback($value));
                 };
@@ -39,12 +39,12 @@ class UpperCallbackAdapter extends CallbackAdapter
         } else {
             preg_match(self::$signature, $raw, $node);
 
-            if(array_key_exists(1, $node)) {
+            if (array_key_exists(1, $node)) {
                 $this->node = $node[1];
             }
 
-            $this->callMethod = "extract";
-            $this->callMethodParameter = ["_text"];
+            $this->callMethod = 'extract';
+            $this->callMethodParameter = ['_text'];
         }
     }
 }

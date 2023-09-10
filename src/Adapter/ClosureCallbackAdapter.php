@@ -13,10 +13,10 @@ class ClosureCallbackAdapter extends CallbackAdapter
     {
         $this->raw = $rawDefiner;
 
-        $this->callMethod = "extract";
-        $this->callMethodParameter = ["_text"];
+        $this->callMethod = 'extract';
+        $this->callMethodParameter = ['_text'];
 
-        if(!empty($rawDefiner)) {
+        if (!empty($rawDefiner)) {
             $this->callback = function ($value) use ($rawDefiner) {
                 return $rawDefiner($value);
             };

@@ -2,13 +2,10 @@
 
 namespace Cacing69\Cquery;
 
+use Cacing69\Cquery\Adapter\ClosureCallbackAdapter;
 use Cacing69\Cquery\Support\RegExp;
 use Cacing69\Cquery\Support\Str;
-use Cacing69\Cquery\RegisterAdapter;
-use Cacing69\Cquery\Adapter\ClosureCallbackAdapter;
 use Cacing69\Cquery\Trait\HasAliasProperty;
-use Cacing69\Cquery\Source;
-use Cacing69\Cquery\Definer;
 use Cacing69\Cquery\Trait\HasSourceProperty;
 use Closure;
 
@@ -19,15 +16,16 @@ class DefinerExtractor
     private $raw;
     private $definer;
     private $adapter;
+
     public function __construct($definer, Source $source = null)
     {
         $this->source = $source;
         $this->raw = $definer;
 
-        if($definer instanceof Definer) {
+        if ($definer instanceof Definer) {
             $this->alias = $definer->getAlias();
 
-            if($definer->getRaw() instanceof Closure) {
+            if ($definer->getRaw() instanceof Closure) {
                 $this->definer = $definer;
                 $adapter = new ClosureCallbackAdapter($definer->getRaw());
 
@@ -51,9 +49,9 @@ class DefinerExtractor
     {
         $_alias = null;
         if (preg_match(RegExp::IS_DEFINER_HAVE_ALIAS, $definerRaw)) {
-            $decodeSelect = explode(" as ", $definerRaw);
+            $decodeSelect = explode(' as ', $definerRaw);
 
-            if(preg_match(RegExp::IS_DEFINER_HAVE_PARENTHESES, $decodeSelect[0])) {
+            if (preg_match(RegExp::IS_DEFINER_HAVE_PARENTHESES, $decodeSelect[0])) {
                 preg_match(RegExp::IS_DEFINER_HAVE_PARENTHESES, $decodeSelect[0], $extract);
 
                 $this->definer = trim($extract[1]);
@@ -72,22 +70,22 @@ class DefinerExtractor
         foreach (RegisterAdapter::load() as $adapter) {
             $_checkSignature = $adapter::getSignature();
 
-            if(is_array($_checkSignature)) {
+            if (is_array($_checkSignature)) {
                 $_founded = false;
                 foreach ($_checkSignature as $signature) {
-                    if(preg_match($signature, $this->definer)) {
+                    if (preg_match($signature, $this->definer)) {
                         $this->adapter = new $adapter($this->definer);
                         $_founded = true;
                         break;
                     }
                 }
 
-                if($_founded) {
+                if ($_founded) {
                     break;
                 }
             } else {
-                if(isset($_checkSignature)) {
-                    if(preg_match($_checkSignature, $this->definer)) {
+                if (isset($_checkSignature)) {
+                    if (preg_match($_checkSignature, $this->definer)) {
                         $this->adapter = new $adapter($this->definer);
                         break;
                     }
@@ -102,7 +100,7 @@ class DefinerExtractor
     {
         $this->alias = $alias;
 
-        if($this->source) {
+        if ($this->source) {
             $this->source->setAlias($alias);
         }
 

@@ -14,12 +14,13 @@ class DefaultCallbackAdapter extends CallbackAdapter
     {
         return self::$signature;
     }
+
     public function __construct(string $raw)
     {
         $this->raw = $raw;
 
         $this->node = $raw;
-        $this->callMethod = "extract";
-        $this->callMethodParameter = ["_text"];
+        $this->callMethod = 'extract';
+        $this->callMethodParameter = ['_text'];
     }
 }

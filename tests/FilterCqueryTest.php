@@ -10,11 +10,11 @@ final class FilterCqueryTest extends TestCase
     public function testFilterAnd()
     {
         $filter = [
-            "and" => [
+            'and' => [
                 [0, 1, 2, 3],
                 [3, 2, 4],
             ],
-            "or" => []
+            'or' => [],
         ];
 
         $resultFilter = Loader::getResultFilter($filter);
@@ -26,11 +26,11 @@ final class FilterCqueryTest extends TestCase
     public function testFilterOr()
     {
         $filter = [
-            "and" => [],
-            "or" => [
+            'and' => [],
+            'or'  => [
                 [0, 1, 2, 3],
                 [3, 2, 4],
-            ]
+            ],
         ];
 
         $resultFilter = Loader::getResultFilter($filter);
@@ -42,14 +42,14 @@ final class FilterCqueryTest extends TestCase
     public function testFilterOrAnd()
     {
         $filter = [
-            "and" => [
+            'and' => [
                 [3, 5, 7],
                 [7, 9, 10],
             ],
-            "or" => [
+            'or' => [
                 [3, 5],
                 [3, 2, 4],
-            ]
+            ],
         ];
 
         $resultFilter = Loader::getResultFilter($filter);

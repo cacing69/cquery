@@ -9,14 +9,13 @@ use Cacing69\Cquery\ParserAdapterInterface;
 
 class ReplaceCallbackAdapter extends CallbackAdapter implements ParserAdapterInterface
 {
-
-    protected static $parserIdentifier = "replace";
-    protected static $parserArguments = ["search", "replace", "querySelector"];
+    protected static $parserIdentifier = 'replace';
+    protected static $parserArguments = ['search', 'replace', 'querySelector'];
 
     protected static $signature = [
-        "replace_from_single_to_single" => '/^\s*replace\(\s*\'(.*?)\'\s*,\s*\'(.*?)\'\s*,\s*(.+)\s*\)\s*(as)?\s*\w*\s*,?$/', // replace('_', '-', .txt > a)
-        "replace_from_array_to_array" => '/^\s*replace\(\s*\[\s*(.*?)\s*\]\s*,\s*\[\s*(.*?)\s*\]\s*,\s*(.+)\s*\)\s*(as)?\s*\w*\s*,?$/', // replace([' _ ', '1'], [' - ', '1'], .txt > a)
-        "replace_from_array_to_single" => '/^\s*replace\(\s*\[\s*(.*?)\s*\]\s*,\s*\'(.*?)\'\s*,\s*(.+)\s*\)\s*(as)?\s*\w*\s*,?$/' // replace(['_', '-'], '*', .txt > a)
+        'replace_from_single_to_single' => '/^\s*replace\(\s*\'(.*?)\'\s*,\s*\'(.*?)\'\s*,\s*(.+)\s*\)\s*(as)?\s*\w*\s*,?$/', // replace('_', '-', .txt > a)
+        'replace_from_array_to_array'   => '/^\s*replace\(\s*\[\s*(.*?)\s*\]\s*,\s*\[\s*(.*?)\s*\]\s*,\s*(.+)\s*\)\s*(as)?\s*\w*\s*,?$/', // replace([' _ ', '1'], [' - ', '1'], .txt > a)
+        'replace_from_array_to_single'  => '/^\s*replace\(\s*\[\s*(.*?)\s*\]\s*,\s*\'(.*?)\'\s*,\s*(.+)\s*\)\s*(as)?\s*\w*\s*,?$/', // replace(['_', '-'], '*', .txt > a)
     ];
 
     public static function getSignature()
@@ -28,6 +27,7 @@ class ReplaceCallbackAdapter extends CallbackAdapter implements ParserAdapterInt
     {
         return self::$parserIdentifier;
     }
+
     public static function getCountParserArguments()
     {
         return count(self::$parserArguments ?? []);
@@ -40,39 +40,42 @@ class ReplaceCallbackAdapter extends CallbackAdapter implements ParserAdapterInt
         $_callbackTmp = null;
 
         foreach (self::$signature as $key => $sign) {
-            if(preg_match($sign, $raw)) {
+            if (preg_match($sign, $raw)) {
                 preg_match($sign, $raw, $extractParams);
                 $this->node = $extractParams[3];
                 $_callbackTmp = function (string $value) use ($extractParams, $key) {
-                    if($key === "replace_from_single_to_single") {
+                    if ($key === 'replace_from_single_to_single') {
                         return str_replace($extractParams[1], $extractParams[2], $value);
-                    } elseif($key === "replace_from_array_to_array") {
-                        $explodeParamsFrom = explode(",", $extractParams[1]);
-                        $explodeParamsTo = explode(",", $extractParams[2]);
+                    } elseif ($key === 'replace_from_array_to_array') {
+                        $explodeParamsFrom = explode(',', $extractParams[1]);
+                        $explodeParamsTo = explode(',', $extractParams[2]);
 
-                        if(count($explodeParamsFrom) === count($explodeParamsTo)) {
+                        if (count($explodeParamsFrom) === count($explodeParamsTo)) {
                             foreach ($explodeParamsFrom as $_key => $_value) {
                                 preg_match('/\'(.*?)\'/', $_value, $_extractFrom);
                                 preg_match('/\'(.*?)\'/', $explodeParamsTo[$_key], $_extractTo);
                                 $value = str_replace($_extractFrom[1], $_extractTo[1], $value);
                             }
+
                             return $value;
-                        } elseif(count($explodeParamsTo) === 1) {
+                        } elseif (count($explodeParamsTo) === 1) {
                             foreach ($explodeParamsFrom as $_value) {
                                 preg_match('/\'(.*?)\'/', $_value, $_extractFrom);
                                 preg_match('/\'(.*?)\'/', $explodeParamsTo[0], $_extractTo);
                                 $value = str_replace($_extractFrom[1], $_extractTo[1], $value);
                             }
+
                             return $value;
                         }
-                    } elseif($key === "replace_from_array_to_single") {
-                        $explodeParamsFrom = explode(",", $extractParams[1]);
+                    } elseif ($key === 'replace_from_array_to_single') {
+                        $explodeParamsFrom = explode(',', $extractParams[1]);
                         $explodeParamsTo = $extractParams[2];
 
                         foreach ($explodeParamsFrom as $_value) {
                             preg_match('/\'(.*?)\'/', $_value, $_extractFrom);
                             $value = str_replace($_extractFrom[1], $explodeParamsTo, $value);
                         }
+
                         return $value;
                     }
                 };
@@ -87,7 +90,7 @@ class ReplaceCallbackAdapter extends CallbackAdapter implements ParserAdapterInt
             $extractChild = $this->extractChild($extract[1]);
             $_childCallback = $extractChild->getAdapter()->getCallback();
 
-            if($_childCallback) {
+            if ($_childCallback) {
                 $this->callback = function (string $value) use ($_childCallback, $_callbackTmp) {
                     return $_callbackTmp((string) $_childCallback($value));
                 };
@@ -95,10 +98,9 @@ class ReplaceCallbackAdapter extends CallbackAdapter implements ParserAdapterInt
                 $this->callback = $_callbackTmp;
             }
         } else {
-            $this->ref = "_text";
+            $this->ref = '_text';
 
-
-            $this->callMethod = "extract";
+            $this->callMethod = 'extract';
             $this->callMethodParameter = [$this->ref];
             $this->callback = $_callbackTmp;
         }

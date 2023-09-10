@@ -1,5 +1,10 @@
 # Cquery (Crawl Query)
 
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/cacing69/cquery.svg)](https://packagist.org/packages/cacing69/cquery)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE.md)
+[![Build Status](https://img.shields.io/travis/qcod/laravel-settings/master.svg)](https://travis-ci.org/qcod/laravel-settings)
+[![StyleCI](https://styleci.io/repos/681557305/shield)](https://styleci.io/repos/681557305)
+
 ## Please Read
 
 ### Want to create a query for web scraping a website like this
@@ -45,7 +50,7 @@ I would greatly accept any support/contribution from everyone. See [CONTRIBUTING
 - [Manipulate Query Result](#handle-manipualte-result)
 - [Multiple Requests (to get detail from another url)](#handle-multi-async)
 - [Doing action after page load (click link/submit form)](#handle-doing-action)
-- [Scrape website load by js/ajax with PHP](#handle-doing-action)
+- [Scrape website load by js/ajax with PHP](#handle-js-ajax)
 
 ## Quick Installation
 
@@ -628,7 +633,19 @@ $result = $data
 
 ![Alt text](https://gcdnb.pbrd.co/images/qfItg3AHpTsR.png?o=1 "a title")
 
-#### Another Example
+<h4 id="handle-js-ajax">
+  How to scrape website load by js/ajax with PHP
+</h4>
+
+If the web page to be scraped uses JavaScript and AJAX handling for its data, then you need to add Panther-loader for cquery.
+
+install composer-panther-loader
+
+```bash
+composer require cacing69/cquery-panther-loader
+```
+
+#### Another Examples
 
 A full list of methods with example code can be found in the [tests](https://github.com/cacing69/cquery/tree/main/tests).
 

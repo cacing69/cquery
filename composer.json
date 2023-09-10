@@ -1,6 +1,6 @@
 {
   "name": "cacing69/cquery",
-  "description": "PHP Scraper with language expression, could be used to scrape data from a website that uses AJAX and JavaScript",
+  "description": "PHP Scraper with language expression, could be used to scrape data from a website that uses javascript or ajax",
   "keywords": [
     "php",
     "crawler",

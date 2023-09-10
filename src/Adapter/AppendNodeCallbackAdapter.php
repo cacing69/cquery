@@ -43,7 +43,6 @@ class AppendNodeCallbackAdapter extends CallbackAdapter implements ParserAdapter
         // dd();
         $this->node = $extract[1];
 
-
         $this->callMethod = 'filter.each';
         $this->callMethodParameter = $extractRefNode->getAdapter()->getCallMethodParameter();
         // dd($this);

@@ -22,7 +22,7 @@ limit 1
 
 ### Changelog
 
-Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
+Please see [CHANGELOG](https://cacing69.github.io/cquery/#/CHANGELOG) for more information what has changed recently.
 
 ### Currently experimenting
 

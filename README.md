@@ -162,13 +162,13 @@ Below are the functions you are can use, they may change over time.
 ### List rules for alias
 
 Below are the functions you are can use, they may change over time. <br>**Note:** nested function has been supported.
-| # | example | alias | description |
+| # | example | key_result | description |
 | ------------- | --------- | --------- | ------------- |
 | 1| `h1` |  `h1` | - |
 | 2 | `h1 > 1` |  `h1_a` | - |
 | 3 | `h1 > 1 as title` |  `title` | - |
-| 4 | `append_node(div > .tags, a) as _tags` |  `_tags[key]` | it will be append element as array each element |
-| 5| `append_node(div > .tags, a) as tags[*][text]` | `tags[0]['text']` | `*` the star symbol signifies all elements at the index. it will be append new key (in this case `text`) each array element
+| 4 | `append_node(div > .tags, a) as _tags.key` |  `_tags[key]` | it will be append element as array each element |
+| 5| `append_node(div > .tags, a) as tags.*.text` | `tags[0]['text']` | `*` the star symbol signifies all elements at the index. it will be append new key (in this case `text`) each array element
 
 ### How to use filter
 

@@ -61,6 +61,7 @@ abstract class CallbackAdapter
 
     public function getRef()
     {
+
         return $this->ref;
     }
 

@@ -8,6 +8,7 @@ use Cacing69\Cquery\Definer;
 use Cacing69\Cquery\Filter;
 use Exception;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DomCrawler\Crawler;
 
 define('SAMPLE_HTML', 'src/Samples/sample.html');
 
@@ -914,8 +915,8 @@ final class SampleTest extends TestCase
             ->define(
                 'span.text as text',
                 'append_node(div > .tags, a) as _tags',
-                'append_node(div > .tags, a) as tags[*][text]',
-                'append_node(div > .tags, attr(href, a)) as tags[*][url]', // * means each index, for now ots limitd only one level
+                'append_node(div > .tags, a) as tags.*.text',
+                'append_node(div > .tags, attr(href, a)) as tags.*.url', // * means each index, for now ots limitd only one level
             )
             ->get();
 
@@ -945,7 +946,7 @@ final class SampleTest extends TestCase
             ->from('.col-md-8 > .quote')
             ->define(
                 'span.text as text',
-                'append_node(div > .tags, a) as tags[key]',
+                'append_node(div > .tags, a) as tags.key',
             )
             ->get();
 
@@ -1222,5 +1223,30 @@ final class SampleTest extends TestCase
             ->raw($query);
 
         $this->assertCount(9, $result);
+    }
+
+    public function testWithNestedData()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_HTML);
+        $data = new Cquery($simpleHtml);
+
+        // ul.nested-list > h1 as title,
+        // ul.nested-list > h1 as data.title,
+        // append_node(ul.nested-list, li) as data.list,
+        // append_node(ul.nested-list > li > ul, li) as data.list_child,
+        // ul.nested-list > h1 as title,
+        // ul.nested-list > h1 as data.title,
+        // append_node(ul.nested-list, li) as data.list,
+
+        $query = "
+                from (.nested-content)
+                define
+                    append_node(ul.nested-list > li > ul > li > ul, attr(href, li > a)) as data.list_child,
+                ";
+        $result = $data
+            ->raw($query);
+
+        $this->assertCount(1, $result[0]["data"]);
+        $this->assertCount(3, $result[0]["data"]["list_child"]);
     }
 }

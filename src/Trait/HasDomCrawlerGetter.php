@@ -83,12 +83,13 @@ trait HasDomCrawlerGetter
                 $_data = $_data->extract($definer->getAdapter()->getCallMethodParameter());
             } elseif ($definer->getAdapter()->getCallMethod() === 'filter.each') {
                 $_data = [];
+
                 $this
                     ->crawler
                     ->filterXPath($this->getSource()->getXpath())
                     ->filterXPath($definer->getAdapter()->getNodeXpath())
                     ->each(function (Crawler $node, $i) use (&$_data, $definer) {
-                        $node->filter('a')->each(function (Crawler $_node, $_i) use ($i, &$_data, $definer) {
+                        $node->filter($definer->getAdapter()->getRef())->each(function (Crawler $_node, $_i) use ($i, &$_data, $definer) {
                             if (is_array($definer->getAdapter()->getCallMethodParameter()) && count($definer->getAdapter()->getCallMethodParameter()) === 1) {
                                 $__callParameter = $definer->getAdapter()->getCallMethodParameter()[0];
                                 if ($__callParameter === '_text') {
@@ -175,9 +176,9 @@ trait HasDomCrawlerGetter
                         $_hold_data[$_key][$definer->getAlias()] = $_value;
                     }
                 } else {
-                    // if alias == tags[*][text]
-                    if (preg_match('/^\s*([A-Za-z0-9\-\_]+?)\[\*\]\[([A-Za-z0-9\-\_]*?)\]\s*?/', $definer->getAlias())) {
-                        preg_match('/^\s*([A-Za-z0-9\-\_]+?)\[\*\]\[([A-Za-z0-9\-\_]*?)\]\s*?/', $definer->getAlias(), $_extractAlias);
+                    // if alias == tags.*.text
+                    if (preg_match('/^\s*([A-Za-z0-9\-\_]+?)\.\*\.([A-Za-z0-9\-\_]+)\s*?/', $definer->getAlias())) {
+                        preg_match('/^\s*([A-Za-z0-9\-\_]+?)\.\*\.([A-Za-z0-9\-\_]+)\s*?/', $definer->getAlias(), $_extractAlias);
 
                         // TODO perlu di check, panjang setiap element dari setiap key harus sama, jika tidak sama, ambil ulang data dengan dengan filter->each
                         if (array_key_exists($_extractAlias[1], $_hold_data[$_key])) {
@@ -192,9 +193,9 @@ trait HasDomCrawlerGetter
 
                         $_hold_data[$_key][$_extractAlias[1]] = $_hold_child;
 
-                        // if alias == tags[text]
-                    } elseif (preg_match('/^\s*([A-Za-z0-9\-\_]+?)\[([A-Za-z0-9\-\_]*?)\]\s*?/', $definer->getAlias())) {
-                        preg_match('/^\s*([A-Za-z0-9\-\_]+?)\[([A-Za-z0-9\-\_]*?)\]\s*?/', $definer->getAlias(), $_extractAlias);
+                        // if alias == tags.text
+                    } elseif (preg_match('/^\s*([A-Za-z0-9\-\_]+?)\.([A-Za-z0-9\-\_]+)\s*?/', $definer->getAlias())) {
+                        preg_match('/^\s*([A-Za-z0-9\-\_]+?)\.([A-Za-z0-9\-\_]+)\s*?/', $definer->getAlias(), $_extractAlias);
 
                         $_hold_data[$_key][$_extractAlias[1]][$_extractAlias[2]] = $_value;
                     } else {

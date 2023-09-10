@@ -103,7 +103,7 @@ class Parser
     {
         $_strDefiner = $definer;
         $_loopDefiner = 0;
-        while (!empty($_strDefiner)) {
+        while (!empty(trim($_strDefiner))) {
             if (preg_match("/(.*?)\s*,\s*/i", $_strDefiner, $_strDefinerMatch)) {
                 $_adapter = null;
 
@@ -143,6 +143,8 @@ class Parser
                                     // if(Str::endWith("$", $_regexCheckSignature)) {
 
                                     $_regexCheckSignature = str_replace('$', '', $_regexCheckSignature);
+
+                                    // dd($_regexCheckSignature);
                                     // }
 
                                     if (preg_match($_regexCheckSignature, $_strDefiner, $_strDefinerMatch)) {

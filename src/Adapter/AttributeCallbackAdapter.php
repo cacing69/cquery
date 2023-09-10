@@ -10,8 +10,8 @@ use Cacing69\Cquery\Support\RegExp;
 
 class AttributeCallbackAdapter extends CallbackAdapter implements ParserAdapterInterface
 {
-    protected static $parserIdentifier = "attr";
-    protected static $parserArguments = ["attr", "querySelector"];
+    protected static $parserIdentifier = 'attr';
+    protected static $parserArguments = ['attr', 'querySelector'];
     protected static $signature = RegExp::IS_ATTRIBUTE;
 
     public static function getSignature()
@@ -23,6 +23,7 @@ class AttributeCallbackAdapter extends CallbackAdapter implements ParserAdapterI
     {
         return self::$parserIdentifier;
     }
+
     public static function getCountParserArguments()
     {
         return count(self::$parserArguments ?? []);
@@ -38,7 +39,7 @@ class AttributeCallbackAdapter extends CallbackAdapter implements ParserAdapterI
         $this->ref = $extractParams[1];
         $this->node = $extractParams[2];
 
-        $this->callMethod = "extract";
+        $this->callMethod = 'extract';
         $this->callMethodParameter = [$this->ref];
     }
 }

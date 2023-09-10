@@ -10,9 +10,10 @@ use Cacing69\Cquery\ParserAdapterInterface;
 
 class AppendNodeCallbackAdapter extends CallbackAdapter implements ParserAdapterInterface
 {
-    protected static $parserIdentifier = "append_node";
-    protected static $parserArguments = ["querySelector", "children"];
+    protected static $parserIdentifier = 'append_node';
+    protected static $parserArguments = ['querySelector', 'children'];
     protected static $signature = '/^\s*?append_node\(\s*(.+?),\s*(.+?)\s*\)\s*(as)?\s*\w*\s*,?$/i';
+
     public static function getSignature()
     {
         return self::$signature;
@@ -22,6 +23,7 @@ class AppendNodeCallbackAdapter extends CallbackAdapter implements ParserAdapter
     {
         return self::$parserIdentifier;
     }
+
     public static function getCountParserArguments()
     {
         return count(self::$parserArguments);
@@ -39,7 +41,7 @@ class AppendNodeCallbackAdapter extends CallbackAdapter implements ParserAdapter
         $this->ref = $extractRefNode->getDefiner();
         $this->node = $extract[1];
 
-        $this->callMethod = "filter.each";
+        $this->callMethod = 'filter.each';
         $this->callMethodParameter = $extractRefNode->getAdapter()->getCallMethodParameter();
     }
 }

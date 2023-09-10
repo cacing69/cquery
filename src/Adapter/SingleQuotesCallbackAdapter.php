@@ -14,6 +14,7 @@ class SingleQuotesCallbackAdapter extends CallbackAdapter
     {
         return self::$signature;
     }
+
     public function __construct(string $raw)
     {
         $this->raw = $raw;
@@ -26,6 +27,6 @@ class SingleQuotesCallbackAdapter extends CallbackAdapter
             return $_extract[1];
         };
 
-        $this->callMethod = "static";
+        $this->callMethod = 'static';
     }
 }

@@ -15,6 +15,7 @@ class LengthCallbackAdapter extends CallbackAdapter
     {
         return self::$signature;
     }
+
     public function __construct(string $raw)
     {
         $this->raw = $raw;
@@ -24,24 +25,23 @@ class LengthCallbackAdapter extends CallbackAdapter
         };
 
         // check if function is nested
-        if(preg_match('/^\s*length\(\s*([a-z0-9_]*\(.*\))\s*\)$/', $raw)) {
+        if (preg_match('/^\s*length\(\s*([a-z0-9_]*\(.*\))\s*\)$/', $raw)) {
             preg_match('/^\s*length\(\s*([a-z0-9_]*\(.*\))\s*\)$/', $raw, $extract);
 
             $extractChild = $this->extractChild($extract[1]);
             $_childCallback = $extractChild->getAdapter()->getCallback();
 
-            if($_childCallback) {
+            if ($_childCallback) {
                 $this->callback = function (string $value) use ($_childCallback) {
                     return strlen((string) $_childCallback($value));
                 };
             }
-
         } else {
             preg_match(self::$signature, $raw, $node);
             $this->node = $node[1];
 
-            $this->callMethod = "extract";
-            $this->callMethodParameter = ["_text"];
+            $this->callMethod = 'extract';
+            $this->callMethodParameter = ['_text'];
         }
     }
 }

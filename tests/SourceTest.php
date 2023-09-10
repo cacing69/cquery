@@ -6,7 +6,7 @@ use Cacing69\Cquery\Cquery;
 use Cacing69\Cquery\Source;
 use PHPUnit\Framework\TestCase;
 
-define("SAMPLE_HTML", "src/Samples/sample.html");
+define('SAMPLE_HTML', 'src/Samples/sample.html');
 final class SourceTest extends TestCase
 {
     public function testSetSelector()
@@ -14,12 +14,12 @@ final class SourceTest extends TestCase
         $simpleHtml = file_get_contents(SAMPLE_HTML);
         $data = new Cquery($simpleHtml);
 
-        $data->from("#lorem .link");
+        $data->from('#lorem .link');
 
         $source = $data->getSource();
 
         $this->assertSame('#lorem .link', $source->getValue());
-        $this->assertSame("", $source->getAlias());
+        $this->assertSame('', $source->getAlias());
     }
 
     public function testSetSelectorWithAlias()
@@ -27,7 +27,7 @@ final class SourceTest extends TestCase
         $simpleHtml = file_get_contents(SAMPLE_HTML);
         $data = new Cquery($simpleHtml);
 
-        $data->from("(#lorem .link) as _el");
+        $data->from('(#lorem .link) as _el');
 
         $selector = $data->getSource();
 
@@ -38,7 +38,7 @@ final class SourceTest extends TestCase
 
     public function SourceExtractorToString()
     {
-        $selector = new Source("(a > ul) as _el");
+        $selector = new Source('(a > ul) as _el');
 
         $this->assertEquals('a > ul', $selector);
     }

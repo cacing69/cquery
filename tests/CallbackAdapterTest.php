@@ -14,8 +14,8 @@ final class UpperCallbackAdapterTest extends TestCase
 
         $_callback = $adapter->getCallback();
 
-        $test = $_callback("test");
-        $this->assertSame("TEST", $test);
+        $test = $_callback('test');
+        $this->assertSame('TEST', $test);
     }
 
     public function testLowerCallbackAdapter()
@@ -24,7 +24,7 @@ final class UpperCallbackAdapterTest extends TestCase
 
         $_callback = $adapter->getCallback();
 
-        $test = $_callback("TEST");
-        $this->assertSame("test", $test);
+        $test = $_callback('TEST');
+        $this->assertSame('test', $test);
     }
 }

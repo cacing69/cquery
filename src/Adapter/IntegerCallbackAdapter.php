@@ -30,7 +30,7 @@ class IntegerCallbackAdapter extends CallbackAdapter
             $extractChild = $this->extractChild($extract[1]);
             $_childCallback = $extractChild->getAdapter()->getCallback();
 
-            if($_childCallback) {
+            if ($_childCallback) {
                 $this->callback = function (string $value) use ($_childCallback) {
                     return intval((string) $_childCallback($value));
                 };
@@ -40,8 +40,8 @@ class IntegerCallbackAdapter extends CallbackAdapter
 
             $this->node = $node[1];
 
-            $this->callMethod = "extract";
-            $this->callMethodParameter = ["_text"];
+            $this->callMethod = 'extract';
+            $this->callMethodParameter = ['_text'];
         }
     }
 }

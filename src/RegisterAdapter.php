@@ -2,9 +2,9 @@
 
 namespace Cacing69\Cquery;
 
+use Cacing69\Cquery\Adapter\AppendNodeCallbackAdapter;
 use Cacing69\Cquery\Adapter\AttributeCallbackAdapter;
 use Cacing69\Cquery\Adapter\DefaultCallbackAdapter;
-use Cacing69\Cquery\Adapter\AppendNodeCallbackAdapter;
 use Cacing69\Cquery\Adapter\FloatCallbackAdapter;
 use Cacing69\Cquery\Adapter\IntegerCallbackAdapter;
 use Cacing69\Cquery\Adapter\LengthCallbackAdapter;
@@ -42,9 +42,9 @@ class RegisterAdapter
             FloatCallbackAdapter::class,
 
             /**
-             *  Make sure that DefaultCallbackAdapter is always at the bottom
+             *  Make sure that DefaultCallbackAdapter is always at the bottom.
              */
-            DefaultCallbackAdapter::class
+            DefaultCallbackAdapter::class,
         ];
     }
 }

@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Cacing69\Cquery;
 
 use Cacing69\Cquery\Adapter\ClosureCallbackAdapter;
-use Cacing69\Cquery\DefinerExtractor;
-use Cacing69\Cquery\Trait\HasSourceProperty;
 use Cacing69\Cquery\Trait\HasDefinersProperty;
 use Cacing69\Cquery\Trait\HasFiltersProperty;
-use Symfony\Component\HttpClient\HttpClient;
+use Cacing69\Cquery\Trait\HasSourceProperty;
+use Closure;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\DomCrawler\Crawler;
-use Closure;
+use Symfony\Component\HttpClient\HttpClient;
 
 abstract class Loader
 {
@@ -21,7 +20,7 @@ abstract class Loader
     use HasDefinersProperty;
     protected $limit = null;
     protected $client;
-    protected $clientName = "browser-kit";
+    protected $clientName = 'browser-kit';
 
     protected $uri = null;
     protected $isRemote = false;
@@ -38,32 +37,35 @@ abstract class Loader
     public function limit(int $limit)
     {
         $this->limit = $limit;
+
         return $this;
     }
+
     public function from(string $value)
     {
-        if($this->source) {
-            throw new CqueryException("cannot call method from twice.");
+        if ($this->source) {
+            throw new CqueryException('cannot call method from twice.');
         }
 
         $this->filters = [];
         $this->fetchCrawler();
 
         $this->source = new Source($value);
+
         return $this;
     }
 
     protected function fetchCrawler()
     {
-        if($this->isRemote) {
-            if($this->clientName === "browser-kit") {
+        if ($this->isRemote) {
+            if ($this->clientName === 'browser-kit') {
                 $this->client = new HttpBrowser(HttpClient::create());
 
                 $this->client->request('GET', $this->uri);
 
                 $this->crawler = new Crawler($this->client->getResponse()->getContent());
 
-                if($this->callbackOnContentLoaded) {
+                if ($this->callbackOnContentLoaded) {
                     $_callbackOnContentLoaded = $this->callbackOnContentLoaded;
 
                     $this->client = $_callbackOnContentLoaded($this->client, $this->crawler);
@@ -78,7 +80,6 @@ abstract class Loader
 
                 //     $this->crawler = new Crawler($output);
                 //     curl_close($ch);
-
             } else {
                 throw new CqueryException("client {$this->clientName} doesnt support");
             }
@@ -98,19 +99,19 @@ abstract class Loader
     public static function getResultFilter(array $filtered): array
     {
         $result = [
-            "and" => [],
-            "or" => [],
+            'and' => [],
+            'or'  => [],
         ];
 
-        if (array_key_exists("and", $filtered) && count($filtered["and"]) > 0) {
-            $result["and"] = array_intersect(...$filtered["and"]);
+        if (array_key_exists('and', $filtered) && count($filtered['and']) > 0) {
+            $result['and'] = array_intersect(...$filtered['and']);
         }
 
-        if (array_key_exists("or", $filtered) && count($filtered["or"]) > 0) {
-            $result["or"] = array_unique(array_merge(...$filtered["or"]));
+        if (array_key_exists('or', $filtered) && count($filtered['or']) > 0) {
+            $result['or'] = array_unique(array_merge(...$filtered['or']));
         }
 
-        $filterResult = array_unique(array_merge($result["and"], $result["or"]));
+        $filterResult = array_unique(array_merge($result['and'], $result['or']));
 
         sort($filterResult, SORT_NUMERIC);
 
@@ -122,6 +123,7 @@ abstract class Loader
         array_push($this->definers, new DefinerExtractor($definer, $this->source));
 
         $this->checkDefineNotDuplicate();
+
         return $this;
     }
 
@@ -130,8 +132,8 @@ abstract class Loader
     {
         $_key = [];
         foreach ($this->definers as $definer) {
-            if(in_array($definer->getAlias(), $_key)) {
-                throw new CqueryException("the alias column must not be duplicated, only one unique name is allowed for the definer");
+            if (in_array($definer->getAlias(), $_key)) {
+                throw new CqueryException('the alias column must not be duplicated, only one unique name is allowed for the definer');
             }
             $_key[] = $definer->getAlias();
         }
@@ -139,13 +141,13 @@ abstract class Loader
 
     public function define(...$defines)
     {
-        if(count($this->definers) > 0) {
-            throw new CqueryException("cannot call method define twice.");
+        if (count($this->definers) > 0) {
+            throw new CqueryException('cannot call method define twice.');
         }
 
         $this->validateSource();
 
-        if($this->isFetched) {
+        if ($this->isFetched) {
             $this->definers = [];
             $this->isFetched = false;
         }
@@ -160,25 +162,25 @@ abstract class Loader
     protected function validateSource()
     {
         if ($this->source === null) {
-            throw new CqueryException("no source defined");
+            throw new CqueryException('no source defined');
         }
     }
 
     protected function validateDefiners()
     {
         if (count($this->definers) === 0) {
-            throw new CqueryException("no definer found");
+            throw new CqueryException('no definer found');
         }
     }
 
     // Before From DOM Manipulator
-    public function addFilter($filter, $operator = "and")
+    public function addFilter($filter, $operator = 'and')
     {
         $this->validateSource();
 
         $adapter = null;
 
-        if($filter->operatorIsCallback()) {
+        if ($filter->operatorIsCallback()) {
             $adapter = new ClosureCallbackAdapter(null);
 
             $extractor = new DefinerExtractor($filter->getNode());
@@ -190,11 +192,11 @@ abstract class Loader
         } else {
             foreach (RegisterAdapter::load() as $adapter) {
                 $_checkSignature = $adapter::getSignature();
-                if(isset($_checkSignature)) {
-                    if(is_array($_checkSignature)) {
+                if (isset($_checkSignature)) {
+                    if (is_array($_checkSignature)) {
                         $_founded = false;
                         foreach ($_checkSignature as $signature) {
-                            if(preg_match($signature, $filter->getNode())) {
+                            if (preg_match($signature, $filter->getNode())) {
                                 $adapter = new $adapter($filter->getNode(), $this->source);
 
                                 $_founded = true;
@@ -202,11 +204,11 @@ abstract class Loader
                             }
                         }
 
-                        if($_founded) {
+                        if ($_founded) {
                             break;
                         }
                     } else {
-                        if(preg_match($_checkSignature, $filter->getNode())) {
+                        if (preg_match($_checkSignature, $filter->getNode())) {
                             $adapter = new $adapter($filter->getNode(), $this->source);
                             break;
                         }
@@ -226,23 +228,28 @@ abstract class Loader
     public function setCallbackOnContentLoaded(Closure $closure)
     {
         $this->callbackOnContentLoaded = $closure;
+
         return $this;
     }
 
     public function setCallbackEachItem(Closure $closure)
     {
         $this->callbackEachItem = $closure;
+
         return $this;
     }
+
     public function setOnObtainedResults(Closure $closure)
     {
         $this->callbackOnObtainedResults = $closure;
+
         return $this;
     }
 
     public function setClientName(string $clientName)
     {
         $this->clientName = $clientName;
+
         return $this;
     }
 

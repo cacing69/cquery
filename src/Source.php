@@ -10,7 +10,7 @@ use Cacing69\Cquery\Trait\HasRawProperty;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 
 /**
- * Source class used to define the source element to be scraped
+ * Source class used to define the source element to be scraped.
  *
  * @author Ibnul Mutaki <ibnuu@gmail.com>
  *
@@ -26,7 +26,6 @@ class Source
 
     public function __construct($init)
     {
-
         $this->raw = $init;
         $css = new CssSelectorConverter();
         if (preg_match(RegExp::IS_SOURCE_HAVE_ALIAS, $init)) {
@@ -36,7 +35,7 @@ class Source
             $this->alias = $extractAlias[2];
         } else {
             $this->value = $init;
-            $this->alias = "";
+            $this->alias = '';
         }
         $this->xpath = $css->toXPath($this->value);
     }
@@ -63,6 +62,6 @@ class Source
 
     public function isHasAlias()
     {
-        return $this->alias !== "";
+        return $this->alias !== '';
     }
 }

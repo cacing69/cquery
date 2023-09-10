@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Cacing69\Cquery;
 
-use Closure;
 use Cacing69\Cquery\Trait\HasNodeProperty;
 use Cacing69\Cquery\Trait\HasOperatorProperty;
+use Closure;
 
 class Filter
 {
@@ -19,7 +19,7 @@ class Filter
 
         $this->operator = $operator;
 
-        if(!($operator instanceof Closure)) {
+        if (!($operator instanceof Closure)) {
             $this->value = $value;
         }
     }
@@ -45,6 +45,6 @@ class Filter
 
     public static function raw($raw)
     {
-        return new Filter("", "");
+        return new Filter('', '');
     }
 }

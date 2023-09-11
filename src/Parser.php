@@ -185,7 +185,7 @@ class Parser
         return $this->definers;
     }
 
-    public getLimit() {
+    public function getLimit() {
         return $this->limit;
     }
 }

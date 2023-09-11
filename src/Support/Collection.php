@@ -9,8 +9,9 @@ class Collection extends ArrayCollection
     /**
      * Get the values of a given key.
      *
-     * @param  string|int|array<array-key, string>  $value
-     * @param  string|null  $key
+     * @param string|int|array<array-key, string> $value
+     * @param string|null                         $key
+     *
      * @return static<array-key, mixed>
      */
     public function pluck($value, $key = null)

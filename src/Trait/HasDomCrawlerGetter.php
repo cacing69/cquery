@@ -1,8 +1,8 @@
 <?php
 
 namespace Cacing69\Cquery\Trait;
-use Cacing69\Cquery\Adapter\AppendNodeCallbackAdapter;
 
+use Cacing69\Cquery\Adapter\AppendNodeCallbackAdapter;
 use Cacing69\Cquery\CqueryException;
 use Cacing69\Cquery\Support\Collection;
 use Symfony\Component\DomCrawler\Crawler;
@@ -142,7 +142,6 @@ trait HasDomCrawlerGetter
                 // TODO tambahkan metode ambil data dengan filter->each, walaupun itu akan sedikit lambat, buts its ok, karena hanya untuk kasus tertentu
                 // TODO index kolom yang menjadi acuan utama adalah index pertama di definer
 
-
                 if (count($_data ?? []) < $_bound) {
                     $_data = [];
                     $this
@@ -161,11 +160,10 @@ trait HasDomCrawlerGetter
                         });
                     //     dump(count($_data), $_bound);
                     // throw new CqueryException("error query definer, there are no matching rows each column.");
-                // dump($_data);
+                    // dump($_data);
                 } elseif (count($_data ?? []) > $_bound) {
-
                     // if(!($definer->getAdapter() instanceof AppendNodeCallbackAdapter)) {
-                        throw new CqueryException('error query definer, there are no matching rows each column.');
+                    throw new CqueryException('error query definer, there are no matching rows each column.');
                     // }
                 }
             }
@@ -197,14 +195,14 @@ trait HasDomCrawlerGetter
                     if (preg_match('/^\s*([A-Za-z0-9\-\_]+?)\.\*\.([A-Za-z0-9\-\_]+)\s*?/', $definer->getAlias())) {
                         preg_match('/^\s*([A-Za-z0-9\-\_]+?)\.\*\.([A-Za-z0-9\-\_]+)\s*?/', $definer->getAlias(), $_extractAlias);
 
-                        if(empty($_boundKey[$_key])) {
+                        if (empty($_boundKey[$_key])) {
                             $_boundKey[$_key] = count($_value);
                         }
                         // dd($_extractAlias);
                         // dd($_key);
                         // TODO perlu di check, panjang setiap element dari setiap key harus sama, jika tidak sama, ambil ulang data dengan dengan filter->each
-                        if(count($_value) < $_boundKey[$_key]) {
-                            throw new CqueryException("the number of rows in query result for this object is not the same as the previous query.");
+                        if (count($_value) < $_boundKey[$_key]) {
+                            throw new CqueryException('the number of rows in query result for this object is not the same as the previous query.');
                         }
 
                         // dd($_extractAlias);
@@ -222,8 +220,6 @@ trait HasDomCrawlerGetter
                         }
 
                         $_hold_data[$_key][$_extractAlias[1]] = $_hold_child;
-
-
                     } elseif (preg_match('/^\s*([A-Za-z0-9\-\_]+?)\.([A-Za-z0-9\-\_]+)\s*?/', $definer->getAlias())) {
                         preg_match('/^\s*([A-Za-z0-9\-\_]+?)\.([A-Za-z0-9\-\_]+)\s*?/', $definer->getAlias(), $_extractAlias);
 

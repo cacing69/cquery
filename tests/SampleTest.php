@@ -1230,7 +1230,6 @@ final class SampleTest extends TestCase
         $data = new Cquery($simpleHtml);
 
         try {
-
             $query = '
                 from (.nested-content)
                 define
@@ -1239,7 +1238,6 @@ final class SampleTest extends TestCase
                 ';
             $result = $data
                 ->raw($query);
-
         } catch (Exception $e) {
             $this->assertSame(CqueryException::class, get_class($e));
             $this->assertSame('the number of rows in query result for this object is not the same as the previous query.', $e->getMessage());
@@ -1264,17 +1262,17 @@ final class SampleTest extends TestCase
         $result = $data
             ->raw($query);
 
-        $pluck = $result->pluck("title")->toArray();
+        $pluck = $result->pluck('title')->toArray();
 
         $this->assertCount(9, $pluck);
-        $this->assertsame("Title 1", $pluck[0]);
-        $this->assertsame("Title 2", $pluck[1]);
-        $this->assertsame("Title 3", $pluck[2]);
-        $this->assertsame("Title 11", $pluck[3]);
-        $this->assertsame("Title 22", $pluck[4]);
-        $this->assertsame("Title 323", $pluck[5]);
-        $this->assertsame("Title 331", $pluck[6]);
-        $this->assertsame("Title 331", $pluck[7]);
-        $this->assertsame("12345", $pluck[8]);
+        $this->assertsame('Title 1', $pluck[0]);
+        $this->assertsame('Title 2', $pluck[1]);
+        $this->assertsame('Title 3', $pluck[2]);
+        $this->assertsame('Title 11', $pluck[3]);
+        $this->assertsame('Title 22', $pluck[4]);
+        $this->assertsame('Title 323', $pluck[5]);
+        $this->assertsame('Title 331', $pluck[6]);
+        $this->assertsame('Title 331', $pluck[7]);
+        $this->assertsame('12345', $pluck[8]);
     }
 }

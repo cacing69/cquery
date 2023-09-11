@@ -16,7 +16,7 @@ class Parser
     use HasRawProperty;
     use HasDefinersProperty;
     use HasFiltersProperty;
-    public $limit;
+    protected $limit;
     public $onDocumentLoaded;
     // 1). \s*from\s*\(\s*(.*?)\s*\)\s*define\s*(.*?)\s*filter\s*(.*)\s*limit\s*(.*)\s*
 
@@ -183,5 +183,9 @@ class Parser
     public function getDefiners()
     {
         return $this->definers;
+    }
+
+    public getLimit() {
+        return $this->limit;
     }
 }

@@ -52,9 +52,16 @@ class Parser
         $this->source = new Source($_from[1]);
 
         if (preg_match("/define\s*(.*)/is", $raw, $_definer)) {
-            if (preg_match("/filter\s*(.*)\s*limit/i", $_definer[1], $_filter)) {
+            if (preg_match("/filter\s*(.*)\s*limit/is", $_definer[1], $_filter)) {
                 // get limit
-                if (preg_match("/limit\s(\d)/is", $_filter[1], $_limit)) {
+                preg_match("/(.*?)\s*filter/is", $_definer[1], $_extractDefinerFromFilter);
+                 // extract definer
+                $this->makeDefiners($_extractDefinerFromFilter[1]);
+
+                 // extract filter
+                $this->makeFilters($_filter[1]);
+                
+                if (preg_match("/limit\s*(\d+)\s*/is", $_definer[1], $_limit)) {
                     $this->limit = intval($_limit[1]);
                 }
             } elseif (preg_match("/filter\s*(.*)/is", $_definer[1], $_filter)) {

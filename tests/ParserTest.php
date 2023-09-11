@@ -240,4 +240,29 @@ final class ParserTest extends TestCase
         $this->assertSame('attr(href, div > h1 > span > a)', $parser->getDefiners()[1]);
         $this->assertSame("replace('i am', 'you are', div > h1 > span > a)", $parser->getDefiners()[2]);
     }
+
+    public function testParseWithLimit()
+    {
+        $query = "
+        from ( .item )
+        define
+            append_node(.list > .item, li) as list,
+            attr(href, div > h1 > span > a),
+            replace('i am', 'you are', div > h1 > span > a)
+        filter
+            span > a.title has 'lorem'  and
+            attr(id, span > a) > 9
+        limit 1
+        ";
+
+        $parser = new Parser($query);
+
+        $this->assertSame('.item', $parser->getSource()->getRaw());
+        $this->assertCount(3, $parser->getDefiners(), 'should have 2 definers');
+        $this->assertCount(2, $parser->getFilters()['and'], 'should have 2 filters');
+        $this->assertSame(1, $parser->limit);
+        $this->assertSame('append_node(.list > .item, li) as list', $parser->getDefiners()[0]);
+        $this->assertSame('attr(href, div > h1 > span > a)', $parser->getDefiners()[1]);
+        $this->assertSame("replace('i am', 'you are', div > h1 > span > a)", $parser->getDefiners()[2]);
+    }
 }

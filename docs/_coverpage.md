@@ -1,5 +1,5 @@
 
-# Cquery <small>1.3.0</small>
+# Cquery <small>1</small>
 
 > It's an acronym for Crawl Query
 

@@ -1245,4 +1245,36 @@ final class SampleTest extends TestCase
             $this->assertSame('the number of rows in query result for this object is not the same as the previous query.', $e->getMessage());
         }
     }
+
+    public function testPluck()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_HTML);
+        $data = new Cquery($simpleHtml);
+
+        $query = "from (#lorem .link)
+                    define
+                        h1 as title,
+                        a as description,
+                        attr(href, a) as url,
+                        attr(class, a) as class
+                    filter
+                        attr(class, a) has 'vip'
+                    ";
+
+        $result = $data
+            ->raw($query);
+
+        $pluck = $result->pluck("title")->toArray();
+
+        $this->assertCount(9, $pluck);
+        $this->assertsame("Title 1", $pluck[0]);
+        $this->assertsame("Title 2", $pluck[1]);
+        $this->assertsame("Title 3", $pluck[2]);
+        $this->assertsame("Title 11", $pluck[3]);
+        $this->assertsame("Title 22", $pluck[4]);
+        $this->assertsame("Title 323", $pluck[5]);
+        $this->assertsame("Title 331", $pluck[6]);
+        $this->assertsame("Title 331", $pluck[7]);
+        $this->assertsame("12345", $pluck[8]);
+    }
 }

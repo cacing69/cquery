@@ -1230,7 +1230,6 @@ final class SampleTest extends TestCase
         $data = new Cquery($simpleHtml);
 
         try {
-
             $query = '
                 from (.nested-content)
                 define
@@ -1239,7 +1238,6 @@ final class SampleTest extends TestCase
                 ';
             $result = $data
                 ->raw($query);
-
         } catch (Exception $e) {
             $this->assertSame(CqueryException::class, get_class($e));
             $this->assertSame('the number of rows in query result for this object is not the same as the previous query.', $e->getMessage());

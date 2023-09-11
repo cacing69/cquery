@@ -55,12 +55,12 @@ class Parser
             if (preg_match("/filter\s*(.*)\s*limit/is", $_definer[1], $_filter)) {
                 // get limit
                 preg_match("/(.*?)\s*filter/is", $_definer[1], $_extractDefinerFromFilter);
-                 // extract definer
+                // extract definer
                 $this->makeDefiners($_extractDefinerFromFilter[1]);
 
-                 // extract filter
+                // extract filter
                 $this->makeFilters($_filter[1]);
-                
+
                 if (preg_match("/limit\s*(\d+)\s*/is", $_definer[1], $_limit)) {
                     $this->limit = intval($_limit[1]);
                 }
@@ -185,7 +185,8 @@ class Parser
         return $this->definers;
     }
 
-    public function getLimit() {
+    public function getLimit()
+    {
         return $this->limit;
     }
 }

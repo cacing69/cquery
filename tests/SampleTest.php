@@ -8,7 +8,6 @@ use Cacing69\Cquery\Definer;
 use Cacing69\Cquery\Filter;
 use Exception;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\DomCrawler\Crawler;
 
 define('SAMPLE_HTML', 'src/Samples/sample.html');
 
@@ -1238,15 +1237,15 @@ final class SampleTest extends TestCase
         // ul.nested-list > h1 as data.title,
         // append_node(ul.nested-list, li) as data.list,
 
-        $query = "
+        $query = '
                 from (.nested-content)
                 define
                     append_node(ul.nested-list > li > ul > li > ul, attr(href, li > a)) as data.list_child,
-                ";
+                ';
         $result = $data
             ->raw($query);
 
-        $this->assertCount(1, $result[0]["data"]);
-        $this->assertCount(3, $result[0]["data"]["list_child"]);
+        $this->assertCount(1, $result[0]['data']);
+        $this->assertCount(3, $result[0]['data']['list_child']);
     }
 }

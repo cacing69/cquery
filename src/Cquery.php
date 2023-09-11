@@ -120,6 +120,16 @@ class Cquery
         return $this->loader->first();
     }
 
+    /**
+     * Take a first result from query result collection.
+     *
+     * @return array
+     */
+    public function last()
+    {
+        return $this->loader->last();
+    }
+
     public static function makeFilter($node, $operator = null, $value = null): Filter
     {
         if ($node instanceof Filter) {

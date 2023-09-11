@@ -1275,4 +1275,25 @@ final class SampleTest extends TestCase
         $this->assertsame('Title 331', $pluck[7]);
         $this->assertsame('12345', $pluck[8]);
     }
+
+    public function testCollectLast()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_HTML);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from('#lorem .link')
+            ->define(
+                'h1 as title',
+                'a as description',
+                'attr(href, a) as url',
+                'attr(class, a) as class'
+            )
+            ->last();
+
+        $this->assertSame('12345', $result['title']);
+        $this->assertSame('Href Attribute Example 52', $result['description']);
+        $this->assertSame('http://ini-url-33-0.com', $result['url']);
+        $this->assertSame('premium class-32 denied', $result['class']);
+    }
 }

@@ -94,6 +94,13 @@ abstract class Loader
             ->first();
     }
 
+    public function last()
+    {
+        return $this
+            ->get()
+            ->last();
+    }
+
     abstract public function get();
 
     public static function getResultFilter(array $filtered): array

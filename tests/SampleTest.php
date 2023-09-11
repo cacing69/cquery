@@ -8,7 +8,6 @@ use Cacing69\Cquery\Definer;
 use Cacing69\Cquery\Filter;
 use Exception;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\DomCrawler\Crawler;
 
 define('SAMPLE_HTML', 'src/Samples/sample.html');
 
@@ -1232,12 +1231,12 @@ final class SampleTest extends TestCase
 
         try {
 
-            $query = "
+            $query = '
                 from (.nested-content)
                 define
                     append_node(ul.nested-list > li > ul > li > ul, attr(href, li > a)) as data.*.url_grand_child,
                     append_node(ul.nested-list > li > ul > li > ul, li > p) as data.*.p_grand_child,
-                ";
+                ';
             $result = $data
                 ->raw($query);
 

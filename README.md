@@ -134,6 +134,7 @@ Lists of method you are can used for query in html
 | `from($selector)` | `from('.content')` |  Used to set the source of the main element that will be used for querying |
 | `define(...$string)` | `define()` | - |
 | `first()` | `first()` | To retrieve first item query results. |
+| `last()` | `last()` | To retrieve last item query results. |
 | `get()` | `get()` | To retrieve collection from query results. |
 | `raw(string)` | `raw('from... define... filter...')` | To get data based on raw cquery. |
 | `filter()` | `filter()` | - |

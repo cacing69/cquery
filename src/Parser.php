@@ -140,12 +140,7 @@ class Parser
                                     // remove $ on the last
                                     $_regexCheckSignature = $adapter::getSignature();
 
-                                    // if(Str::endWith("$", $_regexCheckSignature)) {
-
                                     $_regexCheckSignature = str_replace('$', '', $_regexCheckSignature);
-
-                                    // dd($_regexCheckSignature);
-                                    // }
 
                                     if (preg_match($_regexCheckSignature, $_strDefiner, $_strDefinerMatch)) {
                                         $_cleanDefiner = Str::endWith(trim($_strDefinerMatch[0]), ',') ? substr(trim($_strDefinerMatch[0]), 0, -1) : trim($_strDefinerMatch[0]);

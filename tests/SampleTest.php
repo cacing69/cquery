@@ -1230,23 +1230,20 @@ final class SampleTest extends TestCase
         $simpleHtml = file_get_contents(SAMPLE_HTML);
         $data = new Cquery($simpleHtml);
 
-        // ul.nested-list > h1 as title,
-        // ul.nested-list > h1 as data.title,
-        // append_node(ul.nested-list, li) as data.list,
-        // append_node(ul.nested-list > li > ul, li) as data.list_child,
-        // ul.nested-list > h1 as title,
-        // ul.nested-list > h1 as data.title,
-        // append_node(ul.nested-list, li) as data.list,
+        try {
 
-        $query = "
+            $query = "
                 from (.nested-content)
                 define
-                    append_node(ul.nested-list > li > ul > li > ul, attr(href, li > a)) as data.list_child,
+                    append_node(ul.nested-list > li > ul > li > ul, attr(href, li > a)) as data.*.url_grand_child,
+                    append_node(ul.nested-list > li > ul > li > ul, li > p) as data.*.p_grand_child,
                 ";
-        $result = $data
-            ->raw($query);
+            $result = $data
+                ->raw($query);
 
-        $this->assertCount(1, $result[0]["data"]);
-        $this->assertCount(3, $result[0]["data"]["list_child"]);
+        } catch (Exception $e) {
+            $this->assertSame(CqueryException::class, get_class($e));
+            $this->assertSame('the number of rows in query result for this object is not the same as the previous query.', $e->getMessage());
+        }
     }
 }

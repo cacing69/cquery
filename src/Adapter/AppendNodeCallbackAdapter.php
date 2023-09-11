@@ -12,7 +12,7 @@ class AppendNodeCallbackAdapter extends CallbackAdapter implements ParserAdapter
 {
     protected static $parserIdentifier = 'append_node';
     protected static $parserArguments = ['querySelector', 'children'];
-    protected static $signature = '/^\s*?append_node\(\s*(.+?),\s*(.+)\s*\)\s*(as)?\s*\w*(\.\w+)?\s*,?$/i';
+    protected static $signature = '/^\s*?append_node\(\s*(.+?),\s*(.+)\s*\)\s*(as)?\s*\w*((\.\*)?\.\w+)?\s*,?$/i';
 
     public static function getSignature()
     {
@@ -40,12 +40,9 @@ class AppendNodeCallbackAdapter extends CallbackAdapter implements ParserAdapter
 
         $this->ref = $extractRefNode->getAdapter()->getNode();
 
-        // dd();
         $this->node = $extract[1];
-
 
         $this->callMethod = 'filter.each';
         $this->callMethodParameter = $extractRefNode->getAdapter()->getCallMethodParameter();
-        // dd($this);
     }
 }

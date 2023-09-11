@@ -1,6 +1,7 @@
 <?php
 
 namespace Cacing69\Cquery\Trait;
+use Cacing69\Cquery\Adapter\AppendNodeCallbackAdapter;
 
 use Cacing69\Cquery\CqueryException;
 use Cacing69\Cquery\Support\Collection;
@@ -15,7 +16,10 @@ trait HasDomCrawlerGetter
         // WHERE CHECKING
         $_filtered = null;
 
-        $bound = null;
+        $_bound = null;
+        $_boundKey = [];
+
+        // $_boundFirstLevel = [];
 
         if (count($this->filters) > 0) {
             $_affect = [
@@ -33,7 +37,7 @@ trait HasDomCrawlerGetter
                 } elseif ($filterAdapter->getCallMethod() === 'filter') {
                     dd($filterAdapter);
                 } elseif ($filterAdapter->getCallMethod() === 'static') {
-                    dd(1);
+                    dd($filterAdapter);
                 }
 
                 if ($filterAdapter->getCallback() !== null) {
@@ -102,23 +106,44 @@ trait HasDomCrawlerGetter
                             }
                         });
                     });
+
+                // if($definer->getAdapter() instanceof AppendNodeCallbackAdapter){
+                //     if(is_array($_data[0])) {
+
+                //         $_tmpData = $_data;
+                //         // $_data = [];
+
+                //         foreach ($_tmpData as $_keyTmp => $_valueTmp) {
+                //             // $_data[] = 3;
+                //         }
+
+                //     }  else {
+
+                //     }
+                //         // dump($_data);
+                //     // if($key == 1) {
+                //     //     dd($_data);
+
+                //     // }
+                // }
             } elseif ($definer->getAdapter()->getCallMethod() === 'static') {
                 if ($key === 0) {
                     throw new CqueryException('you cannot define static on the first definer');
                 }
 
-                foreach (range(0, $bound - 1) as $key => $value) {
+                foreach (range(0, $_bound - 1) as $key => $value) {
                     $_data[] = 'static';
                 }
             }
 
             if ($key === 0) {
-                $bound = count($_data ?? []);
+                $_bound = count($_data ?? []);
             } else {
                 // TODO tambahkan metode ambil data dengan filter->each, walaupun itu akan sedikit lambat, buts its ok, karena hanya untuk kasus tertentu
                 // TODO index kolom yang menjadi acuan utama adalah index pertama di definer
 
-                if (count($_data ?? []) < $bound) {
+
+                if (count($_data ?? []) < $_bound) {
                     $_data = [];
                     $this
                         ->crawler
@@ -130,26 +155,18 @@ trait HasDomCrawlerGetter
                                 $_data[$i] = null;
                             } else {
                                 $_filterNode->each(function (Crawler $_node, $_i) use ($i, &$_data) {
-                                    // dump($_node->text());
                                     $_data[$i] = $_node->text();
-
-                                    // if(is_array($definer->getAdapter()->getCallMethodParameter()) && count($definer->getAdapter()->getCallMethodParameter()) === 1) {
-                                    //     $__callParameter = $definer->getAdapter()->getCallMethodParameter()[0];
-                                    //     if($__callParameter === "_text") {
-                                    //         $_data[$i][] = $_node->text();
-                                    //     } else {
-                                    //         $_data[$i][] = $_node->attr($__callParameter);
-                                    //     }
-                                    // } else {
-                                    //     dd('not_supported_yet');
-                                    // }
                                 });
                             }
                         });
-                    //     dump(count($_data), $bound);
+                    //     dump(count($_data), $_bound);
                     // throw new CqueryException("error query definer, there are no matching rows each column.");
-                } elseif (count($_data ?? []) > $bound) {
-                    throw new CqueryException('error query definer, there are no matching rows each column.');
+                // dump($_data);
+                } elseif (count($_data ?? []) > $_bound) {
+
+                    // if(!($definer->getAdapter() instanceof AppendNodeCallbackAdapter)) {
+                        throw new CqueryException('error query definer, there are no matching rows each column.');
+                    // }
                 }
             }
 
@@ -180,10 +197,23 @@ trait HasDomCrawlerGetter
                     if (preg_match('/^\s*([A-Za-z0-9\-\_]+?)\.\*\.([A-Za-z0-9\-\_]+)\s*?/', $definer->getAlias())) {
                         preg_match('/^\s*([A-Za-z0-9\-\_]+?)\.\*\.([A-Za-z0-9\-\_]+)\s*?/', $definer->getAlias(), $_extractAlias);
 
+                        if(empty($_boundKey[$_key])) {
+                            $_boundKey[$_key] = count($_value);
+                        }
+                        // dd($_extractAlias);
+                        // dd($_key);
                         // TODO perlu di check, panjang setiap element dari setiap key harus sama, jika tidak sama, ambil ulang data dengan dengan filter->each
-                        if (array_key_exists($_extractAlias[1], $_hold_data[$_key])) {
+                        if(count($_value) < $_boundKey[$_key]) {
+                            throw new CqueryException("the number of rows in query result for this object is not the same as the previous query.");
+                        }
+
+                        // dd($_extractAlias);
+
+                        if (array_key_exists($_extractAlias[1], $_hold_data[$_key] ?? [])) {
                             $_hold_child = $_hold_data[$_key][$_extractAlias[1]];
                         }
+
+                        // dd($_hold_child, $_key, $_extractAlias[1], $_value);
 
                         foreach ($_value as $__key => $__value) {
                             $__value = strlen((string) $__value) > 0 ? $__value : null;
@@ -193,7 +223,7 @@ trait HasDomCrawlerGetter
 
                         $_hold_data[$_key][$_extractAlias[1]] = $_hold_child;
 
-                        // if alias == tags.text
+
                     } elseif (preg_match('/^\s*([A-Za-z0-9\-\_]+?)\.([A-Za-z0-9\-\_]+)\s*?/', $definer->getAlias())) {
                         preg_match('/^\s*([A-Za-z0-9\-\_]+?)\.([A-Za-z0-9\-\_]+)\s*?/', $definer->getAlias(), $_extractAlias);
 

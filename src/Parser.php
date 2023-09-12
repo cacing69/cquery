@@ -55,17 +55,25 @@ class Parser
             if (preg_match("/filter\s*(.*)\s*limit/is", $_definer[1], $_filter)) {
                 // get limit
                 preg_match("/(.*?)\s*filter/is", $_definer[1], $_extractDefinerFromFilter);
+
                 // extract definer
                 $this->makeDefiners($_extractDefinerFromFilter[1]);
 
                 // extract filter
                 $this->makeFilters($_filter[1]);
 
-                if (preg_match("/limit\s*(\d+)\s*/is", $_definer[1], $_limit)) {
-                    $this->limit = intval($_limit[1]);
+                if (preg_match("/limit\s*(.+)\s*/is", $_definer[1], $_limit)) {
+                    $_trimLimit = trim($_limit[1]);
+
+                    if (is_numeric($_trimLimit) && !preg_match("/\d+(\.|\,)+\d+/is", $_trimLimit)) {
+                        $this->limit = intval($_trimLimit);
+                    } else {
+                        throw new CqueryException('only integer numeric value allowed when used limit argument.');
+                    }
                 }
             } elseif (preg_match("/filter\s*(.*)/is", $_definer[1], $_filter)) {
                 preg_match("/(.*?)\s*filter/is", $_definer[1], $_extractDefinerFromFilter);
+
                 // extract definer
                 $this->makeDefiners($_extractDefinerFromFilter[1]);
 
@@ -121,10 +129,8 @@ class Parser
 
                             if (preg_match($_parserRegexCheck, $_strDefinerMatch[0])) {
                                 if (is_array($adapter::getSignature())) {
-                                    foreach ($adapter::getSignature() as $_key => $signature) {
+                                    foreach ($adapter::getSignature() as $signature) {
                                         $_regexCheckSignature = $signature;
-
-                                        // if(Str::endWith("$", $_regexCheckSignature)) {
 
                                         $_regexCheckSignature = str_replace('$', '', $_regexCheckSignature);
 

@@ -1221,7 +1221,7 @@ final class SampleTest extends TestCase
         $result = $data
             ->raw($query);
 
-        $this->assertCount(9, $result);
+        $this->assertCount(4, $result);
     }
 
     public function testWithNestedData()
@@ -1264,7 +1264,7 @@ final class SampleTest extends TestCase
 
         $pluck = $result->pluck('title')->toArray();
 
-        $this->assertCount(9, $pluck);
+        $this->assertCount(4, $pluck);
         $this->assertsame('Title 1', $pluck[0]);
         $this->assertsame('Title 2', $pluck[1]);
         $this->assertsame('Title 3', $pluck[2]);

@@ -265,4 +265,96 @@ final class ParserTest extends TestCase
         $this->assertSame('attr(href, div > h1 > span > a)', $parser->getDefiners()[1]);
         $this->assertSame("replace('i am', 'you are', div > h1 > span > a)", $parser->getDefiners()[2]);
     }
+
+    public function testParseWithLimitButWithNonNumericValue()
+    {
+        $query = "
+        from ( .item )
+        define
+            append_node(.list > .item, li) as list,
+            attr(href, div > h1 > span > a),
+            replace('i am', 'you are', div > h1 > span > a)
+        filter
+            span > a.title has 'lorem'  and
+            attr(id, span > a) > 9
+        limit abc
+        ";
+
+        try {
+            $parser = new Parser($query);
+
+        } catch (Exception $e) {
+            $this->assertSame(CqueryException::class, get_class($e));
+            $this->assertSame('only integer numeric value allowed when used limit argument.', $e->getMessage());
+        }
+    }
+
+    public function testParseWithLimitButWithFloatValueDot()
+    {
+        $query = "
+        from ( .item )
+        define
+            append_node(.list > .item, li) as list,
+            attr(href, div > h1 > span > a),
+            replace('i am', 'you are', div > h1 > span > a)
+        filter
+            span > a.title has 'lorem'  and
+            attr(id, span > a) > 9
+        limit 3.5
+        ";
+
+        try {
+            $parser = new Parser($query);
+        } catch (Exception $e) {
+            $this->assertSame(CqueryException::class, get_class($e));
+            $this->assertSame('only integer numeric value allowed when used limit argument.', $e->getMessage());
+        }
+    }
+
+    public function testParseWithLimitButWithFloatValueComma()
+    {
+        $query = "
+        from ( .item )
+        define
+            append_node(.list > .item, li) as list,
+            attr(href, div > h1 > span > a),
+            replace('i am', 'you are', div > h1 > span > a)
+        filter
+            span > a.title has 'lorem'  and
+            attr(id, span > a) > 9
+        limit 3,5
+        ";
+
+        try {
+            $parser = new Parser($query);
+        } catch (Exception $e) {
+            $this->assertSame(CqueryException::class, get_class($e));
+            $this->assertSame('only integer numeric value allowed when used limit argument.', $e->getMessage());
+        }
+    }
+
+    public function testParseUsedFilterWithOrOperator()
+    {
+        $query = "
+        from ( .item )
+        define
+            append_node(.list > .item, li) as list,
+            attr(href, div > h1 > span > a),
+            replace('i am', 'you are', div > h1 > span > a)
+        filter
+            span > a.title has 'lorem'  or
+            attr(id, span > a) > 9
+        limit 4
+        ";
+
+        $parser = new Parser($query);
+
+        $this->assertSame('.item', $parser->getSource()->getRaw());
+        $this->assertCount(3, $parser->getDefiners(), 'should have 2 definers');
+        $this->assertCount(2, $parser->getFilters()['or'], 'should have 2 filters');
+        $this->assertSame(4, $parser->getLimit());
+        $this->assertSame('append_node(.list > .item, li) as list', $parser->getDefiners()[0]);
+        $this->assertSame('attr(href, div > h1 > span > a)', $parser->getDefiners()[1]);
+        $this->assertSame("replace('i am', 'you are', div > h1 > span > a)", $parser->getDefiners()[2]);
+    }
 }

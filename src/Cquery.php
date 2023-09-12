@@ -260,6 +260,12 @@ class Cquery
 
         $this->loader->define(...$parser->getDefiners());
 
+        foreach ($parser->getFilters() as $_operator => $_filter) {
+            foreach ($_filter as $filter) {
+                $this->loader->addFilter($filter, $_operator);
+            }
+        }
+
         return $this->get();
     }
 }

@@ -14,7 +14,7 @@ final class DefinerTest extends TestCase
 
         $this->assertSame('a', $definer->getNode());
         $this->assertSame('a', $definer->getAlias());
-        $this->assertSame(true, is_string($definer->getRaw()));
+        $this->assertTrue(is_string($definer->getRaw()));
     }
 
     public function testDefinerStringWithAlias()
@@ -23,7 +23,7 @@ final class DefinerTest extends TestCase
 
         $this->assertSame('h1', $definer->getNode());
         $this->assertSame('title', $definer->getAlias());
-        $this->assertSame(true, is_string($definer->getRaw()));
+        $this->assertTrue(is_string($definer->getRaw()));
     }
 
     public function testDefinerStringWithoutAlias()
@@ -32,7 +32,7 @@ final class DefinerTest extends TestCase
 
         $this->assertSame('h1 > p > ul', $definer->getNode());
         $this->assertSame('h1_p_ul', $definer->getAlias());
-        $this->assertSame(true, is_string($definer->getRaw()));
+        $this->assertTrue(is_string($definer->getRaw()));
     }
 
     public function testDefinerStringWithoutAliasArgument()
@@ -41,7 +41,7 @@ final class DefinerTest extends TestCase
 
         $this->assertSame('h1 > p > ul', $definer->getNode());
         $this->assertSame('_header_1', $definer->getAlias());
-        $this->assertSame(true, is_string($definer->getRaw()));
+        $this->assertTrue(is_string($definer->getRaw()));
     }
 
     public function testDefinerWithCallback()

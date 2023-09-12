@@ -1,3 +1,5 @@
+![Cquery](docs/media/logo-sm.svg?raw=true)
+
 # Cquery (Crawl Query)
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/cacing69/cquery.svg)](https://packagist.org/packages/cacing69/cquery)

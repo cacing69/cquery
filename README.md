@@ -1,6 +1,7 @@
-
 <p align="center">
-  <img width="460" src="https://github.com/cacing69/cquery/blob/main/docs/media/logo-sm.png">
+  <a href="https://laravel.com" target="_blank">
+    <img src="https://raw.githubusercontent.com/cacing69/cquery/main/docs/media/logo-sm.svg" width="400">
+  </a>
 </p>
 
 # Cquery (Crawl Query)
@@ -10,11 +11,9 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 [![StyleCI](https://styleci.io/repos/681557305/shield)](https://styleci.io/repos/681557305)
 
-## Please Read
+## About Cquery
 
-### Want to create a query for web scraping a website like this
-
-I suppose it will enable me to generate scrape queries from anywhere.
+Want to create a query for web scraping a website like this, I suppose it will enable me to generate scrape queries from anywhere.
 
 ```sql
 from (.item)

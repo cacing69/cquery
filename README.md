@@ -134,7 +134,6 @@ Lists of method you are can used for query in html
 | `from($selector)` | `from('.content')` |  Used to set the source of the main element that will be used for querying |
 | `define(...$string)` | `define()` | - |
 | `first()` | `first()` | To retrieve first item query results. |
-| `last()` | `last()` | To retrieve last item query results. |
 | `get()` | `get()` | To retrieve collection from query results. |
 | `raw(string)` | `raw('from... define... filter...')` | To get data based on raw cquery. |
 | `filter()` | `filter()` | - |
@@ -352,7 +351,7 @@ $result_5 = $data
               ->from(".col-md-8 > .quote")
               ->define(
                   "span.text as text",
-                  "append_node(div > .tags, a) as tags[key]", // grab child `a` on element `div > .tags` and place it into tags['key']
+                  "append_node(div > .tags, a) as tags.key", // grab child `a` on element `div > .tags` and place it into tags['key']
               )
               ->get() // -> return type is \Doctrine\Common\Collections\ArrayCollection
               ->toArray();
@@ -376,8 +375,8 @@ $result_6 = $data
               ->define(
                   "span.text as text",
                   "append_node(div > .tags, a) as _tags",
-                  "append_node(div > .tags, a) as tags[*][text]",
-                  "append_node(div > .tags, attr(href, a)) as tags[*][url]", // [*] means each index, for now ots limitd only one level
+                  "append_node(div > .tags, a) as tags.*.text",
+                  "append_node(div > .tags, attr(href, a)) as tags.*.url", // [*] means each index, for now ots limitd only one level
               )
               ->get() // -> return type is \Doctrine\Common\Collections\ArrayCollection
               ->toArray();

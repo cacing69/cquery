@@ -1,4 +1,5 @@
 
+![logo](media/logo.png)
 # Cquery <small>1</small>
 
 > It's an acronym for Crawl Query

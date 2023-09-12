@@ -1,4 +1,4 @@
-# Contributing to Crawl Query
+# Contributing to Cquery
 
 Contributions are welcome by submitting a PR for to be reviewed. If it's to add new features, appreciate it if you could try to maintain the architecture or try to improve on it.
 
@@ -11,5 +11,3 @@ Contributions are welcome by submitting a PR for to be reviewed. If it's to add 
 - Add tests relevant to the fixed bug or new feature.
 
 For specific git instructions, see [GitHub workflow 101](https://github.com/servo/servo/wiki/GitHub-workflow).
-
-## Conduct

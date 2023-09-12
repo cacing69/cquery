@@ -1,4 +1,4 @@
-# README.md
+# Cquery, Expression PHP Scrapper
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/cacing69/cquery.svg)](https://packagist.org/packages/cacing69/cquery)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE.md)

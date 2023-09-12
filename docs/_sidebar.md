@@ -1,5 +1,7 @@
 <!-- docs/_sidebar.md -->
 - [Home](/)
 - [Introduction](introduction.md)
-- [Instalation](instalation.md)
+- [Overview](overview.md)
+- [Quickstart](quickstart.md)
+- [Advanced](advanced.md)
 - [Changelog](CHANGELOG.md)

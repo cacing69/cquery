@@ -4,7 +4,7 @@ The development take all security issues seriously. **Please do not make public 
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Ibnul Mutaki via [ibnuul@gmail.com](mailto:ibnuul@gmail.com)
+If you discover a security vulnerability, please send an e-mail to Ibnul Mutaki via [ibnuul@gmail.com](mailto:ibnuul@gmail.com)
 
 ## Comments on this Policy
 

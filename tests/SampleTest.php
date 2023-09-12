@@ -354,7 +354,7 @@ final class SampleTest extends TestCase
         $this->assertCount(3, $result);
     }
 
-    public function testNewLengthAdapter()
+    public function testNewLengthExpression()
     {
         $simpleHtml = file_get_contents(SAMPLE_HTML);
         $data = new Cquery($simpleHtml);
@@ -378,7 +378,7 @@ final class SampleTest extends TestCase
         $this->assertSame(5, $result[8]['length']);
     }
 
-    public function testNewAdapterWithWhereEquals()
+    public function testNewExpressionWithWhereEquals()
     {
         $simpleHtml = file_get_contents(SAMPLE_HTML);
         $data = new Cquery($simpleHtml);
@@ -1127,7 +1127,7 @@ final class SampleTest extends TestCase
         $this->assertSame('key-2', $result[2]['new_key']);
     }
 
-    public function testCqueryWithIntegerAdapter()
+    public function testCqueryWithIntegerExpression()
     {
         $content = file_get_contents(SAMPLE_HTML);
 
@@ -1146,7 +1146,7 @@ final class SampleTest extends TestCase
         $this->assertSame(2, $result[2]['value']);
     }
 
-    public function testCqueryWithStringAdapter()
+    public function testCqueryWithStringExpression()
     {
         $content = file_get_contents(SAMPLE_HTML);
 
@@ -1165,7 +1165,7 @@ final class SampleTest extends TestCase
         $this->assertSame('2', $result[2]['value']);
     }
 
-    public function testCqueryWithFloatAdapter()
+    public function testCqueryWithFloatExpression()
     {
         $content = file_get_contents(SAMPLE_HTML);
 

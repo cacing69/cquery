@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Cacing69\Cquery\Adapter;
+namespace Cacing69\Cquery\Expression;
 
-use Cacing69\Cquery\CallbackAdapter;
-use Cacing69\Cquery\ParserAdapterInterface;
+use Cacing69\Cquery\CallbackExpression;
+use Cacing69\Cquery\ParserExpressionInterface;
 
-class ReplaceCallbackAdapter extends CallbackAdapter implements ParserAdapterInterface
+class ReplaceCallbackExpression extends CallbackExpression implements ParserExpressionInterface
 {
     protected static $parserIdentifier = 'replace';
     protected static $parserArguments = ['search', 'replace', 'querySelector'];
@@ -88,7 +88,7 @@ class ReplaceCallbackAdapter extends CallbackAdapter implements ParserAdapterInt
             preg_match('/^\s*replace\(.*,.*,\s?([a-z0-9_]*\(.+?\))\s?\)\s*$/', $raw, $extract);
 
             $extractChild = $this->extractChild($extract[1]);
-            $_childCallback = $extractChild->getAdapter()->getCallback();
+            $_childCallback = $extractChild->getExpression()->getCallback();
 
             if ($_childCallback) {
                 $this->callback = function (string $value) use ($_childCallback, $_callbackTmp) {

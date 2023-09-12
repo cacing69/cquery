@@ -26,7 +26,7 @@ class Definer
 
     /**
      * @param string  $node     Its to define expression for scrape,
-     *                          you can used query selector/function adapter available
+     *                          you can used query selector/function expression available
      * @param string  $alias    Its to set alias for key result
      * @param Closure $callback To create callback action to manipulate value
      */

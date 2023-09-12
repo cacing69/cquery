@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Cacing69\Cquery\Adapter;
+namespace Cacing69\Cquery\Expression;
 
-use Cacing69\Cquery\CallbackAdapter;
+use Cacing69\Cquery\CallbackExpression;
 use Closure;
 
-class ClosureCallbackAdapter extends CallbackAdapter
+class ClosureCallbackExpression extends CallbackExpression
 {
     public function __construct(Closure $rawDefiner = null)
     {

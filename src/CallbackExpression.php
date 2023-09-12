@@ -12,7 +12,7 @@ use Cacing69\Cquery\Trait\HasRawProperty;
 use Closure;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 
-abstract class CallbackAdapter
+abstract class CallbackExpression
 {
     use HasOperatorProperty;
     use HasRawProperty;
@@ -51,10 +51,10 @@ abstract class CallbackAdapter
     {
         $extractChild = new DefinerExtractor($raw);
 
-        $this->node = $extractChild->getAdapter()->getNode();
+        $this->node = $extractChild->getExpression()->getNode();
 
-        $this->callMethod = $extractChild->getAdapter()->getCallMethod();
-        $this->callMethodParameter = $extractChild->getAdapter()->getCallMethodParameter();
+        $this->callMethod = $extractChild->getExpression()->getCallMethod();
+        $this->callMethodParameter = $extractChild->getExpression()->getCallMethodParameter();
 
         return $extractChild;
     }

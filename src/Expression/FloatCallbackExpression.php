@@ -2,14 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Cacing69\Cquery\Adapter;
+namespace Cacing69\Cquery\Expression;
 
-use Cacing69\Cquery\CallbackAdapter;
-use Cacing69\Cquery\Support\RegExp;
+use Cacing69\Cquery\CallbackExpression;
 
-class LengthCallbackAdapter extends CallbackAdapter
+class FloatCallbackExpression extends CallbackExpression
 {
-    protected static $signature = RegExp::IS_LENGTH;
+    protected static $signature = '/^\s*float\(\s*(.*?)\s*\)\s*$/is';
 
     public static function getSignature()
     {
@@ -21,23 +20,24 @@ class LengthCallbackAdapter extends CallbackAdapter
         $this->raw = $raw;
 
         $this->callback = function (string $value) {
-            return strlen($value);
+            return floatval($value);
         };
 
         // check if function is nested
-        if (preg_match('/^\s*length\(\s*([a-z0-9_]*\(.*\))\s*\)$/', $raw)) {
-            preg_match('/^\s*length\(\s*([a-z0-9_]*\(.*\))\s*\)$/', $raw, $extract);
+        if (preg_match('/^\s?int\(\s?([a-z0-9_]*\(.+?\))\s?\)$/', $raw)) {
+            preg_match('/^\s?int\(\s?([a-z0-9_]*\(.+?\))\s?\)$/', $raw, $extract);
 
             $extractChild = $this->extractChild($extract[1]);
-            $_childCallback = $extractChild->getAdapter()->getCallback();
+            $_childCallback = $extractChild->getExpression()->getCallback();
 
             if ($_childCallback) {
                 $this->callback = function (string $value) use ($_childCallback) {
-                    return strlen((string) $_childCallback($value));
+                    return floatval((string) $_childCallback($value));
                 };
             }
         } else {
             preg_match(self::$signature, $raw, $node);
+
             $this->node = $node[1];
 
             $this->callMethod = 'extract';

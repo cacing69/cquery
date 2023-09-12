@@ -26,21 +26,21 @@ trait HasDomCrawlerGetter
                 'or'  => [],
             ];
 
-            foreach ($this->filters as $key => $filterAdapter) {
+            foreach ($this->filters as $key => $filterExepression) {
                 $_data = $this->crawler
                     ->filterXPath($this->getSource()->getXpath())
-                    ->filterXPath($filterAdapter->getNodeXpath());
+                    ->filterXPath($filterExepression->getNodeXpath());
 
-                if ($filterAdapter->getCallMethod() === 'extract') {
-                    $_data = $_data->extract($filterAdapter->getCallMethodParameter());
-                } elseif ($filterAdapter->getCallMethod() === 'filter') {
-                    dd($filterAdapter);
-                } elseif ($filterAdapter->getCallMethod() === 'static') {
-                    dd($filterAdapter);
+                if ($filterExepression->getCallMethod() === 'extract') {
+                    $_data = $_data->extract($filterExepression->getCallMethodParameter());
+                } elseif ($filterExepression->getCallMethod() === 'filter') {
+                    dd($filterExepression);
+                } elseif ($filterExepression->getCallMethod() === 'static') {
+                    dd($filterExepression);
                 }
 
-                if ($filterAdapter->getCallback() !== null) {
-                    $_callback = $filterAdapter->getCallback();
+                if ($filterExepression->getCallback() !== null) {
+                    $_callback = $filterExepression->getCallback();
 
                     $_data = array_map(function ($_mapValue) use ($_callback) {
                         return $_callback($_mapValue);
@@ -52,8 +52,8 @@ trait HasDomCrawlerGetter
                         $_value = trim(preg_replace('/\s+/', ' ', (string) $_value));
                     }
 
-                    if ($filterAdapter->filterExecutor($_value)) {
-                        $_affect[$filterAdapter->getOperator()][$key][] = $_key;
+                    if ($filterExepression->filterExecutor($_value)) {
+                        $_affect[$filterExepression->getOperator()][$key][] = $_key;
                     }
                 }
             }
@@ -71,11 +71,11 @@ trait HasDomCrawlerGetter
         foreach ($this->definers as $key => $definer) {
             $_data = null;
 
-            if ($definer->getAdapter()->getCallMethod() === 'extract') {
+            if ($definer->getExpression()->getCallMethod() === 'extract') {
                 $_data = $this
                         ->crawler
                         ->filterXPath($this->getSource()->getXpath())
-                        ->filterXPath($definer->getAdapter()->getNodeXpath());
+                        ->filterXPath($definer->getExpression()->getNodeXpath());
 
                 if ($_filtered !== null) {
                     $_data = $_data->reduce(function (Crawler $node, $i) use ($_filtered) {
@@ -83,18 +83,18 @@ trait HasDomCrawlerGetter
                     });
                 }
 
-                $_data = $_data->extract($definer->getAdapter()->getCallMethodParameter());
-            } elseif ($definer->getAdapter()->getCallMethod() === 'filter.each') {
+                $_data = $_data->extract($definer->getExpression()->getCallMethodParameter());
+            } elseif ($definer->getExpression()->getCallMethod() === 'filter.each') {
                 $_data = [];
 
                 $this
                     ->crawler
                     ->filterXPath($this->getSource()->getXpath())
-                    ->filterXPath($definer->getAdapter()->getNodeXpath())
+                    ->filterXPath($definer->getExpression()->getNodeXpath())
                     ->each(function (Crawler $node, $i) use (&$_data, $definer) {
-                        $node->filter($definer->getAdapter()->getRef())->each(function (Crawler $_node, $_i) use ($i, &$_data, $definer) {
-                            if (is_array($definer->getAdapter()->getCallMethodParameter()) && count($definer->getAdapter()->getCallMethodParameter()) === 1) {
-                                $__callParameter = $definer->getAdapter()->getCallMethodParameter()[0];
+                        $node->filter($definer->getExpression()->getRef())->each(function (Crawler $_node, $_i) use ($i, &$_data, $definer) {
+                            if (is_array($definer->getExpression()->getCallMethodParameter()) && count($definer->getExpression()->getCallMethodParameter()) === 1) {
+                                $__callParameter = $definer->getExpression()->getCallMethodParameter()[0];
                                 if ($__callParameter === '_text') {
                                     $_data[$i][] = $_node->text();
                                 } else {
@@ -106,7 +106,7 @@ trait HasDomCrawlerGetter
                         });
                     });
 
-                // if($definer->getAdapter() instanceof AppendNodeCallbackAdapter){
+                // if($definer->getExpression() instanceof AppendNodeCallbackExpression){
                 //     if(is_array($_data[0])) {
 
                 //         $_tmpData = $_data;
@@ -125,7 +125,7 @@ trait HasDomCrawlerGetter
 
                 //     // }
                 // }
-            } elseif ($definer->getAdapter()->getCallMethod() === 'static') {
+            } elseif ($definer->getExpression()->getCallMethod() === 'static') {
                 if ($key === 0) {
                     throw new CqueryException('you cannot define static on the first definer');
                 }
@@ -147,7 +147,7 @@ trait HasDomCrawlerGetter
                         ->crawler
                         ->filterXPath($this->getSource()->getXpath())
                         ->each(function (Crawler $node, $i) use (&$_data, $definer) {
-                            $_filterNode = $node->filter($definer->getAdapter()->getNode());
+                            $_filterNode = $node->filter($definer->getExpression()->getNode());
 
                             if ($_filterNode->count() === 0) {
                                 $_data[$i] = null;
@@ -161,14 +161,14 @@ trait HasDomCrawlerGetter
                     // throw new CqueryException("error query definer, there are no matching rows each column.");
                     // dump($_data);
                 } elseif (count($_data ?? []) > $_bound) {
-                    // if(!($definer->getAdapter() instanceof AppendNodeCallbackAdapter)) {
+                    // if(!($definer->getExpression() instanceof AppendNodeCallbackExpression)) {
                     throw new CqueryException('error query definer, there are no matching rows each column.');
                     // }
                 }
             }
 
-            if ($definer->getAdapter()->getCallback() !== null) {
-                $_callback = $definer->getAdapter()->getCallback();
+            if ($definer->getExpression()->getCallback() !== null) {
+                $_callback = $definer->getExpression()->getCallback();
                 $_data = array_map(function ($_mapValue) use ($_callback) {
                     return $_callback((string) $_mapValue);
                 }, $_data ?? []);

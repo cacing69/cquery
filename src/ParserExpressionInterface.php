@@ -2,7 +2,7 @@
 
 namespace Cacing69\Cquery;
 
-interface ParserAdapterInterface
+interface ParserExpressionInterface
 {
     public static function getParserIdentifier();
 

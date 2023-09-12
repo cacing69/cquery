@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Cacing69\Cquery\Adapter;
+namespace Cacing69\Cquery\Expression;
 
-use Cacing69\Cquery\CallbackAdapter;
-use Cacing69\Cquery\ParserAdapterInterface;
+use Cacing69\Cquery\CallbackExpression;
+use Cacing69\Cquery\ParserExpressionInterface;
 use Cacing69\Cquery\Support\RegExp;
 
-class AttributeCallbackAdapter extends CallbackAdapter implements ParserAdapterInterface
+class AttributeCallbackExpression extends CallbackExpression implements ParserExpressionInterface
 {
     protected static $parserIdentifier = 'attr';
     protected static $parserArguments = ['attr', 'querySelector'];
@@ -31,7 +31,7 @@ class AttributeCallbackAdapter extends CallbackAdapter implements ParserAdapterI
 
     public function __construct(string $raw)
     {
-        // TODO Check if attribute adapter doesnt support for nested
+        // TODO Check if attribute expression doesnt support for nested
         $this->raw = $raw;
 
         preg_match(self::$signature, $raw, $extractParams);

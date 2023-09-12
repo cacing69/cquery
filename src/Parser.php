@@ -120,16 +120,16 @@ class Parser
         $_loopDefiner = 0;
         while (!empty(trim($_strDefiner))) {
             if (preg_match("/(.*?)\s*,\s*/i", $_strDefiner, $_strDefinerMatch)) {
-                $_adapter = null;
+                $_expression = null;
 
-                foreach (RegisterAdapter::load() as $adapter) {
-                    if (method_exists($adapter, 'getParserIdentifier') && method_exists($adapter, 'getCountParserArguments')) {
-                        if ($adapter::getCountParserArguments() > 1) {
-                            $_parserRegexCheck = "/^\s*".$adapter::getParserIdentifier()."\(\s*(.*)\s*,/i";
+                foreach (RegisterExpression::load() as $expression) {
+                    if (method_exists($expression, 'getParserIdentifier') && method_exists($expression, 'getCountParserArguments')) {
+                        if ($expression::getCountParserArguments() > 1) {
+                            $_parserRegexCheck = "/^\s*".$expression::getParserIdentifier()."\(\s*(.*)\s*,/i";
 
                             if (preg_match($_parserRegexCheck, $_strDefinerMatch[0])) {
-                                if (is_array($adapter::getSignature())) {
-                                    foreach ($adapter::getSignature() as $signature) {
+                                if (is_array($expression::getSignature())) {
+                                    foreach ($expression::getSignature() as $signature) {
                                         $_regexCheckSignature = $signature;
 
                                         $_regexCheckSignature = str_replace('$', '', $_regexCheckSignature);
@@ -151,7 +151,7 @@ class Parser
                                     }
                                 } else {
                                     // remove $ on the last
-                                    $_regexCheckSignature = $adapter::getSignature();
+                                    $_regexCheckSignature = $expression::getSignature();
 
                                     $_regexCheckSignature = str_replace('$', '', $_regexCheckSignature);
 
@@ -166,14 +166,14 @@ class Parser
                                     }
                                 }
 
-                                $_adapter = $adapter;
+                                $_expression = $expression;
                                 break;
                             }
                         }
                     }
                 }
 
-                if (empty($_adapter)) {
+                if (empty($_expression)) {
                     $this->definers[] = trim($_strDefinerMatch[1]);
                     $_strDefiner = substr($_strDefiner, strlen($_strDefinerMatch[0]));
                 }

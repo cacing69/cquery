@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Cacing69\Cquery\Adapter;
+namespace Cacing69\Cquery\Expression;
 
-use Cacing69\Cquery\CallbackAdapter;
+use Cacing69\Cquery\CallbackExpression;
 
-class DefaultCallbackAdapter extends CallbackAdapter
+class DefaultCallbackExpression extends CallbackExpression
 {
     protected static $signature = null;
 

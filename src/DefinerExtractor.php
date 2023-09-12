@@ -2,7 +2,7 @@
 
 namespace Cacing69\Cquery;
 
-use Cacing69\Cquery\Adapter\ClosureCallbackAdapter;
+use Cacing69\Cquery\Expression\ClosureCallbackExpression;
 use Cacing69\Cquery\Support\RegExp;
 use Cacing69\Cquery\Support\Str;
 use Cacing69\Cquery\Trait\HasAliasProperty;
@@ -15,7 +15,7 @@ class DefinerExtractor
     use HasAliasProperty;
     private $raw;
     private $definer;
-    private $adapter;
+    private $expression;
 
     public function __construct($definer, Source $source = null)
     {
@@ -27,16 +27,16 @@ class DefinerExtractor
 
             if ($definer->getRaw() instanceof Closure) {
                 $this->definer = $definer;
-                $adapter = new ClosureCallbackAdapter($definer->getRaw());
+                $expression = new ClosureCallbackExpression($definer->getRaw());
 
                 $extractor = new DefinerExtractor("{$definer->getNode()} as {$definer->getAlias()}");
 
-                $adapter = $adapter->setNode($extractor->getAdapter()->getNode())
-                    ->setCallMethod($extractor->getAdapter()->getCallMethod())
-                    ->setCallMethodParameter($extractor->getAdapter()->getCallMethodParameter())
-                    ->setCallback($adapter->getCallback());
+                $expression = $expression->setNode($extractor->getExpression()->getNode())
+                    ->setCallMethod($extractor->getExpression()->getCallMethod())
+                    ->setCallMethodParameter($extractor->getExpression()->getCallMethodParameter())
+                    ->setCallback($expression->getCallback());
 
-                $this->adapter = $adapter;
+                $this->expression = $expression;
             } else {
                 $this->handlerExtractor($definer->getNodeWithAlias());
             }
@@ -67,14 +67,14 @@ class DefinerExtractor
 
         $this->setAlias($_alias);
 
-        foreach (RegisterAdapter::load() as $adapter) {
-            $_checkSignature = $adapter::getSignature();
+        foreach (RegisterExpression::load() as $expression) {
+            $_checkSignature = $expression::getSignature();
 
             if (is_array($_checkSignature)) {
                 $_founded = false;
                 foreach ($_checkSignature as $signature) {
                     if (preg_match($signature, $this->definer)) {
-                        $this->adapter = new $adapter($this->definer);
+                        $this->expression = new $expression($this->definer);
                         $_founded = true;
                         break;
                     }
@@ -86,11 +86,11 @@ class DefinerExtractor
             } else {
                 if (isset($_checkSignature)) {
                     if (preg_match($_checkSignature, $this->definer)) {
-                        $this->adapter = new $adapter($this->definer);
+                        $this->expression = new $expression($this->definer);
                         break;
                     }
                 } else {
-                    $this->adapter = new $adapter($this->definer);
+                    $this->expression = new $expression($this->definer);
                 }
             }
         }
@@ -112,8 +112,8 @@ class DefinerExtractor
         return $this->definer;
     }
 
-    public function getAdapter()
+    public function getExpression()
     {
-        return $this->adapter;
+        return $this->expression;
     }
 }

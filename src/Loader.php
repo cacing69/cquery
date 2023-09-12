@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Cacing69\Cquery;
 
-use Cacing69\Cquery\Adapter\ClosureCallbackAdapter;
+use Cacing69\Cquery\Expression\ClosureCallbackExpression;
 use Cacing69\Cquery\Trait\HasDefinersProperty;
 use Cacing69\Cquery\Trait\HasFiltersProperty;
 use Cacing69\Cquery\Trait\HasSourceProperty;
@@ -185,26 +185,26 @@ abstract class Loader
     {
         $this->validateSource();
 
-        $adapter = null;
+        $expression = null;
 
         if ($filter->operatorIsCallback()) {
-            $adapter = new ClosureCallbackAdapter(null);
+            $expression = new ClosureCallbackExpression(null);
 
             $extractor = new DefinerExtractor($filter->getNode());
 
-            $adapter = $adapter
-                ->setNode($extractor->getAdapter()->getNode())
-                ->setCallMethod($extractor->getAdapter()->getCallMethod())
-                ->setCallMethodParameter($extractor->getAdapter()->getCallMethodParameter());
+            $expression = $expression
+                ->setNode($extractor->getExpression()->getNode())
+                ->setCallMethod($extractor->getExpression()->getCallMethod())
+                ->setCallMethodParameter($extractor->getExpression()->getCallMethodParameter());
         } else {
-            foreach (RegisterAdapter::load() as $adapter) {
-                $_checkSignature = $adapter::getSignature();
+            foreach (RegisterExpression::load() as $expression) {
+                $_checkSignature = $expression::getSignature();
                 if (isset($_checkSignature)) {
                     if (is_array($_checkSignature)) {
                         $_founded = false;
                         foreach ($_checkSignature as $signature) {
                             if (preg_match($signature, $filter->getNode())) {
-                                $adapter = new $adapter($filter->getNode(), $this->source);
+                                $expression = new $expression($filter->getNode(), $this->source);
 
                                 $_founded = true;
                                 break;
@@ -216,20 +216,20 @@ abstract class Loader
                         }
                     } else {
                         if (preg_match($_checkSignature, $filter->getNode())) {
-                            $adapter = new $adapter($filter->getNode(), $this->source);
+                            $expression = new $expression($filter->getNode(), $this->source);
                             break;
                         }
                     }
                 } else {
-                    $adapter = new $adapter($filter->getNode(), $this->source);
+                    $expression = new $expression($filter->getNode(), $this->source);
                 }
             }
         }
 
-        $adapter->setOperator($operator);
-        $adapter->setFilter($filter);
+        $expression->setOperator($operator);
+        $expression->setFilter($filter);
 
-        $this->filters[] = $adapter;
+        $this->filters[] = $expression;
     }
 
     public function setCallbackOnContentLoaded(Closure $closure)

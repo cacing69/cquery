@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Cacing69\Cquery\Adapter;
+namespace Cacing69\Cquery\Expression;
 
-use Cacing69\Cquery\CallbackAdapter;
+use Cacing69\Cquery\CallbackExpression;
 use Cacing69\Cquery\DefinerExtractor;
-use Cacing69\Cquery\ParserAdapterInterface;
+use Cacing69\Cquery\ParserExpressionInterface;
 
-class AppendNodeCallbackAdapter extends CallbackAdapter implements ParserAdapterInterface
+class AppendNodeCallbackExpression extends CallbackExpression implements ParserExpressionInterface
 {
     protected static $parserIdentifier = 'append_node';
     protected static $parserArguments = ['querySelector', 'children'];
@@ -38,11 +38,11 @@ class AppendNodeCallbackAdapter extends CallbackAdapter implements ParserAdapter
 
         $extractRefNode = new DefinerExtractor($extract[2]);
 
-        $this->ref = $extractRefNode->getAdapter()->getNode();
+        $this->ref = $extractRefNode->getExpression()->getNode();
 
         $this->node = $extract[1];
 
         $this->callMethod = 'filter.each';
-        $this->callMethodParameter = $extractRefNode->getAdapter()->getCallMethodParameter();
+        $this->callMethodParameter = $extractRefNode->getExpression()->getCallMethodParameter();
     }
 }

@@ -3,6 +3,7 @@
 ## [v1.3.2](https://github.com/cacing69/cquery/compare/v1.3.2...v1.3.1) (2023-09-??)
 
 - Can used limit on Parse class, based on this PR [#9](https://github.com/cacing69/cquery/pull/9)
+- Fixing filter on `raw()` method
 
 ## [v1.3.1](https://github.com/cacing69/cquery/compare/v1.3.1...v1.3.0) (2023-09-11)
 

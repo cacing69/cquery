@@ -2,7 +2,6 @@
 
 namespace Cacing69\Cquery\Trait;
 
-use Cacing69\Cquery\Adapter\AppendNodeCallbackAdapter;
 use Cacing69\Cquery\CqueryException;
 use Cacing69\Cquery\Support\Collection;
 use Symfony\Component\DomCrawler\Crawler;

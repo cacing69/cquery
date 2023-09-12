@@ -1,4 +1,7 @@
-![Cquery](docs/media/logo-sm.svg?raw=true)
+
+<p align="center">
+  <img width="460" src="https://github.com/cacing69/cquery/blob/main/docs/media/logo-sm.png">
+</p>
 
 # Cquery (Crawl Query)
 

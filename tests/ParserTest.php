@@ -282,7 +282,6 @@ final class ParserTest extends TestCase
 
         try {
             $parser = new Parser($query);
-
         } catch (Exception $e) {
             $this->assertSame(CqueryException::class, get_class($e));
             $this->assertSame('only integer numeric value allowed when used limit argument.', $e->getMessage());

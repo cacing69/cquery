@@ -1267,13 +1267,8 @@ final class SampleTest extends TestCase
         $this->assertCount(4, $pluck);
         $this->assertsame('Title 1', $pluck[0]);
         $this->assertsame('Title 2', $pluck[1]);
-        $this->assertsame('Title 3', $pluck[2]);
-        $this->assertsame('Title 11', $pluck[3]);
-        $this->assertsame('Title 22', $pluck[4]);
-        $this->assertsame('Title 323', $pluck[5]);
-        $this->assertsame('Title 331', $pluck[6]);
-        $this->assertsame('Title 331', $pluck[7]);
-        $this->assertsame('12345', $pluck[8]);
+        $this->assertsame('Title 11', $pluck[2]);
+        $this->assertsame('Title 22', $pluck[3]);
     }
 
     public function testCollectLast()

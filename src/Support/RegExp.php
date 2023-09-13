@@ -9,6 +9,7 @@
  * the LICENSE file that was distributed with this source code.
  */
 
+
 namespace Cacing69\Cquery\Support;
 
 class RegExp

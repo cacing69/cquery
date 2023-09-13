@@ -36,7 +36,8 @@ class Str
         return substr($haystack, -$length) === $needle;
     }
 
-    public static function cleanValue($value) {
+    public static function cleanValue($value)
+    {
         return trim(preg_replace('/\s+/', ' ', $value));
     }
 }

@@ -4,6 +4,7 @@
 
 - Can used limit on Parse class, based on this PR [#9](https://github.com/cacing69/cquery/pull/9)
 - Fixing filter on `raw()` method
+- now support for nested filter (2 level)
 
 ## [v1.3.1](https://github.com/cacing69/cquery/compare/v1.3.1...v1.3.0) (2023-09-11)
 

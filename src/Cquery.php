@@ -137,9 +137,9 @@ class Cquery
         } else {
             $filter = new Filter($node, $operator);
             if ($node instanceof Closure) {
-                if($operator === null) {
+                if ($operator === null) {
                     // BEGIN NESTED
-                    dd("under_development");
+                    dd('under_development');
                     // END NESTED
                 } else {
                     throw new CqueryException('when used closure, u need to place it on second parameter');

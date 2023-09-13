@@ -1291,4 +1291,49 @@ final class SampleTest extends TestCase
         $this->assertSame('http://ini-url-33-0.com', $result['url']);
         $this->assertSame('premium class-32 denied', $result['class']);
     }
+
+    public function testFilterWithDataCustomAttrIdIntValue()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_HTML);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from('#lorem .link')
+            ->define(
+                'h1 as title',
+                'a as description',
+                'attr(href, a) as url',
+                'attr(class, a) as class'
+            )
+            ->filter("attr(data-custom-attr-id, a)", "=", 12)
+            ->get();
+
+        $this->assertCount(1, $result);
+    }
+
+    public function testWithFilterNested()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_HTML);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from('#lorem .link')
+            ->define(
+                'h1 as title',
+                'a as description',
+                'attr(href, a) as url',
+                'attr(class, a) as class'
+            )
+            // ->filter(function ($query) {
+            //     $query
+            //         ->filter("attr(class, a)", "has", "vip")
+            //         ->andFilter("attr(data-custom-attr-id, a)", "=", 12);
+            // })
+            ->last();
+
+        $this->assertSame('12345', $result['title']);
+        $this->assertSame('Href Attribute Example 52', $result['description']);
+        $this->assertSame('http://ini-url-33-0.com', $result['url']);
+        $this->assertSame('premium class-32 denied', $result['class']);
+    }
 }

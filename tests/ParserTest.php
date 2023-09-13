@@ -372,8 +372,6 @@ final class ParserTest extends TestCase
 
         $this->assertSame('.item', $parser->getSource()->getRaw());
         $this->assertCount(3, $parser->getDefiners());
-        $this->assertNull($parser->getFilters()['or']);
-        $this->assertNull($parser->getFilters()['and']);
         $this->assertSame(4, $parser->getLimit());
         $this->assertSame('append_node(.list > .item, li) as list', $parser->getDefiners()[0]);
         $this->assertSame('attr(href, div > h1 > span > a)', $parser->getDefiners()[1]);

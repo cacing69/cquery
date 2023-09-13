@@ -13,6 +13,8 @@ class Filter
     use HasNodeProperty;
     use HasOperatorProperty;
 
+    private $children;
+
     public function __construct($node, $operator, $value = null)
     {
         $this->node = $node;

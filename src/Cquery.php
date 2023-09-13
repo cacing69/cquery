@@ -137,7 +137,13 @@ class Cquery
         } else {
             $filter = new Filter($node, $operator);
             if ($node instanceof Closure) {
-                throw new CqueryException('when used closure, u need to place it on second parameter');
+                if($operator === null) {
+                    // BEGIN NESTED
+                    dd("under_development");
+                    // END NESTED
+                } else {
+                    throw new CqueryException('when used closure, u need to place it on second parameter');
+                }
             }
 
             if (!($operator instanceof Closure) && empty($value)) {
@@ -156,6 +162,19 @@ class Cquery
      * @return \Cacing69\Cquery\Cquery;
      */
     public function filter($node, $operator = null, $value = null): Cquery
+    {
+        $filter = Cquery::makeFilter($node, $operator, $value);
+        $this->loader->addFilter($filter, 'and');
+
+        return $this;
+    }
+
+    /**
+     * The filter method is used to add filter criteria with 'AND' logic.
+     *
+     * @return \Cacing69\Cquery\Cquery;
+     */
+    public function andFilter($node, $operator = null, $value = null): Cquery
     {
         $filter = Cquery::makeFilter($node, $operator, $value);
         $this->loader->addFilter($filter, 'and');

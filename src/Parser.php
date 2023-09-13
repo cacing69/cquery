@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * This file is part of Cquery.
+ *
+ * (c) 2023 Ibnul Mutaki <ibnuul@gmail.com>
+ *
+ * For the full copyright and license information, please view
+ * the LICENSE file that was distributed with this source code.
+ */
+
+
 declare(strict_types=1);
 
 namespace Cacing69\Cquery;
@@ -20,20 +30,6 @@ class Parser
     protected $limit;
     public $onDocumentLoaded;
 
-    /**
-     * @fn document_loaded use browser, client
-     *
-     * @end_fn
-     *
-     * from ( .item )
-     * define
-     * span > a.title as title,
-     * attr(href, div > h1 > span > a) as url
-     * filter
-     * span > a.title has 'narcos',
-     * span > a.rating > 6
-     * limit 1
-     */
     public function __construct($raw)
     {
         if (empty($raw)) {

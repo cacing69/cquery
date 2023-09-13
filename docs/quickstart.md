@@ -74,7 +74,7 @@ For example, you have a simple HTML element as shown below.
 
 ## Methods
 
-Lists of method you are can used for query in html
+Lists of method available you can used for query html
 
 | method | example | description |
 | --------- | ------------- | ------------------ |

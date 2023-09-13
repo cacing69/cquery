@@ -16,4 +16,5 @@ class RegExp
     public const IS_FILTER_LIKE_END_WITH = '/^%(.*?)$/im';
     public const IS_FILTER_LIKE_START_WITH = '/^(.*?)%$/im';
     public const IS_DEFINER_HAVE_PARENTHESES = '/^\s?\(\s?(.+)\s?\)\s?$/is';
+    public const EXTRACT_FILTER_FROM_PARSER = '/(.*?)\s*(=|==|===|!=|<>|>|>=|<|<=|has|regex|like)\s*(\'.*\'|\d)/i';
 }

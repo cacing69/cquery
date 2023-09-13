@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://laravel.com" target="_blank">
-    <img src="https://raw.githubusercontent.com/cacing69/cquery/main/docs/media/logo-sm.svg" width="400">
+    <img src="https://raw.githubusercontent.com/cacing69/cquery/main/docs/media/logo-sm.png" width="400">
   </a>
 </p>
 
@@ -148,7 +148,7 @@ Lists of method you are can used for query in html
 | `onObtainedResult(function($results))` | `onObtainedResult()` | - |
 
 
-### List definer available
+### List definer expression available
 
 Below are the functions you are can use, they may change over time.
 | function | example | description |

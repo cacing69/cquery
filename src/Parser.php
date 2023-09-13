@@ -6,6 +6,7 @@ namespace Cacing69\Cquery;
 
 use Cacing69\Cquery\Support\Str;
 use Cacing69\Cquery\Trait\HasDefinersProperty;
+use Cacing69\Cquery\Support\RegExp;
 use Cacing69\Cquery\Trait\HasFiltersProperty;
 use Cacing69\Cquery\Trait\HasRawProperty;
 use Cacing69\Cquery\Trait\HasSourceProperty;
@@ -18,25 +19,22 @@ class Parser
     use HasFiltersProperty;
     protected $limit;
     public $onDocumentLoaded;
-    // 1). \s*from\s*\(\s*(.*?)\s*\)\s*define\s*(.*?)\s*filter\s*(.*)\s*limit\s*(.*)\s*
-
-    // https://regex101.com/r/mUvz2R/1
-    // 2). \s*from\s*\(\s*(.+?)\s*\).*define\s*(.*?)\s*(\s*filter\s*(.*?)\s*)?(\s*limit\s*(.*?)\s*)?\s*$
 
     /**
-     * @fn document_loaded use browser, client
-     *
-     * @end_fn
-     *
-     * from ( .item )
-     * define
-     * span > a.title as title,
-     * attr(href, div > h1 > span > a) as url
-     * filter
-     * span > a.title has 'narcos',
-     * span > a.rating > 6
-     * limit 1
+      @fn document_loaded use browser, client
+
+      @end_fn
+
+      from ( .item )
+      define
+           span > a.title as title,
+           attr(href, div > h1 > span > a) as url
+      filter
+           span > a.title has 'narcos',
+           span > a.rating > 6
+      limit 1
      */
+
     public function __construct($raw)
     {
         if (empty($raw)) {
@@ -45,9 +43,11 @@ class Parser
 
         $this->raw = $raw;
 
-        $regex = "/\s*from\s*\(\s*(.*?)\s*\).*define/is";
+        $regex = "/\s*from\s*\(\s*(.+?)\s*\).*define/is";
 
-        preg_match($regex, $raw, $_from);
+        if(!preg_match($regex, $raw, $_from)) {
+            throw new CqueryException('invalid query expression.');
+        }
 
         $this->source = new Source($_from[1]);
 
@@ -65,7 +65,7 @@ class Parser
                 if (preg_match("/limit\s*(.+)\s*/is", $_definer[1], $_limit)) {
                     $_trimLimit = trim($_limit[1]);
 
-                    if (is_numeric($_trimLimit) && !preg_match("/\d+(\.|\,)+\d+/is", $_trimLimit)) {
+                    if (!preg_match("/\d+(\.|\,)+\d+/is", $_trimLimit) && is_numeric($_trimLimit)) {
                         $this->limit = intval($_trimLimit);
                     } else {
                         throw new CqueryException('only integer numeric value allowed when used limit argument.');
@@ -79,11 +79,26 @@ class Parser
 
                 // extract filter
                 $this->makeFilters($_filter[1]);
-            } else {
+            } elseif (preg_match("/limit\s*(.+)\s*/is", $_definer[1], $_limit)) {
+                // if (preg_match("/limit\s*(.+)\s*/is", $_definer[1], $_limit)) {
+                    $_trimLimit = trim($_limit[1]);
+
+                    if (!preg_match("/\d+(\.|\,)+\d+/is", $_trimLimit) && is_numeric($_trimLimit)) {
+                        $this->limit = intval($_trimLimit);
+                    } else {
+                        throw new CqueryException('only integer numeric value allowed when used limit argument.');
+                    }
+                // }
+
+                preg_match("/(.*?)\s*limit/is", $_definer[1], $_extractDefinerFromFilter);
+                // extract definer
+                $this->makeDefiners($_extractDefinerFromFilter[1]);
+            } else{
                 // extract definer
                 $this->makeDefiners($_definer[1]);
             }
         }
+
     }
 
     private function makeFilters($filters)
@@ -95,19 +110,19 @@ class Parser
         while (!empty($_strFilter)) {
             if (preg_match('/.+(and|or)/i', $_strFilter, $_strFilterMatch)) {
                 $_strFilterBefore = $_strFilterMatch[1];
-                $_cleanFilterMatch = trim(preg_replace('/\s+/', ' ', str_replace($_strFilterBefore, '', $_strFilterMatch[0])));
+                $_cleanFilterMatch = Str::cleanValue(str_replace($_strFilterBefore, '', $_strFilterMatch[0]));
 
-                preg_match('/(.*?)\s*(=|==|===|!=|<>|>|>=|<|<=|has|regex|like)\s*(\'.*\'|\d)/i', $_cleanFilterMatch, $_extractCleanFilterMatch);
+                preg_match(RegExp::EXTRACT_FILTER_FROM_PARSER, $_cleanFilterMatch, $_extractCleanFilterMatch);
 
                 $this->filters[$_strFilterBefore][] = Cquery::makeFilter($_extractCleanFilterMatch[1], $_extractCleanFilterMatch[2], str_replace("'", '', $_extractCleanFilterMatch[3]));
                 $_strFilter = str_replace($_strFilterMatch[0], '', $_strFilter);
             } else {
-                $_cleanFilterMatch = trim(preg_replace('/\s+/', ' ', str_replace($_strFilterBefore, '', $_strFilter)));
+                $_cleanFilterMatch = Str::cleanValue(str_replace($_strFilterBefore, '', $_strFilter));
 
-                preg_match('/(.*?)\s*(=|==|===|!=|<>|>|>=|<|<=|has|regex|like)\s*(\'.*\'|\d)/i', $_cleanFilterMatch, $_extractCleanFilterMatch);
+                preg_match(RegExp::EXTRACT_FILTER_FROM_PARSER, $_cleanFilterMatch, $_extractCleanFilterMatch);
                 $this->filters[!empty($_strFilterBefore) ? $_strFilterBefore : 'and'][] = Cquery::makeFilter($_extractCleanFilterMatch[1], $_extractCleanFilterMatch[2], str_replace("'", '', $_extractCleanFilterMatch[3] ?? ''));
 
-                $_strFilter = trim(preg_replace('/\s+/', ' ', str_replace($_cleanFilterMatch, '', $_strFilter)));
+                $_strFilter = Str::cleanValue(str_replace($_cleanFilterMatch, '', $_strFilter));
             }
 
             $_loopFilter++;

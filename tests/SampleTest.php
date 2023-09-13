@@ -1305,7 +1305,7 @@ final class SampleTest extends TestCase
                 'attr(href, a) as url',
                 'attr(class, a) as class'
             )
-            ->filter("attr(data-custom-attr-id, a)", "=", 12)
+            ->filter('attr(data-custom-attr-id, a)', '=', 12)
             ->get();
 
         $this->assertCount(1, $result);

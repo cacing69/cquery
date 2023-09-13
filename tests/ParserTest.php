@@ -357,7 +357,7 @@ final class ParserTest extends TestCase
         $this->assertSame("replace('i am', 'you are', div > h1 > span > a)", $parser->getDefiners()[2]);
     }
 
-        public function testParseWithLimitAndWithoutFilter()
+    public function testParseWithLimitAndWithoutFilter()
     {
         $query = "
         from ( .item )

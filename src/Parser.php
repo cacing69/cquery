@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Cacing69\Cquery;
 
+use Cacing69\Cquery\Support\RegExp;
 use Cacing69\Cquery\Support\Str;
 use Cacing69\Cquery\Trait\HasDefinersProperty;
-use Cacing69\Cquery\Support\RegExp;
 use Cacing69\Cquery\Trait\HasFiltersProperty;
 use Cacing69\Cquery\Trait\HasRawProperty;
 use Cacing69\Cquery\Trait\HasSourceProperty;
@@ -21,20 +21,19 @@ class Parser
     public $onDocumentLoaded;
 
     /**
-      @fn document_loaded use browser, client
-
-      @end_fn
-
-      from ( .item )
-      define
-           span > a.title as title,
-           attr(href, div > h1 > span > a) as url
-      filter
-           span > a.title has 'narcos',
-           span > a.rating > 6
-      limit 1
+     * @fn document_loaded use browser, client
+     *
+     * @end_fn
+     *
+     * from ( .item )
+     * define
+     * span > a.title as title,
+     * attr(href, div > h1 > span > a) as url
+     * filter
+     * span > a.title has 'narcos',
+     * span > a.rating > 6
+     * limit 1
      */
-
     public function __construct($raw)
     {
         if (empty($raw)) {
@@ -45,7 +44,7 @@ class Parser
 
         $regex = "/\s*from\s*\(\s*(.+?)\s*\).*define/is";
 
-        if(!preg_match($regex, $raw, $_from)) {
+        if (!preg_match($regex, $raw, $_from)) {
             throw new CqueryException('invalid query expression.');
         }
 
@@ -81,24 +80,23 @@ class Parser
                 $this->makeFilters($_filter[1]);
             } elseif (preg_match("/limit\s*(.+)\s*/is", $_definer[1], $_limit)) {
                 // if (preg_match("/limit\s*(.+)\s*/is", $_definer[1], $_limit)) {
-                    $_trimLimit = trim($_limit[1]);
+                $_trimLimit = trim($_limit[1]);
 
-                    if (!preg_match("/\d+(\.|\,)+\d+/is", $_trimLimit) && is_numeric($_trimLimit)) {
-                        $this->limit = intval($_trimLimit);
-                    } else {
-                        throw new CqueryException('only integer numeric value allowed when used limit argument.');
-                    }
+                if (!preg_match("/\d+(\.|\,)+\d+/is", $_trimLimit) && is_numeric($_trimLimit)) {
+                    $this->limit = intval($_trimLimit);
+                } else {
+                    throw new CqueryException('only integer numeric value allowed when used limit argument.');
+                }
                 // }
 
                 preg_match("/(.*?)\s*limit/is", $_definer[1], $_extractDefinerFromFilter);
                 // extract definer
                 $this->makeDefiners($_extractDefinerFromFilter[1]);
-            } else{
+            } else {
                 // extract definer
                 $this->makeDefiners($_definer[1]);
             }
         }
-
     }
 
     private function makeFilters($filters)

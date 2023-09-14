@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Cacing69\Cquery\Expression;
 
-use Cacing69\Cquery\CallbackExpression;
+use Cacing69\Cquery\AbstractCallbackExpression;
 use Cacing69\Cquery\Support\RegExp;
 
-class LowerCallbackExpression extends CallbackExpression
+class LowerCallbackExpression extends AbstractCallbackExpression
 {
     protected static $signature = RegExp::IS_LOWER;
 

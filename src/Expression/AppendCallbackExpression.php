@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Cacing69\Cquery\Expression;
 
-use Cacing69\Cquery\CallbackExpression;
+use Cacing69\Cquery\AbstractCallbackExpression;
 use Cacing69\Cquery\DefinerExtractor;
 
-class AppendCallbackExpression extends CallbackExpression
+class AppendCallbackExpression extends AbstractCallbackExpression
 {
     protected static $signature = '/^\s*append\(\s*(.+)\s*\)\s*(as)?\s*\w*((\.\*)?\.\w+)?\s*,?$/i';
 

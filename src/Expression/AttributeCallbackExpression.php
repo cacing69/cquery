@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace Cacing69\Cquery\Expression;
 
-use Cacing69\Cquery\CallbackExpression;
+use Cacing69\Cquery\AbstractCallbackExpression;
 use Cacing69\Cquery\ParserExpressionInterface;
 use Cacing69\Cquery\Support\RegExp;
 
-class AttributeCallbackExpression extends CallbackExpression implements ParserExpressionInterface
+class AttributeCallbackExpression extends AbstractCallbackExpression implements ParserExpressionInterface
 {
     protected static $parserIdentifier = 'attr';
     protected static $parserArguments = ['attr', 'querySelector'];

@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Cacing69\Cquery\Expression;
 
-use Cacing69\Cquery\CallbackExpression;
+use Cacing69\Cquery\AbstractCallbackExpression;
 
-class StaticIntCallbackExpression extends CallbackExpression
+class StaticIntCallbackExpression extends AbstractCallbackExpression
 {
     protected static $signature = '/^\s*(\d+)\s*$/is';
 

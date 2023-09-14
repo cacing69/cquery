@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace Cacing69\Cquery\Expression;
 
-use Cacing69\Cquery\CallbackExpression;
+use Cacing69\Cquery\AbstractCallbackExpression;
 use Cacing69\Cquery\DefinerExtractor;
 use Cacing69\Cquery\ParserExpressionInterface;
 
-class AppendNodeCallbackExpression extends CallbackExpression implements ParserExpressionInterface
+class AppendNodeCallbackExpression extends AbstractCallbackExpression implements ParserExpressionInterface
 {
     protected static $parserIdentifier = 'append_node';
     protected static $parserArguments = ['querySelector', 'children'];

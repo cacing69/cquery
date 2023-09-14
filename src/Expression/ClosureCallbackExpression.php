@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Cacing69\Cquery\Expression;
 
-use Cacing69\Cquery\CallbackExpression;
+use Cacing69\Cquery\AbstractCallbackExpression;
 use Closure;
 
-class ClosureCallbackExpression extends CallbackExpression
+class ClosureCallbackExpression extends AbstractCallbackExpression
 {
     public function __construct(Closure $rawDefiner = null)
     {

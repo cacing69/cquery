@@ -21,7 +21,7 @@ use Cacing69\Cquery\Trait\HasRawProperty;
 use Closure;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 
-abstract class CallbackExpression
+abstract class AbstractCallbackExpression
 {
     use HasOperatorProperty;
     use HasRawProperty;

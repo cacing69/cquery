@@ -1,5 +1,10 @@
 # Release Notes
 
+## [v1.5.0](https://github.com/cacing69/cquery/compare/v1.5.0...v1.4.0) (2023-09-??)
+
+- Prepare for nested filter, only for 2 level
+- Add writer for save as file (ex: csv, json)
+
 ## [v1.4.0](https://github.com/cacing69/cquery/compare/v1.4.0...v1.3.1) (2023-09-14)
 
 - Can used limit on Parse class, based on this PR [#9](https://github.com/cacing69/cquery/pull/9)

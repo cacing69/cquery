@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Cacing69\Cquery\Expression;
 
-use Cacing69\Cquery\CallbackExpression;
+use Cacing69\Cquery\AbstractCallbackExpression;
 use Cacing69\Cquery\ParserExpressionInterface;
 
-class ReplaceCallbackExpression extends CallbackExpression implements ParserExpressionInterface
+class ReplaceCallbackExpression extends AbstractCallbackExpression implements ParserExpressionInterface
 {
     protected static $parserIdentifier = 'replace';
     protected static $parserArguments = ['search', 'replace', 'querySelector'];

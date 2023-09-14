@@ -1349,15 +1349,15 @@ final class SampleTest extends TestCase
 
         $this->assertCount(9, $result);
 
-        $this->assertSame("MAIN TITLE", $result[0]["head"]);
-        $this->assertSame("MAIN TITLE", $result[1]["head"]);
-        $this->assertSame("MAIN TITLE", $result[2]["head"]);
-        $this->assertSame("MAIN TITLE", $result[3]["head"]);
-        $this->assertSame("MAIN TITLE", $result[4]["head"]);
-        $this->assertSame("MAIN TITLE", $result[5]["head"]);
-        $this->assertSame("MAIN TITLE", $result[6]["head"]);
-        $this->assertSame("MAIN TITLE", $result[7]["head"]);
-        $this->assertSame("MAIN TITLE", $result[8]["head"]);
+        $this->assertSame('MAIN TITLE', $result[0]['head']);
+        $this->assertSame('MAIN TITLE', $result[1]['head']);
+        $this->assertSame('MAIN TITLE', $result[2]['head']);
+        $this->assertSame('MAIN TITLE', $result[3]['head']);
+        $this->assertSame('MAIN TITLE', $result[4]['head']);
+        $this->assertSame('MAIN TITLE', $result[5]['head']);
+        $this->assertSame('MAIN TITLE', $result[6]['head']);
+        $this->assertSame('MAIN TITLE', $result[7]['head']);
+        $this->assertSame('MAIN TITLE', $result[8]['head']);
     }
 
     public function testWithAppendNestedUsedSelector()
@@ -1375,15 +1375,15 @@ final class SampleTest extends TestCase
 
         $this->assertCount(9, $result);
 
-        $this->assertSame("main-txt content-title", $result[0]["head_class"]);
-        $this->assertSame("main-txt content-title", $result[1]["head_class"]);
-        $this->assertSame("main-txt content-title", $result[2]["head_class"]);
-        $this->assertSame("main-txt content-title", $result[3]["head_class"]);
-        $this->assertSame("main-txt content-title", $result[4]["head_class"]);
-        $this->assertSame("main-txt content-title", $result[5]["head_class"]);
-        $this->assertSame("main-txt content-title", $result[6]["head_class"]);
-        $this->assertSame("main-txt content-title", $result[7]["head_class"]);
-        $this->assertSame("main-txt content-title", $result[8]["head_class"]);
+        $this->assertSame('main-txt content-title', $result[0]['head_class']);
+        $this->assertSame('main-txt content-title', $result[1]['head_class']);
+        $this->assertSame('main-txt content-title', $result[2]['head_class']);
+        $this->assertSame('main-txt content-title', $result[3]['head_class']);
+        $this->assertSame('main-txt content-title', $result[4]['head_class']);
+        $this->assertSame('main-txt content-title', $result[5]['head_class']);
+        $this->assertSame('main-txt content-title', $result[6]['head_class']);
+        $this->assertSame('main-txt content-title', $result[7]['head_class']);
+        $this->assertSame('main-txt content-title', $result[8]['head_class']);
     }
 
     public function testWithIntWithAppendExpressionUsedSelector()
@@ -1401,15 +1401,15 @@ final class SampleTest extends TestCase
 
         $this->assertCount(9, $result);
 
-        $this->assertSame(9, $result[0]["head_id"]);
-        $this->assertSame(9, $result[1]["head_id"]);
-        $this->assertSame(9, $result[2]["head_id"]);
-        $this->assertSame(9, $result[3]["head_id"]);
-        $this->assertSame(9, $result[4]["head_id"]);
-        $this->assertSame(9, $result[5]["head_id"]);
-        $this->assertSame(9, $result[6]["head_id"]);
-        $this->assertSame(9, $result[7]["head_id"]);
-        $this->assertSame(9, $result[8]["head_id"]);
+        $this->assertSame(9, $result[0]['head_id']);
+        $this->assertSame(9, $result[1]['head_id']);
+        $this->assertSame(9, $result[2]['head_id']);
+        $this->assertSame(9, $result[3]['head_id']);
+        $this->assertSame(9, $result[4]['head_id']);
+        $this->assertSame(9, $result[5]['head_id']);
+        $this->assertSame(9, $result[6]['head_id']);
+        $this->assertSame(9, $result[7]['head_id']);
+        $this->assertSame(9, $result[8]['head_id']);
     }
 
     public function testWithAppendWithIntExpressionUsedSelector()
@@ -1427,15 +1427,15 @@ final class SampleTest extends TestCase
 
         $this->assertCount(9, $result);
 
-        $this->assertSame(9, $result[0]["head_id"]);
-        $this->assertSame(9, $result[1]["head_id"]);
-        $this->assertSame(9, $result[2]["head_id"]);
-        $this->assertSame(9, $result[3]["head_id"]);
-        $this->assertSame(9, $result[4]["head_id"]);
-        $this->assertSame(9, $result[5]["head_id"]);
-        $this->assertSame(9, $result[6]["head_id"]);
-        $this->assertSame(9, $result[7]["head_id"]);
-        $this->assertSame(9, $result[8]["head_id"]);
+        $this->assertSame(9, $result[0]['head_id']);
+        $this->assertSame(9, $result[1]['head_id']);
+        $this->assertSame(9, $result[2]['head_id']);
+        $this->assertSame(9, $result[3]['head_id']);
+        $this->assertSame(9, $result[4]['head_id']);
+        $this->assertSame(9, $result[5]['head_id']);
+        $this->assertSame(9, $result[6]['head_id']);
+        $this->assertSame(9, $result[7]['head_id']);
+        $this->assertSame(9, $result[8]['head_id']);
     }
 
     public function testWithAppendWithDoubleQupteExpression()
@@ -1453,15 +1453,15 @@ final class SampleTest extends TestCase
 
         $this->assertCount(9, $result);
 
-        $this->assertSame("staticValue", $result[0]["static_value"]);
-        $this->assertSame("staticValue", $result[1]["static_value"]);
-        $this->assertSame("staticValue", $result[2]["static_value"]);
-        $this->assertSame("staticValue", $result[3]["static_value"]);
-        $this->assertSame("staticValue", $result[4]["static_value"]);
-        $this->assertSame("staticValue", $result[5]["static_value"]);
-        $this->assertSame("staticValue", $result[6]["static_value"]);
-        $this->assertSame("staticValue", $result[7]["static_value"]);
-        $this->assertSame("staticValue", $result[8]["static_value"]);
+        $this->assertSame('staticValue', $result[0]['static_value']);
+        $this->assertSame('staticValue', $result[1]['static_value']);
+        $this->assertSame('staticValue', $result[2]['static_value']);
+        $this->assertSame('staticValue', $result[3]['static_value']);
+        $this->assertSame('staticValue', $result[4]['static_value']);
+        $this->assertSame('staticValue', $result[5]['static_value']);
+        $this->assertSame('staticValue', $result[6]['static_value']);
+        $this->assertSame('staticValue', $result[7]['static_value']);
+        $this->assertSame('staticValue', $result[8]['static_value']);
     }
 
     public function testWithStaticNumericExpression()
@@ -1479,15 +1479,15 @@ final class SampleTest extends TestCase
 
         $this->assertCount(9, $result);
 
-        $this->assertSame(19, $result[0]["static_number"]);
-        $this->assertSame(19, $result[1]["static_number"]);
-        $this->assertSame(19, $result[2]["static_number"]);
-        $this->assertSame(19, $result[3]["static_number"]);
-        $this->assertSame(19, $result[4]["static_number"]);
-        $this->assertSame(19, $result[5]["static_number"]);
-        $this->assertSame(19, $result[6]["static_number"]);
-        $this->assertSame(19, $result[7]["static_number"]);
-        $this->assertSame(19, $result[8]["static_number"]);
+        $this->assertSame(19, $result[0]['static_number']);
+        $this->assertSame(19, $result[1]['static_number']);
+        $this->assertSame(19, $result[2]['static_number']);
+        $this->assertSame(19, $result[3]['static_number']);
+        $this->assertSame(19, $result[4]['static_number']);
+        $this->assertSame(19, $result[5]['static_number']);
+        $this->assertSame(19, $result[6]['static_number']);
+        $this->assertSame(19, $result[7]['static_number']);
+        $this->assertSame(19, $result[8]['static_number']);
     }
 
     public function testWithStaticFloatExpression()
@@ -1505,15 +1505,15 @@ final class SampleTest extends TestCase
 
         $this->assertCount(9, $result);
 
-        $this->assertSame(1.9, $result[0]["static_number"]);
-        $this->assertSame(1.9, $result[1]["static_number"]);
-        $this->assertSame(1.9, $result[2]["static_number"]);
-        $this->assertSame(1.9, $result[3]["static_number"]);
-        $this->assertSame(1.9, $result[4]["static_number"]);
-        $this->assertSame(1.9, $result[5]["static_number"]);
-        $this->assertSame(1.9, $result[6]["static_number"]);
-        $this->assertSame(1.9, $result[7]["static_number"]);
-        $this->assertSame(1.9, $result[8]["static_number"]);
+        $this->assertSame(1.9, $result[0]['static_number']);
+        $this->assertSame(1.9, $result[1]['static_number']);
+        $this->assertSame(1.9, $result[2]['static_number']);
+        $this->assertSame(1.9, $result[3]['static_number']);
+        $this->assertSame(1.9, $result[4]['static_number']);
+        $this->assertSame(1.9, $result[5]['static_number']);
+        $this->assertSame(1.9, $result[6]['static_number']);
+        $this->assertSame(1.9, $result[7]['static_number']);
+        $this->assertSame(1.9, $result[8]['static_number']);
     }
 
     public function testWithFilterNested()

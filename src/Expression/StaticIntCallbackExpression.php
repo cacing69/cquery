@@ -9,7 +9,6 @@
  * the LICENSE file that was distributed with this source code.
  */
 
-
 declare(strict_types=1);
 
 namespace Cacing69\Cquery\Expression;
@@ -33,7 +32,6 @@ class StaticIntCallbackExpression extends CallbackExpression
 
         $this->callback = function ($value) use ($raw) {
             preg_match(self::$signature, $raw, $_extract);
-
 
             return intval($_extract[1]);
         };

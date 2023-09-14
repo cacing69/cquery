@@ -9,7 +9,6 @@
  * the LICENSE file that was distributed with this source code.
  */
 
-
 declare(strict_types=1);
 
 namespace Cacing69\Cquery\Expression;
@@ -35,7 +34,6 @@ class AppendCallbackExpression extends CallbackExpression
         $extractRefNode = new DefinerExtractor($extract[1]);
 
         if (preg_match('/^\s*append\(\s*([a-z0-9_]*\(.+\))\s*\)$/', $raw, $extract)) {
-
             $extractChild = $this->extractChild($extract[1]);
             $_childCallback = $extractChild->getExpression()->getCallback();
 

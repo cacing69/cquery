@@ -18,10 +18,9 @@ define('Y_QQ_COM', 'https://y.qq.com/n/ryqq/singer/00220AYa4Ohak5');
 
 final class SampleOnlineTest extends TestCase
 {
-
-        /**
-         * @group ignore
-         */
+    /**
+     * @group ignore
+     */
     public function testGetGoogleTitle()
     {
         $data = new Cquery(GOOGLE);
@@ -39,7 +38,6 @@ final class SampleOnlineTest extends TestCase
     /**
      * @group ignore
      */
-
     public function testHttpBinTestWithActions()
     {
         $data = new Cquery(HTTP_BIN_TEST_K6_FORM_POST);
@@ -86,7 +84,6 @@ final class SampleOnlineTest extends TestCase
     /**
      * @group ignore
      */
-
     public function testClickLinkOnSemver()
     {
         $data = new Cquery(SEMVER_ORG);
@@ -116,7 +113,6 @@ final class SampleOnlineTest extends TestCase
     /**
      * @group ignore
      */
-
     public function testFormSearchOnWikipedia()
     {
         $data = new Cquery(WIKIPEDIA);
@@ -143,7 +139,6 @@ final class SampleOnlineTest extends TestCase
     /**
      * @group ignore
      */
-
     public function testFormSearchOnWikipediaButWithClickFirst()
     {
         $data = new Cquery(WIKIPEDIA);

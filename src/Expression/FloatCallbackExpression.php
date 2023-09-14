@@ -29,7 +29,7 @@ class FloatCallbackExpression extends CallbackExpression
     {
         $this->raw = $raw;
 
-        $this->callback = function (string $value) {
+        $this->callback = function ($value) {
             return floatval($value);
         };
 
@@ -41,7 +41,7 @@ class FloatCallbackExpression extends CallbackExpression
             $_childCallback = $extractChild->getExpression()->getCallback();
 
             if ($_childCallback) {
-                $this->callback = function (string $value) use ($_childCallback) {
+                $this->callback = function ($value) use ($_childCallback) {
                     return floatval((string) $_childCallback($value));
                 };
             }

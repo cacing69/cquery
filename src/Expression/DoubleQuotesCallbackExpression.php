@@ -16,9 +16,9 @@ namespace Cacing69\Cquery\Expression;
 
 use Cacing69\Cquery\CallbackExpression;
 
-class SingleQuotesCallbackExpression extends CallbackExpression
+class DoubleQuotesCallbackExpression extends CallbackExpression
 {
-    protected static $signature = '/^\'(.+)\'$/is';
+    protected static $signature = '/^\"(.+)\"$/is';
 
     public static function getSignature()
     {

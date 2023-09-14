@@ -150,7 +150,7 @@ Lists of method you are can used for query in html
 
 ### List definer expression available
 
-Below are the functions you are can use, they may change over time.
+Below are the expressions you are can use, they may change over time.
 | function | example | description |
 | --------- | ------------- | ------------------ |
 | `attr(attrName, selector)` | `attr(class, .link)` |  will retrieve all class value present on the element/container according to the selector. (.link) |
@@ -162,6 +162,7 @@ Below are the functions you are can use, they may change over time.
 | `float(selector)` | `float(h1)` | will parse element content to float (h1) |
 | `reverse(selector)` | `reverse(h1)` | will reverse text according to the selector. (h1) |
 | `replace(from, to, selector)` | `replace('lorem', 'ipsum', h1)` | will change text from `lorem` to `ipsum` according to the selector (h1). <br> have 3 option to use that <br><br> `replace('lorem', 'ipsum', h1)` <br><br> `replace(['lorem', 'dolor'], ['ipsum', 'sit'], h1)` <br><br> `replace(['lorem', 'ipsum'], 'ipsum', h1)` <br><br> it used single tick on argument/param |
+| `append(selectorParent)` | `append(title)  as main_title` | will append single element as new key on element each item outsoide main source. |
 | `append_node(selectorParent, selectorChildAfterParent)` | `append_node(div > .tags, a)  as tags` | will append array element as a child each item, for its usage, you can refer to the sample code below in $result_4. |
 
 ### List rules for alias

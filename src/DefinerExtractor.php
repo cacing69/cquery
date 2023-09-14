@@ -110,9 +110,9 @@ class DefinerExtractor
     {
         $this->alias = $alias;
 
-        if ($this->source) {
-            $this->source->setAlias($alias);
-        }
+        // if ($this->source) {
+        //     $this->source->setAlias($alias);
+        // }
 
         return $this;
     }

@@ -53,7 +53,7 @@ class ReplaceCallbackExpression extends CallbackExpression implements ParserExpr
             if (preg_match($sign, $raw)) {
                 preg_match($sign, $raw, $extractParams);
                 $this->node = $extractParams[3];
-                $_callbackTmp = function (string $value) use ($extractParams, $key) {
+                $_callbackTmp = function ($value) use ($extractParams, $key) {
                     if ($key === 'replace_from_single_to_single') {
                         return str_replace($extractParams[1], $extractParams[2], $value);
                     } elseif ($key === 'replace_from_array_to_array') {

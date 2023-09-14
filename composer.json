@@ -9,6 +9,11 @@
   "type": "library",
   "license": "MIT",
   "homepage": "https://github.com/cacing69/cquery",
+  "support": {
+      "issues": "https://github.com/cacing69/cquery/http-exception/issues",
+      "source": "https://github.com/cacing69/cquery",
+      "docs": "https://cacing69.github.io/cquery"
+  },
   "autoload": {
     "psr-4": {
       "Cacing69\\Cquery\\": "src/"
@@ -23,7 +28,18 @@
       "email": "ibnuul@gmail.com"
     }
   ],
-  "minimum-stability": "dev",
+  "config": {
+        "optimize-autoloader": true,
+        "preferred-install": {
+            "*": "dist"
+        },
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true
+        }
+    },
+  "minimum-stability": "stable",
+  "prefer-stable": true,
   "require": {
     "php": "^7.2|^8.1",
     "symfony/browser-kit": "^5.4|^6.3",
@@ -39,5 +55,24 @@
     "phpunit/phpunit": "^8.0|^9.0|^10.0",
     "friendsofphp/php-cs-fixer": "^3.4",
     "symfony/var-dumper": "^5.4|^6.4"
+  },
+  "scripts": {
+    "test": "phpunit --color=always",
+    "coverage:text": [
+            "@putenv XDEBUG_MODE=coverage",
+            "phpunit --color=always --coverage-text"
+        ],
+        "coverage:clover": [
+            "@putenv XDEBUG_MODE=coverage",
+            "phpunit --color=always --coverage-clover=coverage.xml"
+        ],
+        "coverage:html": [
+            "@putenv XDEBUG_MODE=coverage",
+            "phpunit --color=always --coverage-html=coverage"
+        ],
+        "coverage:check": [
+            "@coverage:clover",
+            "phpcov check:project coverage.xml"
+        ]
   }
 }

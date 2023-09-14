@@ -1,10 +1,13 @@
 # Release Notes
 
-## [v1.3.2](https://github.com/cacing69/cquery/compare/v1.3.2...v1.3.1) (2023-09-??)
+## [v1.4.0](https://github.com/cacing69/cquery/compare/v1.4.0...v1.3.1) (2023-09-14)
 
 - Can used limit on Parse class, based on this PR [#9](https://github.com/cacing69/cquery/pull/9)
 - Fixing filter on `raw()` method
-- now support for nested filter (2 level)
+- create new expression `append(selector)` for append single element to query
+- create new expression for static value with double quote `"rawValue"`
+- create new expression for static int  `99`
+- create new expression for static float  `9.9`
 
 ## [v1.3.1](https://github.com/cacing69/cquery/compare/v1.3.1...v1.3.0) (2023-09-11)
 

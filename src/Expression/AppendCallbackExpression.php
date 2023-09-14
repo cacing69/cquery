@@ -15,11 +15,11 @@ declare(strict_types=1);
 namespace Cacing69\Cquery\Expression;
 
 use Cacing69\Cquery\CallbackExpression;
-use Cacing69\Cquery\Support\RegExp;
+use Cacing69\Cquery\DefinerExtractor;
 
-class ReverseCallbackExpression extends CallbackExpression
+class AppendCallbackExpression extends CallbackExpression
 {
-    protected static $signature = RegExp::IS_REVERSE;
+    protected static $signature = '/^\s*append\(\s*(.+)\s*\)\s*(as)?\s*\w*((\.\*)?\.\w+)?\s*,?$/i';
 
     public static function getSignature()
     {
@@ -30,28 +30,27 @@ class ReverseCallbackExpression extends CallbackExpression
     {
         $this->raw = $raw;
 
-        $this->callback = function (string $value) {
-            return strrev((string) $value);
-        };
+        preg_match(self::$signature, $raw, $extract);
 
-        // check if function is nested
-        if (preg_match('/^\s?reverse\(\s?([a-z0-9_]*\(.+?\))\s?\)$/', $raw)) {
-            preg_match('/^\s?reverse\(\s?([a-z0-9_]*\(.+?\))\s?\)$/', $raw, $extract);
+        $extractRefNode = new DefinerExtractor($extract[1]);
+
+        if (preg_match('/^\s*append\(\s*([a-z0-9_]*\(.+\))\s*\)$/', $raw, $extract)) {
 
             $extractChild = $this->extractChild($extract[1]);
             $_childCallback = $extractChild->getExpression()->getCallback();
 
             if ($_childCallback) {
                 $this->callback = function ($value) use ($_childCallback) {
-                    return strrev((string) $_childCallback($value));
+                    return $_childCallback($value);
                 };
             }
-        } else {
-            preg_match(self::$signature, $raw, $node);
-            $this->node = $node[1];
-
-            $this->callMethod = 'extract';
-            $this->callMethodParameter = ['_text'];
         }
+
+        $this->ref = $extractRefNode->getExpression()->getNode();
+
+        $this->node = $extractRefNode->getExpression()->getNode();
+
+        $this->callMethod = 'static.extract';
+        $this->callMethodParameter = $extractRefNode->getExpression()->getCallMethodParameter();
     }
 }

@@ -42,7 +42,7 @@ class LowerCallbackExpression extends CallbackExpression
             $_childCallback = $extractChild->getExpression()->getCallback();
 
             if ($_childCallback) {
-                $this->callback = function (string $value) use ($_childCallback) {
+                $this->callback = function ($value) use ($_childCallback) {
                     return strtolower((string) $_childCallback($value));
                 };
             }

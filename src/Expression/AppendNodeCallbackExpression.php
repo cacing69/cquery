@@ -44,12 +44,26 @@ class AppendNodeCallbackExpression extends CallbackExpression implements ParserE
         // TODO Check if append node doesnt not support for nested
         $this->raw = $raw;
 
+        $this->ignoreCallbackOnLoop = true;
+
         preg_match(self::$signature, $raw, $extract);
 
         $extractRefNode = new DefinerExtractor($extract[2]);
 
-        $this->ref = $extractRefNode->getExpression()->getNode();
+        if (preg_match('/^\s*append_node\(\s*(.+)\s*\,\s*([a-z0-9_]*\(.+\))\s*\)$/', $raw, $_extract)) {
+            // dd($extract);
+            $extractChild = $this->extractChild($_extract[2]);
+            $_childCallback = $extractChild->getExpression()->getCallback();
 
+            if ($_childCallback) {
+                $this->callback = function ($value) use ($_childCallback) {
+                    return $_childCallback($value);
+                };
+            }
+        }
+
+        $this->ref = $extractRefNode->getExpression()->getNode();
+        // dd($extractRefNode->getExpression()->getNode());
         $this->node = $extract[1];
 
         $this->callMethod = 'filter.each';

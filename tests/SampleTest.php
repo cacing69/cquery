@@ -856,11 +856,34 @@ final class SampleTest extends TestCase
                 'span:nth-child(2) > small as author',
                 'append_node(div > .tags, a)  as tags',
             )
-            ->get();
+            ->get()
+            ->toArray();
 
         $this->assertCount(10, $result);
         $this->assertCount(4, $result[0]['tags']);
         $this->assertCount(2, $result[1]['tags']);
+    }
+
+    public function testScrapeQuotesToScrapeWithAppendNodeNestwedWithIntDefiner()
+    {
+        $content = file_get_contents(SAMPLE_HTML);
+
+        $data = new Cquery($content);
+
+        $result = $data
+            ->from('.col-md-8 > .quote')
+            ->define(
+                'span.text as text',
+                'span:nth-child(2) > small as author',
+                'append_node(div > .tags, int(attr(data-id, a)))  as tags',
+            )
+            ->first();
+
+        $this->assertCount(4, $result['tags']);
+        $this->assertSame(0, $result['tags'][0]);
+        $this->assertSame(0, $result['tags'][1]);
+        $this->assertSame(0, $result['tags'][2]);
+        $this->assertSame(0, $result['tags'][3]);
     }
 
     public function testScrapeQuotesToScrapeWithAppendNodeHrefAttributeDefiner()
@@ -1309,6 +1332,188 @@ final class SampleTest extends TestCase
             ->get();
 
         $this->assertCount(1, $result);
+    }
+
+    public function testWithAppendUsedSelector()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_HTML);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from('#lorem .link')
+            ->define(
+                'h1 as title',
+                'append(#title) as head'
+            )
+            ->get();
+
+        $this->assertCount(9, $result);
+
+        $this->assertSame("MAIN TITLE", $result[0]["head"]);
+        $this->assertSame("MAIN TITLE", $result[1]["head"]);
+        $this->assertSame("MAIN TITLE", $result[2]["head"]);
+        $this->assertSame("MAIN TITLE", $result[3]["head"]);
+        $this->assertSame("MAIN TITLE", $result[4]["head"]);
+        $this->assertSame("MAIN TITLE", $result[5]["head"]);
+        $this->assertSame("MAIN TITLE", $result[6]["head"]);
+        $this->assertSame("MAIN TITLE", $result[7]["head"]);
+        $this->assertSame("MAIN TITLE", $result[8]["head"]);
+    }
+
+    public function testWithAppendNestedUsedSelector()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_HTML);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from('#lorem .link')
+            ->define(
+                'h1 as title',
+                'append(attr(class, #title)) as head_class'
+            )
+            ->get();
+
+        $this->assertCount(9, $result);
+
+        $this->assertSame("main-txt content-title", $result[0]["head_class"]);
+        $this->assertSame("main-txt content-title", $result[1]["head_class"]);
+        $this->assertSame("main-txt content-title", $result[2]["head_class"]);
+        $this->assertSame("main-txt content-title", $result[3]["head_class"]);
+        $this->assertSame("main-txt content-title", $result[4]["head_class"]);
+        $this->assertSame("main-txt content-title", $result[5]["head_class"]);
+        $this->assertSame("main-txt content-title", $result[6]["head_class"]);
+        $this->assertSame("main-txt content-title", $result[7]["head_class"]);
+        $this->assertSame("main-txt content-title", $result[8]["head_class"]);
+    }
+
+    public function testWithIntWithAppendExpressionUsedSelector()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_HTML);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from('#lorem .link')
+            ->define(
+                'h1 as title',
+                'int(append(attr(data-id, #title))) as head_id'
+            )
+            ->get();
+
+        $this->assertCount(9, $result);
+
+        $this->assertSame(9, $result[0]["head_id"]);
+        $this->assertSame(9, $result[1]["head_id"]);
+        $this->assertSame(9, $result[2]["head_id"]);
+        $this->assertSame(9, $result[3]["head_id"]);
+        $this->assertSame(9, $result[4]["head_id"]);
+        $this->assertSame(9, $result[5]["head_id"]);
+        $this->assertSame(9, $result[6]["head_id"]);
+        $this->assertSame(9, $result[7]["head_id"]);
+        $this->assertSame(9, $result[8]["head_id"]);
+    }
+
+    public function testWithAppendWithIntExpressionUsedSelector()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_HTML);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from('#lorem .link')
+            ->define(
+                'h1 as title',
+                'append(int(attr(data-id, #title))) as head_id'
+            )
+            ->get();
+
+        $this->assertCount(9, $result);
+
+        $this->assertSame(9, $result[0]["head_id"]);
+        $this->assertSame(9, $result[1]["head_id"]);
+        $this->assertSame(9, $result[2]["head_id"]);
+        $this->assertSame(9, $result[3]["head_id"]);
+        $this->assertSame(9, $result[4]["head_id"]);
+        $this->assertSame(9, $result[5]["head_id"]);
+        $this->assertSame(9, $result[6]["head_id"]);
+        $this->assertSame(9, $result[7]["head_id"]);
+        $this->assertSame(9, $result[8]["head_id"]);
+    }
+
+    public function testWithAppendWithDoubleQupteExpression()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_HTML);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from('#lorem .link')
+            ->define(
+                'h1 as title',
+                '"staticValue" as static_value'
+            )
+            ->get();
+
+        $this->assertCount(9, $result);
+
+        $this->assertSame("staticValue", $result[0]["static_value"]);
+        $this->assertSame("staticValue", $result[1]["static_value"]);
+        $this->assertSame("staticValue", $result[2]["static_value"]);
+        $this->assertSame("staticValue", $result[3]["static_value"]);
+        $this->assertSame("staticValue", $result[4]["static_value"]);
+        $this->assertSame("staticValue", $result[5]["static_value"]);
+        $this->assertSame("staticValue", $result[6]["static_value"]);
+        $this->assertSame("staticValue", $result[7]["static_value"]);
+        $this->assertSame("staticValue", $result[8]["static_value"]);
+    }
+
+    public function testWithStaticNumericExpression()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_HTML);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from('#lorem .link')
+            ->define(
+                'h1 as title',
+                '19 as static_number'
+            )
+            ->get();
+
+        $this->assertCount(9, $result);
+
+        $this->assertSame(19, $result[0]["static_number"]);
+        $this->assertSame(19, $result[1]["static_number"]);
+        $this->assertSame(19, $result[2]["static_number"]);
+        $this->assertSame(19, $result[3]["static_number"]);
+        $this->assertSame(19, $result[4]["static_number"]);
+        $this->assertSame(19, $result[5]["static_number"]);
+        $this->assertSame(19, $result[6]["static_number"]);
+        $this->assertSame(19, $result[7]["static_number"]);
+        $this->assertSame(19, $result[8]["static_number"]);
+    }
+
+    public function testWithStaticFloatExpression()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_HTML);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from('#lorem .link')
+            ->define(
+                'h1 as title',
+                '1.9 as static_number'
+            )
+            ->get();
+
+        $this->assertCount(9, $result);
+
+        $this->assertSame(1.9, $result[0]["static_number"]);
+        $this->assertSame(1.9, $result[1]["static_number"]);
+        $this->assertSame(1.9, $result[2]["static_number"]);
+        $this->assertSame(1.9, $result[3]["static_number"]);
+        $this->assertSame(1.9, $result[4]["static_number"]);
+        $this->assertSame(1.9, $result[5]["static_number"]);
+        $this->assertSame(1.9, $result[6]["static_number"]);
+        $this->assertSame(1.9, $result[7]["static_number"]);
+        $this->assertSame(1.9, $result[8]["static_number"]);
     }
 
     public function testWithFilterNested()

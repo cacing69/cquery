@@ -30,7 +30,7 @@ class UpperCallbackExpression extends CallbackExpression
     {
         $this->raw = $raw;
 
-        $this->callback = function (string $value) {
+        $this->callback = function ($value) {
             return strtoupper($value);
         };
 
@@ -42,8 +42,8 @@ class UpperCallbackExpression extends CallbackExpression
             $_childCallback = $extractChild->getExpression()->getCallback();
 
             if ($_childCallback) {
-                $this->callback = function (string $value) use ($_childCallback) {
-                    return strtoupper((string) $_childCallback($value));
+                $this->callback = function ($value) use ($_childCallback) {
+                    return strtoupper($_childCallback($value));
                 };
             }
         } else {

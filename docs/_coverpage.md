@@ -1,6 +1,6 @@
 
 ![logo](media/logo.png)
-# Cquery <small>1.3</small>
+# Cquery <small>1.4.0</small>
 
 > It's an acronym for Crawl Query
 

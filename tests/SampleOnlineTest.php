@@ -14,9 +14,14 @@ define('LAMBDA_TEST_SELENIUM_PLAYGROUND_SIMPLE_FORM_DEMO', 'https://www.lambdate
 define('USER_AGENTS_RANDOM', 'https://user-agents.net/random');
 define('WIKIPEDIA', 'https://id.wikipedia.org/wiki/Halaman_Utama');
 define('SEMVER_ORG', 'https://semver.org/');
+define('Y_QQ_COM', 'https://y.qq.com/n/ryqq/singer/00220AYa4Ohak5');
 
 final class SampleOnlineTest extends TestCase
 {
+
+        /**
+         * @group ignore
+         */
     public function testGetGoogleTitle()
     {
         $data = new Cquery(GOOGLE);
@@ -30,6 +35,10 @@ final class SampleOnlineTest extends TestCase
 
         $this->assertSame('Google', $result['title']);
     }
+
+    /**
+     * @group ignore
+     */
 
     public function testHttpBinTestWithActions()
     {
@@ -50,6 +59,9 @@ final class SampleOnlineTest extends TestCase
         $this->assertSame(true, true);
     }
 
+    /**
+     * @group ignore
+     */
     public function testGetAndLimitUserAgents()
     {
         $data = new Cquery(USER_AGENTS_RANDOM);
@@ -70,6 +82,10 @@ final class SampleOnlineTest extends TestCase
 
         $this->assertCount(5, $result);
     }
+
+    /**
+     * @group ignore
+     */
 
     public function testClickLinkOnSemver()
     {
@@ -97,6 +113,10 @@ final class SampleOnlineTest extends TestCase
         $this->assertSame('Lisensi', $result[7]['text']);
     }
 
+    /**
+     * @group ignore
+     */
+
     public function testFormSearchOnWikipedia()
     {
         $data = new Cquery(WIKIPEDIA);
@@ -119,6 +139,10 @@ final class SampleOnlineTest extends TestCase
 
         $this->assertSame('Kabupaten Sambas - Wikipedia bahasa Indonesia, ensiklopedia bebas', $result[0]['title']);
     }
+
+    /**
+     * @group ignore
+     */
 
     public function testFormSearchOnWikipediaButWithClickFirst()
     {

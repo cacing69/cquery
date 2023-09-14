@@ -16,9 +16,9 @@ namespace Cacing69\Cquery\Expression;
 
 use Cacing69\Cquery\CallbackExpression;
 
-class SingleQuotesCallbackExpression extends CallbackExpression
+class StaticFloatCallbackExpression extends CallbackExpression
 {
-    protected static $signature = '/^\'(.+)\'$/is';
+    protected static $signature = '/^\s*(\d+\.\d+)\s*$/is';
 
     public static function getSignature()
     {
@@ -34,7 +34,8 @@ class SingleQuotesCallbackExpression extends CallbackExpression
         $this->callback = function ($value) use ($raw) {
             preg_match(self::$signature, $raw, $_extract);
 
-            return $_extract[1];
+
+            return floatval($_extract[1]);
         };
 
         $this->callMethod = 'static';

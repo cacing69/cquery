@@ -30,7 +30,7 @@ class LengthCallbackExpression extends CallbackExpression
     {
         $this->raw = $raw;
 
-        $this->callback = function (string $value) {
+        $this->callback = function ($value) {
             return strlen($value);
         };
 

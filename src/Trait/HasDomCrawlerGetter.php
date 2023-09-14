@@ -27,8 +27,6 @@ trait HasDomCrawlerGetter
         $_bound = null;
         $_boundKey = [];
 
-        // $_boundFirstLevel = [];
-
         if (count($this->filters) > 0) {
             $_affect = [
                 'and' => [],
@@ -43,9 +41,12 @@ trait HasDomCrawlerGetter
                 if ($filterExepression->getCallMethod() === 'extract') {
                     $_data = $_data->extract($filterExepression->getCallMethodParameter());
                 } elseif ($filterExepression->getCallMethod() === 'filter') {
-                    dd($filterExepression);
+                    throw new CqueryException("filter on `{$filterExepression->getCallMethod()}` not yet available");
+
                 } elseif ($filterExepression->getCallMethod() === 'static') {
-                    dd($filterExepression);
+                    throw new CqueryException("filter on  `{$filterExepression->getCallMethod()}` not yet available");
+                } elseif ($filterExepression->getCallMethod() === 'static.extract') {
+                    throw new CqueryException(" filter on `{$filterExepression->getCallMethod()}` not yet available");
                 }
 
                 if ($filterExepression->getCallback() !== null) {
@@ -103,37 +104,28 @@ trait HasDomCrawlerGetter
                     ->each(function (Crawler $node, $i) use (&$_data, $definer) {
                         $node->filter($definer->getExpression()->getRef())->each(function (Crawler $_node, $_i) use ($i, &$_data, $definer) {
                             if (is_array($definer->getExpression()->getCallMethodParameter()) && count($definer->getExpression()->getCallMethodParameter()) === 1) {
+
                                 $__callParameter = $definer->getExpression()->getCallMethodParameter()[0];
+
+                                $__text = null;
+
                                 if ($__callParameter === '_text') {
-                                    $_data[$i][] = $_node->text();
+                                    $__text = $_node->text();
                                 } else {
-                                    $_data[$i][] = $_node->attr($__callParameter);
+                                    $__text = $_node->attr($__callParameter);
                                 }
+
+                                if($definer->getExpression()->getCallback()) {
+                                    $__callbackFilterEach = $definer->getExpression()->getCallback();
+                                    $__text = $__callbackFilterEach($__text);
+                                }
+
+                                $_data[$i][] = $__text;
                             } else {
                                 dd('not_supported_yet');
                             }
                         });
                     });
-
-                // if($definer->getExpression() instanceof AppendNodeCallbackExpression){
-                //     if(is_array($_data[0])) {
-
-                //         $_tmpData = $_data;
-                //         // $_data = [];
-
-                //         foreach ($_tmpData as $_keyTmp => $_valueTmp) {
-                //             // $_data[] = 3;
-                //         }
-
-                //     }  else {
-
-                //     }
-                //         // dump($_data);
-                //     // if($key == 1) {
-                //     //     dd($_data);
-
-                //     // }
-                // }
             } elseif ($definer->getExpression()->getCallMethod() === 'static') {
                 if ($key === 0) {
                     throw new CqueryException('you cannot define static on the first definer');
@@ -141,6 +133,23 @@ trait HasDomCrawlerGetter
 
                 foreach (range(0, $_bound - 1) as $key => $value) {
                     $_data[] = 'static';
+                }
+            } elseif ($definer->getExpression()->getCallMethod() === 'static.extract') {
+                if ($key === 0) {
+                    throw new CqueryException('you cannot used append on the first definer');
+                }
+
+                $_static = $this
+                    ->crawler
+                    ->filterXPath($definer->getExpression()->getNodeXpath())
+                    ->extract($definer->getExpression()->getCallMethodParameter());
+
+                if(count($_static) > 1) {
+                    throw new CqueryException('you cannot append if there was multiple element exist on your document');
+                }
+
+                foreach (range(0, $_bound - 1) as $key => $value) {
+                    $_data[] = $_static[0];
                 }
             }
 
@@ -166,9 +175,9 @@ trait HasDomCrawlerGetter
                                 });
                             }
                         });
-                    //     dump(count($_data), $_bound);
+
                     // throw new CqueryException("error query definer, there are no matching rows each column.");
-                    // dump($_data);
+
                 } elseif (count($_data ?? []) > $_bound) {
                     // if(!($definer->getExpression() instanceof AppendNodeCallbackExpression)) {
                     throw new CqueryException('error query definer, there are no matching rows each column.');
@@ -176,7 +185,7 @@ trait HasDomCrawlerGetter
                 }
             }
 
-            if ($definer->getExpression()->getCallback() !== null) {
+            if ($definer->getExpression()->getCallback() !== null && !$definer->getExpression()->getIgnoreCallbackOnLoop()) {
                 $_callback = $definer->getExpression()->getCallback();
                 $_data = array_map(function ($_mapValue) use ($_callback) {
                     return $_callback((string) $_mapValue);
@@ -206,20 +215,15 @@ trait HasDomCrawlerGetter
                         if (empty($_boundKey[$_key])) {
                             $_boundKey[$_key] = count($_value);
                         }
-                        // dd($_extractAlias);
-                        // dd($_key);
+
                         // TODO perlu di check, panjang setiap element dari setiap key harus sama, jika tidak sama, ambil ulang data dengan dengan filter->each
                         if (count($_value) < $_boundKey[$_key]) {
                             throw new CqueryException('the number of rows in query result for this object is not the same as the previous query.');
                         }
 
-                        // dd($_extractAlias);
-
                         if (array_key_exists($_extractAlias[1], $_hold_data[$_key] ?? [])) {
                             $_hold_child = $_hold_data[$_key][$_extractAlias[1]];
                         }
-
-                        // dd($_hold_child, $_key, $_extractAlias[1], $_value);
 
                         foreach ($_value as $__key => $__value) {
                             $__value = strlen((string) $__value) > 0 ? $__value : null;

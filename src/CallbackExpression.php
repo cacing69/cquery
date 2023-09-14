@@ -29,9 +29,15 @@ abstract class CallbackExpression
     use HasNodeProperty;
     use HasCallbackProperty;
     protected $ref;
+    protected $ignoreCallbackOnLoop = false;
     protected $callMethod;
     protected $callMethodParameter;
     protected $filter;
+
+    public function getIgnoreCallbackOnLoop()
+    {
+        return $this->ignoreCallbackOnLoop;
+    }
 
     public function setFilter($filter)
     {

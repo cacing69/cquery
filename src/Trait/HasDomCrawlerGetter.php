@@ -42,7 +42,6 @@ trait HasDomCrawlerGetter
                     $_data = $_data->extract($filterExepression->getCallMethodParameter());
                 } elseif ($filterExepression->getCallMethod() === 'filter') {
                     throw new CqueryException("filter on `{$filterExepression->getCallMethod()}` not yet available");
-
                 } elseif ($filterExepression->getCallMethod() === 'static') {
                     throw new CqueryException("filter on  `{$filterExepression->getCallMethod()}` not yet available");
                 } elseif ($filterExepression->getCallMethod() === 'static.extract') {
@@ -104,7 +103,6 @@ trait HasDomCrawlerGetter
                     ->each(function (Crawler $node, $i) use (&$_data, $definer) {
                         $node->filter($definer->getExpression()->getRef())->each(function (Crawler $_node, $_i) use ($i, &$_data, $definer) {
                             if (is_array($definer->getExpression()->getCallMethodParameter()) && count($definer->getExpression()->getCallMethodParameter()) === 1) {
-
                                 $__callParameter = $definer->getExpression()->getCallMethodParameter()[0];
 
                                 $__text = null;
@@ -115,7 +113,7 @@ trait HasDomCrawlerGetter
                                     $__text = $_node->attr($__callParameter);
                                 }
 
-                                if($definer->getExpression()->getCallback()) {
+                                if ($definer->getExpression()->getCallback()) {
                                     $__callbackFilterEach = $definer->getExpression()->getCallback();
                                     $__text = $__callbackFilterEach($__text);
                                 }
@@ -144,7 +142,7 @@ trait HasDomCrawlerGetter
                     ->filterXPath($definer->getExpression()->getNodeXpath())
                     ->extract($definer->getExpression()->getCallMethodParameter());
 
-                if(count($_static) > 1) {
+                if (count($_static) > 1) {
                     throw new CqueryException('you cannot append if there was multiple element exist on your document');
                 }
 
@@ -177,7 +175,6 @@ trait HasDomCrawlerGetter
                         });
 
                     // throw new CqueryException("error query definer, there are no matching rows each column.");
-
                 } elseif (count($_data ?? []) > $_bound) {
                     // if(!($definer->getExpression() instanceof AppendNodeCallbackExpression)) {
                     throw new CqueryException('error query definer, there are no matching rows each column.');

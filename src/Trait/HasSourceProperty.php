@@ -24,6 +24,11 @@ trait HasSourceProperty
         return $this;
     }
 
+    /**
+     * Used to get source cquery.
+     *
+     * @return \Cacing69\Cquery\Source
+     */
     public function getSource()
     {
         return $this->source;

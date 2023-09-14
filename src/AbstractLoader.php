@@ -295,7 +295,7 @@ abstract class AbstractLoader
         return $this;
     }
 
-    public function setOnObtainedResults(Closure $closure)
+    public function setCallbackOnObtainedResults(Closure $closure)
     {
         $this->callbackOnObtainedResults = $closure;
 

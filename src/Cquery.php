@@ -220,31 +220,17 @@ class Cquery extends AbstractLoader
      */
     public function onObtainedResults($closure)
     {
-        $this->loader->setOnObtainedResults($closure);
+        $this->loader->setCallbackOnObtainedResults($closure);
 
         return $this;
     }
 
     /**
-     * Used to get source cquery.
-     *
-     * @return \Cacing69\Cquery\Source;
+     * {@inheritdoc}
      */
     public function getSource(): Source
     {
         return $this->loader->getSource();
-    }
-
-    /**
-     * Used to set http client type.
-     *
-     * @param string $clientType
-     *
-     * @return $this;
-     */
-    public function client($clientType)
-    {
-        return $this;
     }
 
     /**

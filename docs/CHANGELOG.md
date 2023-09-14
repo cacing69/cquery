@@ -6,7 +6,8 @@
 - rename abstract class prefix (`CallbackExpression -> AbstractCallbackExpression`, `Loader -> AbstractLoader`)
 - Add writer for save as file (ex: csv, json)
 - Add method `setHttpMethod` to change default http method (`GET`/`POST`) on http client used
-- improvemen on `filter` for better exception handling
+- improvement on `filter` for better exception handling
+- change Cquery base to extends AbstractLoader
 
 ## [v1.4.0](https://github.com/cacing69/cquery/compare/v1.4.0...v1.3.1) (2023-09-14)
 

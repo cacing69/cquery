@@ -25,7 +25,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-class Cquery
+class Cquery extends AbstractLoader
 {
     private $loaderName;
 
@@ -34,20 +34,11 @@ class Cquery
      * loader should be an instance of Cacing69\Loader\Loader
      * Available loader DOMCrawlerLoader.
      *
-     * @var \Cacing69\Cquery\Loader
+     * @var \Cacing69\Cquery\AbstractLoader
      *
      * The default loader is null, u need to specify when create Cquery instance.
      */
     private $loader;
-
-    /**
-     * A variable used to store the results of a query.
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * The default results is null
-     */
-    private $results;
 
     /**
      * Create a new Cquery instance.
@@ -70,13 +61,7 @@ class Cquery
     }
 
     /**
-     * Adds a source based on data given.
-     * This method is used to determine the HTML element selector
-     * that will serve as a property in each array element.
-     *
-     * @param string $value set a source element selector to activate query
-     *
-     * @return \Cacing69\Cquery\Cquery
+     * {@inheritdoc}
      */
     public function from(string $value)
     {
@@ -86,16 +71,7 @@ class Cquery
     }
 
     /**
-     * Adds a definer to the current source.
-     *
-     * This method is used to determine the HTML element selector
-     * that will serve as a property in each array element.
-     *
-     * @param \Cacing69\Cquery\Definer|string $picks a selector to grab on element
-     *
-     * @throws \Cacing69\Cquery\CqueryException when the provided parameter is incorrect."
-     *
-     * @return \Cacing69\Cquery\Cquery
+     * {@inheritdoc}
      */
     public function define(...$defines): Cquery
     {
@@ -105,12 +81,7 @@ class Cquery
     }
 
     /**
-     * Add limit amount when scraping.
-     * This method is used to limit the total length of the data.
-     *
-     * @param int $limit set a limit
-     *
-     * @return \Cacing69\Cquery\Cquery
+     * {@inheritdoc}
      */
     public function limit(int $limit)
     {
@@ -120,9 +91,7 @@ class Cquery
     }
 
     /**
-     * Take a first result from query result collection.
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function first()
     {
@@ -130,9 +99,7 @@ class Cquery
     }
 
     /**
-     * Take a first result from query result collection.
-     *
-     * @return array
+     * {@inheritDoc}
      */
     public function last()
     {
@@ -148,7 +115,7 @@ class Cquery
             if ($node instanceof Closure) {
                 if ($operator === null) {
                     // BEGIN NESTED
-                    dd('under_development');
+                    throw new CqueryException('nested filter, still not available');
                     // END NESTED
                 } else {
                     throw new CqueryException('when used closure, u need to place it on second parameter');
@@ -168,12 +135,19 @@ class Cquery
     /**
      * The filter method is used to add filter criteria with 'AND' logic.
      *
-     * @return \Cacing69\Cquery\Cquery;
+     * @return $this;
      */
     public function filter($node, $operator = null, $value = null): Cquery
     {
+
+        if(count($this->loader->getFilters()) > 0) {
+            throw new CqueryException("use `andFilter` or `orFilter` after filter declared");
+
+        }
+
         $filter = Cquery::makeFilter($node, $operator, $value);
         $this->loader->addFilter($filter, 'and');
+
 
         return $this;
     }
@@ -181,7 +155,7 @@ class Cquery
     /**
      * The filter method is used to add filter criteria with 'AND' logic.
      *
-     * @return \Cacing69\Cquery\Cquery;
+     * @return $this;
      */
     public function andFilter($node, $operator = null, $value = null): Cquery
     {
@@ -194,7 +168,7 @@ class Cquery
     /**
      * The filter method is used to add filter criteria with 'OR' logic.
      *
-     * @return \Cacing69\Cquery\Cquery;
+     * @return $this;
      */
     public function orFilter($node, $operator = null, $value = null): Cquery
     {
@@ -228,7 +202,7 @@ class Cquery
      *
      * @param Closure(array): $closure
      *
-     * @return \Cacing69\Cquery\Cquery;
+     * @return $this;
      */
     public function eachItem(Closure $closure)
     {
@@ -242,7 +216,7 @@ class Cquery
      *
      * @param Closure(array): $closure
      *
-     * @return \Cacing69\Cquery\Cquery;
+     * @return $this;
      */
     public function onObtainedResults($closure)
     {
@@ -266,7 +240,7 @@ class Cquery
      *
      * @param string $clientType
      *
-     * @return \Cacing69\Cquery\Cquery;
+     * @return $this;
      */
     public function client($clientType)
     {

@@ -162,8 +162,8 @@ final class SampleTest extends TestCase
             ->from('#lorem .link')
             ->define('h1 as title', 'a as description', 'attr(href, a) as url', 'attr(class, a) as class')
             ->filter('attr(class, a)', 'has', 'vip')
-            ->filter('attr(class, a)', 'has', 'blocked')
-            ->filter('attr(class, a)', 'has', 'super')
+            ->andFilter('attr(class, a)', 'has', 'blocked')
+            ->andFilter('attr(class, a)', 'has', 'super')
             ->get();
 
         $this->assertCount(1, $result);

@@ -30,10 +30,20 @@ abstract class AbstractLoader
     protected $limit = null;
     protected $client;
     protected $clientName = 'browser-kit';
+    protected $httpMethod = "get";
 
     protected $uri = null;
     protected $isRemote = false;
     protected $isFetched = false;
+
+    /**
+     * A variable used to store the results of a query.
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * The default results is null
+     */
+
     protected $results = [];
 
     protected $crawler;
@@ -43,12 +53,30 @@ abstract class AbstractLoader
     protected $callbackOnObtainedResults;
     protected $callbackClientOnEnd;
 
+    /**
+     * Add limit amount when scraping.
+     * This method is used to limit the total length of the data.
+     *
+     * @param int $limit set a limit
+     *
+     * @return $this
+     */
     public function limit(int $limit)
     {
         $this->limit = $limit;
 
         return $this;
     }
+
+    /**
+     * Adds a source based on data given.
+     * This method is used to determine the HTML element selector
+     * that will serve as a property in each array element.
+     *
+     * @param string $value set a source element selector to activate query
+     *
+     * @return $this
+     */
 
     public function from(string $value)
     {
@@ -80,21 +108,17 @@ abstract class AbstractLoader
                     $this->client = $_callbackOnContentLoaded($this->client, $this->crawler);
                     $this->crawler = new Crawler($this->client->getResponse()->getContent());
                 }
-
-                // } elseif ($this->clientName === "curl") {
-                //     $ch = curl_init();
-                //     curl_setopt($ch, CURLOPT_URL, $this->uri);
-                //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                //     $output = curl_exec($ch);
-
-                //     $this->crawler = new Crawler($output);
-                //     curl_close($ch);
             } else {
                 throw new CqueryException("client {$this->clientName} doesnt support");
             }
         }
     }
 
+    /**
+     * Take a first item from query result collection.
+     *
+     * @return array
+     */
     public function first()
     {
         return $this
@@ -103,6 +127,11 @@ abstract class AbstractLoader
             ->first();
     }
 
+    /**
+     * Take a last item from query result collection.
+     *
+     * @return array
+     */
     public function last()
     {
         return $this
@@ -155,6 +184,18 @@ abstract class AbstractLoader
         }
     }
 
+    /**
+     * Adds a definer to the current source.
+     *
+     * This method is used to determine the HTML element selector
+     * that will serve as a property in each array element.
+     *
+     * @param \Cacing69\Cquery\Definer|string $picks a selector to grab on element
+     *
+     * @throws \Cacing69\Cquery\CqueryException when the provided parameter is incorrect."
+     *
+     * @return $this
+     */
     public function define(...$defines)
     {
         if (count($this->definers) > 0) {
@@ -189,7 +230,6 @@ abstract class AbstractLoader
         }
     }
 
-    // Before From DOM Manipulator
     public function addFilter($filter, $operator = 'and')
     {
         $this->validateSource();
@@ -265,6 +305,13 @@ abstract class AbstractLoader
     public function setClientName(string $clientName)
     {
         $this->clientName = $clientName;
+
+        return $this;
+    }
+
+    public function setHttpMethod(string $httpMethod)
+    {
+        $this->httpMethod = $httpMethod;
 
         return $this;
     }

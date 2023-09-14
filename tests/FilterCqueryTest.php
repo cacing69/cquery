@@ -2,7 +2,7 @@
 
 namespace Cacing69\Cquery\Test;
 
-use Cacing69\Cquery\Loader;
+use Cacing69\Cquery\AbstractLoader;
 use PHPUnit\Framework\TestCase;
 
 final class FilterCqueryTest extends TestCase
@@ -17,7 +17,7 @@ final class FilterCqueryTest extends TestCase
             'or' => [],
         ];
 
-        $resultFilter = Loader::getResultFilter($filter);
+        $resultFilter = AbstractLoader::getResultFilter($filter);
 
         $this->assertIsArray($resultFilter);
         $this->assertSame([2, 3], $resultFilter);
@@ -33,7 +33,7 @@ final class FilterCqueryTest extends TestCase
             ],
         ];
 
-        $resultFilter = Loader::getResultFilter($filter);
+        $resultFilter = AbstractLoader::getResultFilter($filter);
 
         $this->assertIsArray($resultFilter);
         $this->assertSame([0, 1, 2, 3, 4], $resultFilter);
@@ -52,7 +52,7 @@ final class FilterCqueryTest extends TestCase
             ],
         ];
 
-        $resultFilter = Loader::getResultFilter($filter);
+        $resultFilter = AbstractLoader::getResultFilter($filter);
 
         $this->assertIsArray($resultFilter);
         $this->assertSame([2, 3, 4, 5, 7], $resultFilter);

@@ -8,11 +8,20 @@
   ],
   "type": "library",
   "license": "MIT",
+  "version": "1.4.0",
   "homepage": "https://github.com/cacing69/cquery",
   "support": {
+      "email": "ibnuul@gmail.com",
       "issues": "https://github.com/cacing69/cquery/http-exception/issues",
       "source": "https://github.com/cacing69/cquery",
       "docs": "https://cacing69.github.io/cquery"
+  },
+  "archive": {
+    "exclude": [
+      "/tests",
+      "/docs",
+      "/.*"
+    ]
   },
   "autoload": {
     "psr-4": {
@@ -55,6 +64,9 @@
     "phpunit/phpunit": "^8.0|^9.0|^10.0",
     "friendsofphp/php-cs-fixer": "^3.4",
     "symfony/var-dumper": "^5.4|^6.4"
+  },
+  "suggest": {
+    "cqacing69/cquery-panther-loader": "Might be required by cquery to scrape javascript or ajax webpage"
   },
   "scripts": {
     "test": "phpunit --color=always",

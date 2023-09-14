@@ -6,8 +6,8 @@
 - Fixing filter on `raw()` method
 - create new expression `append(selector)` for append single element to query
 - create new expression for static value with double quote `"rawValue"`
-- create new expression for static int  `99`
-- create new expression for static float  `9.9`
+- create new expression for static int  example `99`
+- create new expression for static float  example `9.9`
 
 ## [v1.3.1](https://github.com/cacing69/cquery/compare/v1.3.1...v1.3.0) (2023-09-11)
 

@@ -1513,9 +1513,9 @@ final class SampleTest extends TestCase
                 'h1 as title',
                 '1.9 as static_number'
             )
-            ->save(".cached/test_write.csv");
+            ->save('.cached/test_write.csv');
 
-        $this->assertFileExists(".cached/test_write.csv");
+        $this->assertFileExists('.cached/test_write.csv');
     }
 
     public function testWithFilterNested()

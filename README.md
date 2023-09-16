@@ -130,24 +130,6 @@ For example, you have a simple HTML element as shown below.
 
 </details>
 
-### List method Cquery
-
-Lists of method you are can used for query in html
-| method | example | description |
-| --------- | ------------- | ------------------ |
-| `from($selector)` | `from('.content')` |  Used to set the source of the main element that will be used for querying |
-| `define(...$string)` | `define()` | - |
-| `first()` | `first()` | To retrieve first item query results. |
-| `get()` | `get()` | To retrieve collection from query results. |
-| `raw(string)` | `raw('from... define... filter...')` | To get data based on raw cquery. |
-| `filter()` | `filter()` | - |
-| `getSource()` | `getSource()` | - |
-| `orFilter()` | `orFilter()` | - |
-| `onContentLoaded(function($browser))` | `onContentLoaded()` | - |
-| `eachItem(function($item, $index))` | `eachItem()` | - |
-| `onObtainedResult(function($results))` | `onObtainedResult()` | - |
-
-
 ### List definer expression available
 
 Below are the expressions you are can use, they may change over time.

@@ -312,6 +312,10 @@ final class ParserTest extends TestCase
 
     public function testParseWithLimitButWithFloatValueComma()
     {
+        $this->expectException(CqueryException::class);
+        $this->expectExceptionMessage('only integer numeric value allowed when used limit argument.');
+
+
         $query = "
         from ( .item )
         define
@@ -324,12 +328,7 @@ final class ParserTest extends TestCase
         limit 3,5
         ";
 
-        try {
-            $parser = new Parser($query);
-        } catch (Exception $e) {
-            $this->assertSame(CqueryException::class, get_class($e));
-            $this->assertSame('only integer numeric value allowed when used limit argument.', $e->getMessage());
-        }
+        $parser = new Parser($query);
     }
 
     public function testParseUsedFilterWithOrOperator()

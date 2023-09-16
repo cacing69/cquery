@@ -25,8 +25,8 @@ final class WriterTest extends TestCase
 
         $writer->setData($result);
 
-        $writer->save(".cached/output.csv");
+        $save = $writer->save(".cached/output.csv");
 
-        $this->assertFileExists(".cached/output.csv");
+        $this->assertSame(".cached/output.csv", $save);
     }
 }

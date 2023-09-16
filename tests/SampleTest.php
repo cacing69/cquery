@@ -1513,7 +1513,7 @@ final class SampleTest extends TestCase
             )
             ->save(".cached/test_write.csv");
 
-        $this->assertFileExists(".cached/test_write.csv");
+        $this->assertSame(".cached/test_write.csv", $result);
     }
 
     public function testWithFilterNested()

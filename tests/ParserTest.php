@@ -4,7 +4,6 @@ namespace Cacing69\Cquery\Test;
 
 use Cacing69\Cquery\CqueryException;
 use Cacing69\Cquery\Parser;
-use Exception;
 use PHPUnit\Framework\TestCase;
 
 final class ParserTest extends TestCase

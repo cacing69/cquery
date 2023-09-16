@@ -139,15 +139,12 @@ class Cquery extends AbstractLoader
      */
     public function filter($node, $operator = null, $value = null): Cquery
     {
-
-        if(count($this->loader->getFilters()) > 0) {
-            throw new CqueryException("use `andFilter` or `orFilter` after filter declared");
-
+        if (count($this->loader->getFilters()) > 0) {
+            throw new CqueryException('use `andFilter` or `orFilter` after filter declared');
         }
 
         $filter = Cquery::makeFilter($node, $operator, $value);
         $this->loader->addFilter($filter, 'and');
-
 
         return $this;
     }

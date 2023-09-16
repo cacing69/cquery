@@ -16,6 +16,7 @@ abstract class AbstractWriter
     protected $data;
     protected $only;
     protected $exclude;
+
     abstract public function save();
 
     public function only(string ...$only)

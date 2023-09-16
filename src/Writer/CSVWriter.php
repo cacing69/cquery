@@ -10,12 +10,12 @@
  */
 
 namespace Cacing69\Cquery\Writer;
+
 use Cacing69\Cquery\AbstractWriter;
 
 class CSVWriter extends AbstractWriter
 {
     public function save($path)
     {
-
     }
 }

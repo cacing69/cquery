@@ -1,4 +1,5 @@
 <?php
+
 use Cacing69\Cquery\Cquery;
 use Cacing69\Cquery\Writer\CSVWriter;
 use PHPUnit\Framework\TestCase;
@@ -25,8 +26,8 @@ final class WriterTest extends TestCase
 
         $writer->setData($result);
 
-        $writer->save(".cached/output.csv");
+        $writer->save('.cached/output.csv');
 
-        $this->assertFileExists(".cached/output.csv");
+        $this->assertFileExists('.cached/output.csv');
     }
 }

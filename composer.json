@@ -63,28 +63,15 @@
   "require-dev": {
     "phpunit/phpunit": "^8.0|^9.0|^10.0",
     "friendsofphp/php-cs-fixer": "^3.4",
-    "symfony/var-dumper": "^5.4|^6.4"
+    "symfony/var-dumper": "^5.4|^6.4",
+    "phpstan/phpstan" : "^1.10"
   },
   "suggest": {
     "cqacing69/cquery-panther-loader": "Might be required by cquery to scrape javascript or ajax webpage"
   },
   "scripts": {
-    "test": "phpunit --color=always",
-    "coverage:text": [
-            "@putenv XDEBUG_MODE=coverage",
-            "phpunit --color=always --coverage-text"
-        ],
-        "coverage:clover": [
-            "@putenv XDEBUG_MODE=coverage",
-            "phpunit --color=always --coverage-clover=coverage.xml"
-        ],
-        "coverage:html": [
-            "@putenv XDEBUG_MODE=coverage",
-            "phpunit --color=always --coverage-html=coverage"
-        ],
-        "coverage:check": [
-            "@coverage:clover",
-            "phpcov check:project coverage.xml"
-        ]
+    "test": "vendor/bin/phpunit tests",
+    "static-analysis": "vendor/bin/phpstan analyse src",
+    "fix": "vendor/bin/php-cs-fixer fix src"
   }
 }

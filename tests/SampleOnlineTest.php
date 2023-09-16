@@ -1,7 +1,5 @@
 <?php
 
-namespace Cacing69\Cquery\Test;
-
 use Cacing69\Cquery\Cquery;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\BrowserKit\HttpBrowser;

@@ -11,11 +11,22 @@
 
 namespace Cacing69\Cquery\Writer;
 
-use Cacing69\Cquery\AbstractWriter;
+use Cacing69\Cquery\AbstractCqueryWriter;
 
-class CSVWriter extends AbstractWriter
+class CSVWriter extends AbstractCqueryWriter
 {
-    public function save($path)
+    public function save($path = null)
     {
+        $output = fopen($path, 'w');
+
+        fputcsv($output, array_keys($this->data[0]));
+
+        foreach ($this->data as $data) {
+            fputcsv($output, $data);
+        }
+
+        fclose($output);
+
+        return $path;
     }
 }

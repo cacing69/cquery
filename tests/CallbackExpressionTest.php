@@ -1,7 +1,5 @@
 <?php
 
-namespace Cacing69\Cquery\Test;
-
 use Cacing69\Cquery\Expression\LowerCallbackExpression;
 use Cacing69\Cquery\Expression\UpperCallbackExpression;
 use PHPUnit\Framework\TestCase;

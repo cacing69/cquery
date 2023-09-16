@@ -3,11 +3,11 @@
 ## [v1.5.0](https://github.com/cacing69/cquery/compare/v1.5.0...v1.4.0) (2023-09-??)
 
 - Prepare for nested filter, only for 2 level
-- rename abstract class prefix (`CallbackExpression -> AbstractCallbackExpression`, `Loader -> AbstractLoader`)
-- Add writer for save as file (ex: csv, json)
-- Add method `setHttpMethod` to change default http method (`GET`/`POST`) on http client used
+- rename abstract class prefix (`CallbackExpression -> AbstractCallbackExpression`, `Loader -> AbstractCqueryLoader`)
+- Add writer for save as file (ex: csv, json) call `->save($path, $writer)` before/after `->get()`
 - improvement on `filter` for better exception handling
-- change Cquery base to extends AbstractLoader
+- change Cquery base to extends AbstractCqueryLoader
+- Add method `setHttpMethod` to change default http method (`GET`/`POST`) on http client used
 
 ## [v1.4.0](https://github.com/cacing69/cquery/compare/v1.4.0...v1.3.1) (2023-09-14)
 

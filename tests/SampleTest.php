@@ -1,7 +1,5 @@
 <?php
 
-namespace Cacing69\Cquery\Test;
-
 use Cacing69\Cquery\Cquery;
 use Cacing69\Cquery\CqueryException;
 use Cacing69\Cquery\Definer;
@@ -1500,6 +1498,22 @@ final class SampleTest extends TestCase
         $this->assertSame(1.9, $result[6]['static_number']);
         $this->assertSame(1.9, $result[7]['static_number']);
         $this->assertSame(1.9, $result[8]['static_number']);
+    }
+
+    public function testSaveWithCsvWriter()
+    {
+        $simpleHtml = file_get_contents(SAMPLE_HTML);
+        $data = new Cquery($simpleHtml);
+
+        $result = $data
+            ->from('#lorem .link')
+            ->define(
+                'h1 as title',
+                '1.9 as static_number'
+            )
+            ->save(".cached/test_write.csv");
+
+        $this->assertFileExists(".cached/test_write.csv");
     }
 
     public function testWithFilterNested()

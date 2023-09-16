@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Cacing69\Cquery;
 
 use Cacing69\Cquery\Loader\DOMCrawlerLoader;
+use Cacing69\Cquery\Writer\CSVWriter;
 use Closure;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -25,7 +26,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-class Cquery extends AbstractLoader
+class Cquery extends AbstractCqueryLoader
 {
     private $loaderName;
 
@@ -34,7 +35,7 @@ class Cquery extends AbstractLoader
      * loader should be an instance of Cacing69\Loader\Loader
      * Available loader DOMCrawlerLoader.
      *
-     * @var \Cacing69\Cquery\AbstractLoader
+     * @var \Cacing69\Cquery\AbstractCqueryLoader
      *
      * The default loader is null, u need to specify when create Cquery instance.
      */
@@ -252,5 +253,12 @@ class Cquery extends AbstractLoader
         }
 
         return $this->get();
+    }
+
+    public function save($path, $writer = CSVWriter::class)
+    {
+        $writer = new $writer();
+        $writer->setData($this->get());
+        return $writer->save($path);
     }
 }

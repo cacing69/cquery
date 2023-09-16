@@ -1,7 +1,5 @@
 <?php
 
-namespace Cacing69\Cquery\Test;
-
 use Cacing69\Cquery\Cquery;
 use Cacing69\Cquery\Source;
 use PHPUnit\Framework\TestCase;

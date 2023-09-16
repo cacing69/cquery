@@ -11,7 +11,7 @@
 
 namespace Cacing69\Cquery;
 
-abstract class AbstractWriter
+abstract class AbstractCqueryWriter
 {
     protected $data;
     protected $only;

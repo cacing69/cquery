@@ -1,7 +1,5 @@
 <?php
 
-namespace Cacing69\Cquery\Test;
-
 use Cacing69\Cquery\Definer;
 use Closure;
 use PHPUnit\Framework\TestCase;

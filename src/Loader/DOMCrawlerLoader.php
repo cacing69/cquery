@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Cacing69\Cquery\Loader;
 
-use Cacing69\Cquery\AbstractLoader;
+use Cacing69\Cquery\AbstractCqueryLoader;
 use Cacing69\Cquery\Trait\HasDomCrawlerGetter;
 use Symfony\Component\DomCrawler\Crawler;
 
-class DOMCrawlerLoader extends AbstractLoader
+class DOMCrawlerLoader extends AbstractCqueryLoader
 {
     use HasDomCrawlerGetter;
 

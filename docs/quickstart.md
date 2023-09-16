@@ -82,6 +82,7 @@ Lists of method available you can used for query html
 | `define(...$string)` | `define("h1 as title", "attr(href, a) as url)"` | Used to define element to scrape, and saved them to object depend on alias directly |
 | `first()` | `first()` | To retrieve first item query results. |
 | `get()` | `get()` | To retrieve collection from query results. |
+| `save($path, $writer)` | `save('public/output.csv')` | To save query as external file, default writer is CSVWriter. |
 | `raw(string)` | `raw('from... define... filter...')` | To get data based on raw cquery. |
 | `filter()` | `filter()` | - |
 | `getSource()` | `getSource()` | - |

@@ -259,6 +259,7 @@ class Cquery extends AbstractCqueryLoader
     {
         $writer = new $writer();
         $writer->setData($this->get());
+
         return $writer->save($path);
     }
 }

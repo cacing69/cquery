@@ -1,4 +1,5 @@
 <?php
+
 use Cacing69\Cquery\Cquery;
 use Cacing69\Cquery\Writer\CSVWriter;
 use PHPUnit\Framework\TestCase;

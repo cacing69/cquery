@@ -30,7 +30,7 @@ abstract class AbstractLoader
     protected $limit = null;
     protected $client;
     protected $clientName = 'browser-kit';
-    protected $httpMethod = "get";
+    protected $httpMethod = 'get';
 
     protected $uri = null;
     protected $isRemote = false;
@@ -43,7 +43,6 @@ abstract class AbstractLoader
      *
      * The default results is null
      */
-
     protected $results = [];
 
     protected $crawler;
@@ -77,7 +76,6 @@ abstract class AbstractLoader
      *
      * @return $this
      */
-
     public function from(string $value)
     {
         if ($this->source) {

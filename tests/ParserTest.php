@@ -315,7 +315,6 @@ final class ParserTest extends TestCase
         $this->expectException(CqueryException::class);
         $this->expectExceptionMessage('only integer numeric value allowed when used limit argument.');
 
-
         $query = "
         from ( .item )
         define

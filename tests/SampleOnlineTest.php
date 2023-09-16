@@ -23,6 +23,7 @@ final class SampleOnlineTest extends TestCase
      */
     public function testGetGoogleTitle()
     {
+        $this->markTestSkipped('will be skipped.');
         $data = new Cquery(GOOGLE);
 
         $result = $data
@@ -40,6 +41,8 @@ final class SampleOnlineTest extends TestCase
      */
     public function testHttpBinTestWithActions()
     {
+        $this->markTestSkipped('will be skipped.');
+
         $data = new Cquery(HTTP_BIN_TEST_K6_FORM_POST);
 
         $result = $data
@@ -62,6 +65,8 @@ final class SampleOnlineTest extends TestCase
      */
     public function testGetAndLimitUserAgents()
     {
+        $this->markTestSkipped('will be skipped.');
+
         $data = new Cquery(USER_AGENTS_RANDOM);
 
         $result = $data
@@ -86,6 +91,8 @@ final class SampleOnlineTest extends TestCase
      */
     public function testClickLinkOnSemver()
     {
+        $this->markTestSkipped('will be skipped.');
+
         $data = new Cquery(SEMVER_ORG);
 
         $result = $data
@@ -115,6 +122,8 @@ final class SampleOnlineTest extends TestCase
      */
     public function testFormSearchOnWikipedia()
     {
+        $this->markTestSkipped('will be skipped.');
+
         $data = new Cquery(WIKIPEDIA);
 
         $result = $data
@@ -141,6 +150,8 @@ final class SampleOnlineTest extends TestCase
      */
     public function testFormSearchOnWikipediaButWithClickFirst()
     {
+        $this->markTestSkipped('will be skipped.');
+
         $data = new Cquery(WIKIPEDIA);
 
         $result = $data

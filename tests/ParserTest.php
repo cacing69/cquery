@@ -11,14 +11,12 @@ final class ParserTest extends TestCase
 {
     public function testParseWithEmptyQuery()
     {
+        $this->expectException(CqueryException::class);
+        $this->expectExceptionMessage('empty query provided');
+
         $query = '';
 
-        try {
-            $parser = new Parser($query);
-        } catch (Exception $e) {
-            $this->assertSame(CqueryException::class, get_class($e));
-            $this->assertSame('empty query provided', $e->getMessage());
-        }
+        $parser = new Parser($query);
     }
 
     public function testParseQuery1Selector()
@@ -268,6 +266,9 @@ final class ParserTest extends TestCase
 
     public function testParseWithLimitButWithNonNumericValue()
     {
+        $this->expectException(CqueryException::class);
+        $this->expectExceptionMessage('only integer numeric value allowed when used limit argument.');
+
         $query = "
         from ( .item )
         define
@@ -280,16 +281,14 @@ final class ParserTest extends TestCase
         limit abc
         ";
 
-        try {
-            $parser = new Parser($query);
-        } catch (Exception $e) {
-            $this->assertSame(CqueryException::class, get_class($e));
-            $this->assertSame('only integer numeric value allowed when used limit argument.', $e->getMessage());
-        }
+        $parser = new Parser($query);
     }
 
     public function testParseWithLimitButWithFloatValueDot()
     {
+        $this->expectException(CqueryException::class);
+        $this->expectExceptionMessage('only integer numeric value allowed when used limit argument.');
+
         $query = "
         from ( .item )
         define
@@ -302,19 +301,13 @@ final class ParserTest extends TestCase
         limit 3.5
         ";
 
-        try {
-            $parser = new Parser($query);
-        } catch (Exception $e) {
-            $this->assertSame(CqueryException::class, get_class($e));
-            $this->assertSame('only integer numeric value allowed when used limit argument.', $e->getMessage());
-        }
+        $parser = new Parser($query);
     }
 
     public function testParseWithLimitButWithFloatValueComma()
     {
         $this->expectException(CqueryException::class);
         $this->expectExceptionMessage('only integer numeric value allowed when used limit argument.');
-
 
         $query = "
         from ( .item )

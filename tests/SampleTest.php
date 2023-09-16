@@ -110,31 +110,27 @@ final class SampleTest extends TestCase
 
     public function testShouldGetAnExceptionNoSourceDefined()
     {
+        $this->expectException(CqueryException::class);
+        $this->expectExceptionMessage('no source defined');
+
         $simpleHtml = file_get_contents(SAMPLE_HTML);
         $data = new Cquery($simpleHtml);
 
-        try {
-            $query = $data
+        $query = $data
                 ->define('_el > a > p as title');
-        } catch (Exception $e) {
-            $this->assertSame(CqueryException::class, get_class($e));
-            $this->assertSame('no source defined', $e->getMessage());
-        }
     }
 
     public function testShouldGetAnExceptionNoDefinerFound()
     {
+        $this->expectException(CqueryException::class);
+        $this->expectExceptionMessage('no definer found');
+
         $simpleHtml = file_get_contents(SAMPLE_HTML);
         $data = new Cquery($simpleHtml);
 
-        try {
-            $query = $data
-                ->from('(#lorem .link) as _el')
-                ->get();
-        } catch (Exception $e) {
-            $this->assertSame(CqueryException::class, get_class($e));
-            $this->assertSame('no definer found', $e->getMessage());
-        }
+        $query = $data
+            ->from('(#lorem .link) as _el')
+            ->get();
     }
 
     public function testMultipleWhereWithUsedOrCondition()
@@ -475,21 +471,19 @@ final class SampleTest extends TestCase
 
     public function testUsedFilterErrorAnonymousFunctionWithoutSelector()
     {
+        $this->expectException(CqueryException::class);
+        $this->expectExceptionMessage('when used closure, u need to place it on second parameter');
+
         $simpleHtml = file_get_contents(SAMPLE_HTML);
         $data = new Cquery($simpleHtml);
 
-        try {
-            $result = $data
-            ->from('#lorem .link')
-            ->define('h1 as title', 'a as description', 'attr(href, a) as url', 'attr(class, a) as class')
-            ->filter(function ($e) {
-                return $e === 'Title 3';
-            }, 'h1')
-            ->get();
-        } catch (Exception $e) {
-            $this->assertSame(CqueryException::class, get_class($e));
-            $this->assertSame('when used closure, u need to place it on second parameter', $e->getMessage());
-        }
+        $result = $data
+        ->from('#lorem .link')
+        ->define('h1 as title', 'a as description', 'attr(href, a) as url', 'attr(class, a) as class')
+        ->filter(function ($e) {
+            return $e === 'Title 3';
+        }, 'h1')
+        ->get();
     }
 
     public function testCqueryWithNestedDefinerFunctionLengthAndAttr()
@@ -823,24 +817,21 @@ final class SampleTest extends TestCase
 
     public function testScrapeQuotesToScrapeWithWrongDefiner()
     {
+        $this->expectException(CqueryException::class);
+        $this->expectExceptionMessage('error query definer, there are no matching rows each column.');
+
         $content = file_get_contents(SAMPLE_HTML);
 
         $data = new Cquery($content);
 
-        try {
-            $result = $data
-                ->from('.col-md-8 > .quote')
-                ->define(
-                    'span.text as text',
-                    'span:nth-child(2) > small as author',
-                    '(div > .tags > a)  as tags',
-                )
-                ->get();
-        } catch (Exception $e) {
-            $this->assertSame(CqueryException::class, get_class($e));
-            $this->assertStringContainsString('error query definer', $e->getMessage());
-            $this->assertSame('error query definer, there are no matching rows each column.', $e->getMessage());
-        }
+        $result = $data
+            ->from('.col-md-8 > .quote')
+            ->define(
+                'span.text as text',
+                'span:nth-child(2) > small as author',
+                '(div > .tags > a)  as tags',
+            )
+            ->get();
     }
 
     public function testScrapeQuotesToScrapeWithAppendNodeDefiner()
@@ -1040,36 +1031,32 @@ final class SampleTest extends TestCase
 
     public function testCallDefinerTwiceMustGotAnException()
     {
+        $this->expectException(CqueryException::class);
+        $this->expectExceptionMessage('cannot call method define twice.');
+
         $simpleHtml = file_get_contents(SAMPLE_HTML);
         $data = new Cquery($simpleHtml);
 
-        try {
-            $result = $data
+        $result = $data
             ->from('footer')
             ->define('p')
             ->define('p')
             ->first();
-        } catch (Exception $e) {
-            $this->assertSame(CqueryException::class, get_class($e));
-            $this->assertSame('cannot call method define twice.', $e->getMessage());
-        }
     }
 
     public function testCallFromTwiceMustGotAnException()
     {
+        $this->expectException(CqueryException::class);
+        $this->expectExceptionMessage('cannot call method from twice.');
+
         $simpleHtml = file_get_contents(SAMPLE_HTML);
         $data = new Cquery($simpleHtml);
 
-        try {
-            $result = $data
+        $result = $data
             ->from('footer')
             ->from('footer > .lorem')
             ->define('p')
             ->first();
-        } catch (Exception $e) {
-            $this->assertSame(CqueryException::class, get_class($e));
-            $this->assertSame('cannot call method from twice.', $e->getMessage());
-        }
     }
 
     public function testWithStaticValueInDefiner()
@@ -1249,22 +1236,21 @@ final class SampleTest extends TestCase
 
     public function testWithNestedData()
     {
+        $this->expectException(CqueryException::class);
+        $this->expectExceptionMessage('the number of rows in query result for this object is not the same as the previous query.');
+
         $simpleHtml = file_get_contents(SAMPLE_HTML);
         $data = new Cquery($simpleHtml);
 
-        try {
-            $query = '
+        $query = '
                 from (.nested-content)
                 define
                     append_node(ul.nested-list > li > ul > li > ul, attr(href, li > a)) as data.*.url_grand_child,
                     append_node(ul.nested-list > li > ul > li > ul, li > p) as data.*.p_grand_child,
                 ';
-            $result = $data
-                ->raw($query);
-        } catch (Exception $e) {
-            $this->assertSame(CqueryException::class, get_class($e));
-            $this->assertSame('the number of rows in query result for this object is not the same as the previous query.', $e->getMessage());
-        }
+
+        $result = $data
+            ->raw($query);
     }
 
     public function testPluck()

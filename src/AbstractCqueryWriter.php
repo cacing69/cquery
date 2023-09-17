@@ -10,6 +10,7 @@
  */
 
 namespace Cacing69\Cquery;
+use Cacing69\Cquery\Support\Collection;
 
 abstract class AbstractCqueryWriter
 {
@@ -32,5 +33,26 @@ abstract class AbstractCqueryWriter
     public function exclude(string ...$exclude)
     {
         $this->exclude = $exclude;
+    }
+
+    public function getData()
+    {
+        if($this->only != null){
+            $_data = [];
+            foreach ($this->data as $key => $value) {
+                // foreach ($this->only as $only) {
+                foreach ($value as $_keyValue => $value) {
+                    if(in_array($_keyValue, $this->only)) {
+                        $data[$key][$_keyValue] = $value;
+                    }
+                }
+                // }
+            }
+
+            return new Collection($data);
+        } else {
+            return $this->data;
+        }
+
     }
 }
